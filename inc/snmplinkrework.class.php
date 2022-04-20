@@ -940,12 +940,13 @@ JAVASCRIPT;
             return date('Y-m-d', strtotime($str));
          case 'datetime':
             return date('Y-m-d H:i:s', strtotime($str));
+            //return $str;
          case 'bool':
             return (bool)$str;
          case 'tinyint':
-            return $str == '1' ? 1 : 0;
+            return ($str == '1' || strtoupper($str) == "TRUE") ? 1 : 0;
          case 'timestamp':
-            return strtotime($str);
+            return date('Y-m-d H:i:s', strtotime($str));
          case 'decimal':
             return (float)$str;
          default:
@@ -2171,9 +2172,11 @@ JAVASCRIPT;
             if (substr($reconciliationKey, -3) == '_id') {
                $insert[$reconciliationKey] = self::getObjectOrInsert($reconciliationKey, $data[$reconciliationValue]);
             } else {
-               $value = self::convertStrToSqlValueBySqlType($data[$reconciliationValue], $dataTypesArray[$reconciliationKey]);
-               if (isset($value) && $value != "") {
-                  $insert[$reconciliationKey] = $value;
+               if (isset($data[$reconciliationValue]) && isset($dataTypesArray[$reconciliationKey])) {
+                  $value = self::convertStrToSqlValueBySqlType($data[$reconciliationValue], $dataTypesArray[$reconciliationKey]);
+                  if (isset($value) && $value != "") {
+                     $insert[$reconciliationKey] = $value;
+                  }
                }
             }
          }
@@ -2246,8 +2249,9 @@ JAVASCRIPT;
       global $DB, $CFG_GLPI;
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
       $snmpTypes = $ocsClient->getSnmpTypesIfReconciliation();
+      $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
 
-      $query = "SELECT DISTINCT ocs_snmp_type_id FROM glpi_plugin_ocsinventoryng_snmplinkreworks";
+      $query = "SELECT DISTINCT ocs_snmp_type_id FROM glpi_plugin_ocsinventoryng_snmplinkreworks WHERE ocs_srv = $ocs_srv";
       $result = $DB->query($query);
       $snmpTypesAlreadyLinkedypes = [];
       while ($data = $DB->fetchAssoc($result)) {
@@ -2374,8 +2378,9 @@ JAVASCRIPT;
       global $DB, $CFG_GLPI;
 
       $device = $params['device'];
+      $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
 
-      $query = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE `ocs_snmp_type_id`='" . $params['snmptype'] . "'";
+      $query = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE `ocs_snmp_type_id`='" . $params['snmptype'] . "' AND ocs_srv = $ocs_srv";
       $result = $DB->query($query);
       $oldData = [];
       while ($data = $DB->fetchArray($result)) {
@@ -2405,6 +2410,7 @@ JAVASCRIPT;
                      'ocs_snmp_type_id' => $ocsSplit[0],
                      'ocs_snmp_label_id' => $ocsSplit[1],
                      'is_reconsiliation' => $ocsSplit[2] == "Yes" ? 1 : 0,
+                     'ocs_srv' => $ocs_srv,
    
                   ]
                );
@@ -2417,8 +2423,9 @@ JAVASCRIPT;
    static function showSnmpLinks(){
       global $DB, $CFG_GLPI;
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
+      $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
 
-      $query = "SELECT `object`, `ocs_snmp_type_id` FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` GROUP BY `ocs_snmp_type_id`;";
+      $query = "SELECT `object`, `ocs_snmp_type_id` FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE ocs_srv = $ocs_srv GROUP BY `ocs_snmp_type_id`;";
       $result_glpi = $DB->query($query);
       
       $snmpTypes = $ocsClient->getSnmpTypes();

@@ -34,6 +34,8 @@ define("PLUGIN_OCSINVENTORYNG_STATE_FINISHED", 3);
 define("PLUGIN_OCSINVENTORYNG_LOCKFILE", GLPI_LOCK_DIR . "/ocsinventoryng.lock");
 define('PLUGIN_OCS_VERSION', '1.7.4');
 
+define('PLUGIN_OCS_ROOTDOC', Plugin::getWebDir('ocsinventoryng'));
+
 /**
  * Init the hooks of the plugins -Needed
  **/
@@ -142,7 +144,9 @@ function plugin_init_ocsinventoryng() {
                          ['networkport_instantiations' => true]);
 
    Plugin::registerClass('PluginOcsinventoryngSnmpOcslink',
-                         ['addtabon' => ['Computer', 'Printer', 'NetworkEquipment', 'Peripheral', 'Phone']]);
+                        ['addtabon' => ['Computer', 'Printer', 'NetworkEquipment', 'Peripheral', 'Phone']]);
+
+   Plugin::registerClass('PluginOcsinventoryngSnmplinkRework');
 
    Plugin::registerClass('PluginOcsinventoryngOcsAlert',
                          ['addtabon'                    => ['Entity', 'CronTask'],
@@ -181,6 +185,18 @@ function plugin_init_ocsinventoryng() {
          $PLUGIN_HOOKS['post_item_form']['ocsinventoryng'] = [PluginOcsinventoryngBitlockerstatus::class,'showForDisk'];
       }
    }
+
+   // SNMP Rework
+   $PLUGIN_HOOKS['menu_toadd']['ocsinventoryng']['snmplinkrework'] = 'PluginOcsinventoryngSnmplinkRework';
+   $links['config'] = PLUGIN_OCS_ROOTDOC . '/front/snmplinkrework.php';
+   $links['add']    = PLUGIN_OCS_ROOTDOC . '/front/snmplinkrework.form.php';
+   $PLUGIN_HOOKS['submenu_entry']['ocsinventoryng']['options'] = [
+      'config'       => ['title'  => __('Setup'),
+                         'page'   => PLUGIN_OCS_ROOTDOC . '/front/snmplinkrework.php',
+                         'links'  => $links],
+      'options'      => ['title'  => _n('Form', 'Forms', 2, 'ocsinventoryng'),
+                         'links'  => $links],
+   ];
 
    $CFG_GLPI['ocsinventoryng_devices_index'] = [1  => 'Item_DeviceMotherboard',
                                                 2  => 'Item_DeviceProcessor',

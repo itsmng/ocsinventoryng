@@ -50,6 +50,13 @@ if (isset($_POST["plugin_ocsinventoryng_ocsservers_id"])) {
    $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = PluginOcsinventoryngOcsServer::getFirstServer();
 }
 
+$cfg_ocs = PluginOcsinventoryngOcsServer::getConfig($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+if ($cfg_ocs['ocs_version'] >= PluginOcsinventoryngOcsServer::OCS2_8_VERSION_LIMIT) {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = true;
+} else {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = false;
+}
+
 //PluginOcsinventoryngOcsServer::newOcsMenu($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
 echo "<div align='center'><img src='".$CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/pics/ocsinventoryng.png'></div>";
 $menu = new PluginOcsinventoryngMenu();

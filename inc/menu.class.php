@@ -110,16 +110,30 @@ class PluginOcsinventoryngMenu extends CommonGLPI {
       }
 
       // Import
-      $menu['options']['importsnmp']['title'] = __s('Import new snmp devices', 'ocsinventoryng');
-      $menu['options']['importsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.import.php';
+      if (array_key_exists("plugin_ocsinventoryng_ocsservers_version_2_8", $_SESSION) && $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+         $menu['options']['importsnmp']['title'] = __s('Import new snmp devices', 'ocsinventoryng');
+         $menu['options']['importsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmprework.import.php';
+      } else {
+         $menu['options']['importsnmp']['title'] = __s('Import new snmp devices', 'ocsinventoryng');
+         $menu['options']['importsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.import.php';
+      }
 
       // Sync
-      $menu['options']['syncsnmp']['title'] = __s('Synchronize snmp devices already imported', 'ocsinventoryng');
-      $menu['options']['syncsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.sync.php';
-
+      if (array_key_exists("plugin_ocsinventoryng_ocsservers_version_2_8", $_SESSION) && $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+         $menu['options']['syncsnmp']['title'] = __s('Synchronize snmp devices already imported', 'ocsinventoryng');
+         $menu['options']['syncsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmprework.sync.php';
+      } else {
+         $menu['options']['syncsnmp']['title'] = __s('Synchronize snmp devices already imported', 'ocsinventoryng');
+         $menu['options']['syncsnmp']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.sync.php';
+      }
       // Link
-      $menu['options']['synclink']['title'] = __s('Link SNMP devices to existing GLPI objects', 'ocsinventoryng');
-      $menu['options']['synclink']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.link.php';
+      if (array_key_exists("plugin_ocsinventoryng_ocsservers_version_2_8", $_SESSION) && $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+         $menu['options']['synclink']['title'] = __s('Link SNMP devices to existing GLPI objects', 'ocsinventoryng');
+         $menu['options']['synclink']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmprework.link.php';
+      } else {
+         $menu['options']['synclink']['title'] = __s('Link SNMP devices to existing GLPI objects', 'ocsinventoryng');
+         $menu['options']['synclink']['page']  = '/plugins/ocsinventoryng/front/ocsngsnmp.link.php';
+      }
 
       //ipdiscover
       $menu['options']['importipdiscover']['title'] = __s('IPDiscover Import', 'ocsinventoryng');
@@ -229,7 +243,11 @@ class PluginOcsinventoryngMenu extends CommonGLPI {
       if ($item->getType() == __CLASS__) {
          $ocs    = new PluginOcsinventoryngOcsServer();
          $ipdisc = new PluginOcsinventoryngIpdiscoverOcslink();
-         $snmp   = new PluginOcsinventoryngSnmpOcslink();
+         if ($_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+            $snmp   = new PluginOcsinventoryngSnmplinkRework();
+         } else {
+            $snmp   = new PluginOcsinventoryngSnmpOcslink();
+         }
          switch ($tabnum) {
             case 0 :
                $ocs->setupMenu($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);

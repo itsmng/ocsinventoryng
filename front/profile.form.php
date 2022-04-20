@@ -49,6 +49,13 @@ if (isset($_POST["addocsserver"]) && ($_POST['plugin_ocsinventoryng_ocsservers_i
 // stock selected servers in session
 $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = PluginOcsinventoryngOcsServer::getFirstServer();
 
+$cfg_ocs = PluginOcsinventoryngOcsServer::getConfig($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+if ($cfg_ocs['ocs_version'] >= PluginOcsinventoryngOcsServer::OCS2_8_VERSION_LIMIT) {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = true;
+} else {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = false;
+}
+
 if (isset ($_POST['delete'])) {
    $input = [];
    foreach ($_POST['item'] as $id => $val) {

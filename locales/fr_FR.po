@@ -1971,6 +1971,47 @@ msgstr "Objet SNMP OCSNG"
 msgid "Update SNMP device"
 msgstr "Mise à jour de l'objet SNMP"
 
+#: inc/snmplinkrework.class.php:2567
+msgid "Snmp device imported from OCSNG"
+msgstr "Objet SNMP importé depuis OCS"
+
+#: inc/snmplinkrework.class.php:2781
+msgid "Snmp device updated from OCSNG"
+msgstr "Objet SNMP mis à jour depuis OCS"
+
+#: inc/snmplinkrework.class.php:2605
+msgid "Object"
+msgstr "Objet"
+
+#: inc/snmplinkrework.class.php:2605
+msgid "Choose a label"
+msgstr "Selectionnez un label"
+
+#: inc/snmplinkrework.class.php:2795
+#: inc/snmplinkrework.class.php:2852
+msgid "Delete"
+msgstr "Supprimer"
+
+#: inc/snmplinkrework.class.php:2795
+msgid "OCS snmp Type"
+msgstr "OCS Type SNMP"
+
+#: inc/snmplinkrework.class.php:2795
+msgid "GLPI field"
+msgstr "Champs GLPI"
+
+#: inc/snmplinkrework.class.php:2795
+msgid "OCS field"
+msgstr "Champs OCS"
+
+#: inc/snmplinkrework.class.php:2795
+msgid "No SNMP object to link"
+msgstr "Pas de nouveau type snmp à lier"
+
+#: inc/snmplinkrework.class.php:2631
+msgid "Transfer of OCS object %s to GLPI object %s"
+msgstr "Transfert de l'objet OCS %s vers l'objet GLPI %s"
+
 #: inc/software.class.php:303
 msgid "Software deleted by OCSNG synchronization"
 msgstr "Logiciel supprimé par la synchronisation OCSNG"

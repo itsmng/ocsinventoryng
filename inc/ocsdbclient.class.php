@@ -1432,6 +1432,55 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
 
    }
 
+   public function getSnmpTypes(){
+      $query = "SELECT * FROM snmp_types";
+
+      $request = $this->db->query($query);
+
+      while ($snmptypeid = $this->db->fetchAssoc($request)) {
+         $res[$snmptypeid['ID']] = $snmptypeid['TYPE_NAME'];
+      }
+
+      return $res;
+   }
+
+   public function getSnmpTypesIfReconciliation(){
+      $query = "SELECT t.* FROM snmp_types t JOIN snmp_configs c ON t.ID = c.TYPE_ID WHERE c.RECONCILIATION = 'YES' GROUP BY c.TYPE_ID";
+
+      $request = $this->db->query($query);
+
+      while ($snmptypeid = $this->db->fetchAssoc($request)) {
+         $res[$snmptypeid['ID']] = $snmptypeid['TYPE_NAME'];
+      }
+
+      return $res;
+   }
+
+   public function getSnmpTypeById($id){
+      $query = "SELECT * FROM snmp_types WHERE ID = $id";
+
+      $request = $this->db->query($query);
+
+      while ($snmptypeid = $this->db->fetchAssoc($request)) {
+         return $snmptypeid['TYPE_NAME'];
+      }
+   }
+
+   public function getSnmpLabelByType($type){
+      $query = "SELECT l.*, c.TYPE_ID, c.RECONCILIATION FROM `snmp_labels` l JOIN `snmp_configs` c ON l.ID = c.LABEL_ID WHERE c.TYPE_ID = $type";
+
+      $request = $this->db->query($query);
+
+      $res = [];
+
+      while ($snmptypeid = $this->db->fetchAssoc($request)) {
+         $id = $snmptypeid['TYPE_ID'] . "_" . $snmptypeid['ID'] . "_" . $snmptypeid['RECONCILIATION'];
+         $res[$id] = $snmptypeid['LABEL_NAME'];
+      }
+
+      return $res;
+   }
+
    /**
     * @param array $options
     *
@@ -1569,6 +1618,217 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
       }
 
       return $res;
+   }
+
+   /**
+    * @param array $options
+    *
+    * @return array
+    * @see PluginOcsinventoryngOcsClient::getSnmp()
+    *
+    */
+   public function getSnmpRework() {
+      global $DB, $CFG_GLPI;
+
+      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a GROUP BY `ocs_snmp_type_id`;";
+      $results = $DB->query($glpiQuery);
+
+      $snmpLinks = [];
+      if ($DB->numrows($results) > 0) {
+         $i = 0;
+         while ($data = $DB->fetchArray($results)) {
+            $snmpLinks[$i]['object'] = $data["object"];
+            $snmpLinks[$i]['typeId'] = $data['ocs_snmp_type_id'];
+            $snmpLinks[$i]['reconsiliation'] = explode(',', $data['reconciliation']);
+            $i++;
+         }
+      }
+      $res["TOTAL_COUNT"] = 0;
+
+      foreach ($snmpLinks as $key => $value) {
+         $queryTable = "SELECT * FROM snmp_types WHERE ID = " . $value['typeId'];
+         $table = $this->db->query($queryTable);
+
+         if ($this->db->numrows($table)) {
+            while ($snmpTypes = $this->db->fetchAssoc($table)) {
+               $snmpTable = $snmpTypes['TABLE_TYPE_NAME'];
+            }
+
+            $query   = "SELECT DISTINCT * FROM `$snmpTable`";
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+
+               $count = 0;
+               $snmpids = [];
+               while ($snmpid = $this->db->fetchAssoc($request)) {
+                  $where = " WHERE ";
+                  foreach ($value['reconsiliation'] as $reconciliationKey => $reconciliationValue) {
+                     if (isset($reconciliationValue) && $reconciliationValue != "") {
+                        $where .= $reconciliationValue . " = '" . $snmpid[$this->getOCSColumnNameByTableAndGlpiName($value['typeId'], $reconciliationValue)] . "' AND ";
+                        $haveReconsiliation = true;
+                     } else {
+                        $haveReconsiliation = false;
+                     }
+                  }
+                  if ($haveReconsiliation) {
+                     $where = rtrim($where, ' AND ');
+                  } else {
+                     $where = rtrim($where, ' WHERE ');
+                  }
+
+                  $queryExist = "SELECT * FROM `" . $value['object'] . "`" . $where;
+                  $requestExist = $DB->query($queryExist);
+                  if ($DB->numrows($requestExist) == 0 || !$haveReconsiliation) {
+                     $snmpids[] = $snmpid;
+                     $count++;
+                  }
+               }
+               $res["TOTAL_COUNT"] += $count;
+               $complete = 1;
+               $res["SNMP"][$value['typeId']] = $snmpids;
+               $snmpids = [];
+            }
+         }
+      }
+
+      return $res;
+   }
+
+   public function getSnmpReworkAlreadyImported(){
+      global $DB, $CFG_GLPI;
+
+      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a GROUP BY `ocs_snmp_type_id`;";
+      $results = $DB->query($glpiQuery);
+
+      $snmpLinks = [];
+      if ($DB->numrows($results) > 0) {
+         $i = 0;
+         while ($data = $DB->fetchArray($results)) {
+            $snmpLinks[$i]['object'] = $data["object"];
+            $snmpLinks[$i]['typeId'] = $data['ocs_snmp_type_id'];
+            $snmpLinks[$i]['reconsiliation'] = explode(',', $data['reconciliation']);
+            $i++;
+         }
+      }
+      $res["TOTAL_COUNT"] = 0;
+
+      foreach ($snmpLinks as $key => $value) {
+         $queryTable = "SELECT * FROM snmp_types WHERE ID = " . $value['typeId'];
+         $table = $this->db->query($queryTable);
+
+         if ($this->db->numrows($table)) {
+            while ($snmpTypes = $this->db->fetchAssoc($table)) {
+               $snmpTable = $snmpTypes['TABLE_TYPE_NAME'];
+            }
+
+            $query   = "SELECT DISTINCT * FROM `$snmpTable`";
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+               $snmpids = [];
+               $count = 0;
+               while ($snmpid = $this->db->fetchAssoc($request)) {
+                  $where = " WHERE ";
+                  foreach ($value['reconsiliation'] as $reconciliationKey => $reconciliationValue) {
+                     if (isset($reconciliationValue) && $reconciliationValue != "") {
+                        $where .= $reconciliationValue . " = '" . $snmpid[$this->getOCSColumnNameByTableAndGlpiName($value['typeId'], $reconciliationValue)] . "' AND ";
+                        $haveReconsiliation = true;
+                     } else {
+                        $haveReconsiliation = false;
+                     }
+                  }
+                  if ($haveReconsiliation) {
+                     $where = rtrim($where, ' AND ');
+                  } else {
+                     $where = rtrim($where, ' WHERE ');
+                  }
+
+                  if ($haveReconsiliation) {
+                     $queryExist = "SELECT * FROM `" . $value['object'] . "`" . $where;
+                     $requestExist = $DB->query($queryExist);
+                     if ($DB->numrows($requestExist) > 0) {
+                        $snmpids[] = $snmpid;
+                        $count++;
+                     }
+                  }
+
+               }
+               $res["TOTAL_COUNT"] += $count;
+               $res["SNMP"][$value['typeId']] = $snmpids;
+               $snmpids = [];
+            }
+         }
+      }
+
+      return $res;
+
+   }
+
+   public function getOCSColumnNameByTableAndGlpiName($tableId, $glpiName) {
+      global $DB, $CFG_GLPI;
+
+      $query = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE `ocs_snmp_type_id` = '$tableId' AND `glpi_col` = '$glpiName'";
+      $result = $DB->query($query);
+
+      if ($DB->numrows($result) > 0) {
+         while ($data = $DB->fetchAssoc($result)) {
+            $id = $data['ocs_snmp_label_id'];
+         }
+      }
+
+      if (isset($id)) {
+         $ocsQuery = "SELECT LABEL_NAME FROM `snmp_labels` WHERE ID = '$id'";
+         $result = $this->db->query($ocsQuery);
+   
+         if ($this->db->numrows($result) > 0) {
+            while ($data = $this->db->fetchAssoc($result)) {
+               $columnName = $data['LABEL_NAME'];
+            }
+         }
+   
+         return $columnName;
+      } else {
+         return false;
+      }
+
+   }
+
+   public function getSnmpValueByTableAndId($tableId, $valueId)
+   {
+      $queryTable = "SELECT * FROM snmp_types WHERE ID = $tableId";
+      $table = $this->db->query($queryTable);
+
+      $queryLabels = "SELECT * FROM snmp_labels";
+      $resultLabels = $this->db->query($queryLabels);
+
+      if ($this->db->numrows($resultLabels)) {
+         while ($labels = $this->db->fetchAssoc($resultLabels)) {
+            $snmpLabels[$labels['LABEL_NAME']] = $labels['ID'];
+         }
+      }
+
+      if ($this->db->numrows($table)) {
+         while ($snmpTypes = $this->db->fetchAssoc($table)) {
+            $snmpTable = $snmpTypes['TABLE_TYPE_NAME'];
+         }
+
+         $query   = "SELECT DISTINCT * FROM `$snmpTable` WHERE ID = $valueId";
+         $request = $this->db->query($query);
+
+         if ($this->db->numrows($request)) {
+            while ($res = $this->db->fetchAssoc($request)) {
+               foreach ($res as $key => $value) {
+                  if (isset($snmpLabels[$key])) {
+                     $result[$snmpLabels[$key]] = $value;
+                  } else {
+                     $result[$key] = $value;
+                  }
+               }
+            }
+         }
+         return $result;
+      }
    }
 
 }

@@ -68,7 +68,7 @@ if (isset($_POST["force_ocssnmp_resynch"])) {
    $params = [];
 
    foreach ($links as $key => $value) {
-      $params[$value['glpi_col']] = $value['ocs_snmp_type_id'] . "_" . $value['ocs_snmp_label_id'] . "_" . ($value['is_reconsiliation'] == 0 ? "" : 1);
+      $params[$value['glpi_col']] = $value['ocs_snmp_type_id'] . "_" . $value['ocs_snmp_label_id'] . "_" . ($value['is_reconsiliation'] == 0 ? "" : "Yes");
       $_GET['SelectGLPI'] = $value['object'];
       $_GET['SelectOCS'] = $value['ocs_snmp_type_id'];
    }

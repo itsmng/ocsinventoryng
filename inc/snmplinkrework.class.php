@@ -841,10 +841,12 @@ JAVASCRIPT;
       $ocsTable = $split[0];
       $ocsId = $split[1];
 
+      $ocs_srv = $plugin_ocsinventoryng_ocsservers_id;
+
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($plugin_ocsinventoryng_ocsservers_id);
       $cfg_ocs   = PluginOcsinventoryngOcsServer::getConfig($plugin_ocsinventoryng_ocsservers_id);
       
-      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable";
+      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable AND ocs_srv = $ocs_srv";
       $reconciliationData = $DB->query($queryReconciliation);
       if ($DB->numrows($reconciliationData)) {
          while ($lines = $DB->fetchAssoc($reconciliationData)) {
@@ -2114,10 +2116,12 @@ JAVASCRIPT;
       $ocsTable = $split[0];
       $ocsId = $split[1];
 
+      $ocs_srv = $plugin_ocsinventoryng_ocsservers_id;
+
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($plugin_ocsinventoryng_ocsservers_id);
       $cfg_ocs   = PluginOcsinventoryngOcsServer::getConfig($plugin_ocsinventoryng_ocsservers_id);
       
-      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable";
+      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable AND ocs_srv = $ocs_srv";
       $reconciliationData = $DB->query($queryReconciliation);
       if ($DB->numrows($reconciliationData)) {
          while ($lines = $DB->fetchAssoc($reconciliationData)) {
@@ -2266,10 +2270,26 @@ JAVASCRIPT;
 
       $target = $CFG_GLPI['root_doc'] . '/plugins/ocsinventoryng/front/snmplinkrework.form.php';
 
+      $glpi_types = [
+        'glpi_computers' => 'Computer',
+        'glpi_monitors' => 'Monitor',
+        'glpi_networkequipments' => 'NetworkEquipment',
+        'glpi_peripherals' => 'Peripheral',
+        'glpi_phones' => 'Phone',
+        'glpi_printers' => 'Printer',
+        'glpi_softwarelicenses' => 'SoftwareLicense',
+        'glpi_certificates' => 'Certificate',
+      ];
+
+      /*echo "<pre>" , var_dump($CFG_GLPI) , "</pre>";
       $glpi_types = [];
       foreach ($CFG_GLPI['asset_types'] as $key => $value) {
+         echo "<pre>" , var_dump($CFG_GLPI['glpitablesitemtype'][$value]) , "</pre>";
+         
          $glpi_types[$CFG_GLPI['glpitablesitemtype'][$value]] = $value;
       }
+
+      echo "<pre>" , var_dump($glpi_types) , "</pre>";*/
 
       $options = [];
 
@@ -2322,7 +2342,7 @@ JAVASCRIPT;
 
       $target = $CFG_GLPI['root_doc'] . '/plugins/ocsinventoryng/front/snmplinkrework.form.php';
 
-      $query = "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='glpi' AND `TABLE_NAME`='" . $_GET['SelectGLPI'] . "'";
+      $query = "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`=Database() AND `TABLE_NAME`='" . $_GET['SelectGLPI'] . "'";
       $result_glpi = $DB->query($query);
 
       $snmpLinks = [];
@@ -2422,6 +2442,7 @@ JAVASCRIPT;
    
    static function showSnmpLinks(){
       global $DB, $CFG_GLPI;
+
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
       $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
 
@@ -2564,6 +2585,17 @@ JAVASCRIPT;
       if (!$start) {
          $start = 0;
       }
+      
+      $glpi_types = [
+         'glpi_computers' => 'Computer',
+         'glpi_monitors' => 'Monitor',
+         'glpi_networkequipments' => 'NetworkEquipment',
+         'glpi_peripherals' => 'Peripheral',
+         'glpi_phones' => 'Phone',
+         'glpi_printers' => 'Printer',
+         'glpi_softwarelicenses' => 'SoftwareLicense',
+         'glpi_certificates' => 'Certificate',
+       ];
 
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
       $ocsResult = $ocsClient->getSnmpRework();
@@ -2637,7 +2669,7 @@ JAVASCRIPT;
                      //echo "<h3>" . $ocsClient->getSnmpTypeById($keysnmp) . " -> " . __($CFG_GLPI['glpiitemtypetables'][self::getGlpiObjectByOcsTypes($keysnmp)]) . "</h3>";
                      echo "<h3>" . sprintf(__('Transfer of OCS object %s to GLPI object %s',
                                  'ocsinventoryng'),
-                                 $ocsClient->getSnmpTypeById($keysnmp), __($CFG_GLPI['glpiitemtypetables'][self::getGlpiObjectByOcsTypes($keysnmp)]))
+                                 $ocsClient->getSnmpTypeById($keysnmp), __($glpi_types[self::getGlpiObjectByOcsTypes($keysnmp)]))
                                  . "</h3>";
                      
                      echo "</div>";
@@ -2647,7 +2679,7 @@ JAVASCRIPT;
                         $item_num = 1;
       
                         echo Search::showNewLine($output_type, $row_num % 2);
-                        echo Search::showItem($output_type, __($CFG_GLPI['glpiitemtypetables'][self::getGlpiObjectByOcsTypes($keysnmp)]), $item_num, $row_num);
+                        echo Search::showItem($output_type, __($glpi_types[self::getGlpiObjectByOcsTypes($keysnmp)]), $item_num, $row_num);
                         
                         foreach ($tab as $colName => $colValue) {
                            if ($colName != 'ID') {
@@ -2717,8 +2749,9 @@ JAVASCRIPT;
    static function getGlpiObjectByOcsTypes($ocsTypes)
    {
       global $DB, $CFG_GLPI;
+      $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
 
-      $query = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE `ocs_snmp_type_id` = $ocsTypes;";
+      $query = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE `ocs_snmp_type_id` = $ocsTypes AND ocs_srv = $ocs_srv;";
       $result = $DB->query($query);
 
       $glpiObject = "";
@@ -2801,6 +2834,17 @@ JAVASCRIPT;
             $end_display   = $start + $_SESSION["glpilist_limit"];
 
             $snmps = array_slice($ocsImported['SNMP'], $start, $_SESSION['glpilist_limit']);
+            
+            $glpi_types = [
+               'glpi_computers' => 'Computer',
+               'glpi_monitors' => 'Monitor',
+               'glpi_networkequipments' => 'NetworkEquipment',
+               'glpi_peripherals' => 'Peripheral',
+               'glpi_phones' => 'Phone',
+               'glpi_printers' => 'Printer',
+               'glpi_softwarelicenses' => 'SoftwareLicense',
+               'glpi_certificates' => 'Certificate',
+             ];
 
             echo "<div class='center'>";
             echo "<h2>" . __('Snmp device updated from OCSNG', 'ocsinventoryng') . "</h2>";
@@ -2836,7 +2880,7 @@ JAVASCRIPT;
                      echo "<div class='center'>";
                      echo "<h3>" . sprintf(__('Transfer of OCS object %s to GLPI object %s',
                                  'ocsinventoryng'),
-                                 $ocsClient->getSnmpTypeById($keysnmp), __($CFG_GLPI['glpiitemtypetables'][self::getGlpiObjectByOcsTypes($keysnmp)]))
+                                 $ocsClient->getSnmpTypeById($keysnmp), __($glpi_types[self::getGlpiObjectByOcsTypes($keysnmp)]))
                                  . "</h3>";
                      echo "</div>";
    
@@ -2856,7 +2900,7 @@ JAVASCRIPT;
                         $item_num = 1;
       
                         echo Search::showNewLine($output_type, $row_num % 2);
-                        echo Search::showItem($output_type, __($CFG_GLPI['glpiitemtypetables'][self::getGlpiObjectByOcsTypes($keysnmp)]), $item_num, $row_num);
+                        echo Search::showItem($output_type, __($glpi_types[self::getGlpiObjectByOcsTypes($keysnmp)]), $item_num, $row_num);
                         
                         foreach ($tab as $colName => $colValue) {
                            if ($colName != 'ID') {
@@ -2977,6 +3021,8 @@ JAVASCRIPT;
    static function deleteSnmp($id, $plugin_ocsinventoryng_ocsservers_id) {
       global $DB;
 
+      $ocs_srv = $_SESSION['plugin_ocsinventoryng_ocsservers_id'];
+
       $split = explode("_", $id);
       $ocsTable = $split[0];
       $ocsId = $split[1];
@@ -2984,7 +3030,7 @@ JAVASCRIPT;
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
       $data = $ocsClient->getSnmpValueByTableAndId($ocsTable, $ocsId);
 
-      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable";
+      $queryReconciliation = "SELECT *, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE ocs_snmp_type_id = $ocsTable AND ocs_srv = $ocs_srv";
       $reconciliationData = $DB->query($queryReconciliation);
       if ($DB->numrows($reconciliationData)) {
          while ($lines = $DB->fetchAssoc($reconciliationData)) {

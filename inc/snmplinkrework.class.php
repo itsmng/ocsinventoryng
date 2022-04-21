@@ -2598,7 +2598,7 @@ JAVASCRIPT;
        ];
 
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
-      $ocsResult = $ocsClient->getSnmpRework();
+      $ocsResult = $ocsClient->getSnmpRework($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
       //$ocsImported = $ocsClient->getSnmpReworkAlreadyImported();
 
       //echo "<pre>" , var_dump($ocsImported) , "</pre>";
@@ -2817,7 +2817,7 @@ JAVASCRIPT;
 
       // Get linked computer ids in GLPI
       $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
-      $ocsImported = $ocsClient->getSnmpReworkAlreadyImported();
+      $ocsImported = $ocsClient->getSnmpReworkAlreadyImported($_SESSION['plugin_ocsinventoryng_ocsservers_id']);
 
       if ($ocsImported["TOTAL_COUNT"] == 0) {
          echo "<div class='center b'>" . __('No new SNMP device to be updated', 'ocsinventoryng') . "</div>";

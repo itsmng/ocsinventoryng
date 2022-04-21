@@ -1627,10 +1627,10 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
     * @see PluginOcsinventoryngOcsClient::getSnmp()
     *
     */
-   public function getSnmpRework() {
+   public function getSnmpRework($ocs_srv = 1) {
       global $DB, $CFG_GLPI;
 
-      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a GROUP BY `ocs_snmp_type_id`;";
+      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE a.ocs_srv = $ocs_srv GROUP BY `ocs_snmp_type_id`;";
       $results = $DB->query($glpiQuery);
 
       $snmpLinks = [];
@@ -1695,10 +1695,10 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
       return $res;
    }
 
-   public function getSnmpReworkAlreadyImported(){
+   public function getSnmpReworkAlreadyImported($ocs_srv = 1){
       global $DB, $CFG_GLPI;
 
-      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a GROUP BY `ocs_snmp_type_id`;";
+      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE a.ocs_srv = $ocs_srv GROUP BY `ocs_snmp_type_id`;";
       $results = $DB->query($glpiQuery);
 
       $snmpLinks = [];

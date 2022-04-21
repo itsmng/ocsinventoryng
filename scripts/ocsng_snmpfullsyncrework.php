@@ -131,6 +131,8 @@ $fields["error_msg"] = '';
 //$fields["id"] = $tid;
 $tid = $threadid;
 
+var_dump($ocsservers_id);
+
 if ($ocsservers_id != -1) {
    $result = launchSync($tid, $ocsservers_id, $thread_nbr, $threadid, $fields, $config);
    if ($result) {
@@ -224,23 +226,23 @@ function importSNMPFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr,
    $ocsServerId = $cfg_ocs['id'];
    $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
 
-   $ocsResult = $ocsClient->getSnmpRework();
-   $ocsImported = $ocsClient->getSnmpReworkAlreadyImported();
-
-   //Import SNMP objects
-   foreach ($ocsResult['SNMP'] as $ID => $snmpids) {
-      foreach ($snmpids as $key => $snmpid) {
-         $id = $ID . "_" . $snmpid['ID'];
-         $action = PluginOcsinventoryngSnmplinkRework::importSnmp($id, $ocsServerId, []);
-         PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
-      }
-   }
+   $ocsResult = $ocsClient->getSnmpRework($ocsServerId);
+   $ocsImported = $ocsClient->getSnmpReworkAlreadyImported($ocsServerId);
    
    //Update SNMP objects
    foreach ($ocsImported['SNMP'] as $ID => $snmpids) {
       foreach ($snmpids as $key => $snmpid) {
          $id = $ID . "_" . $snmpid['ID'];
          $action = PluginOcsinventoryngSnmplinkRework::updateSnmp($id, $ocsServerId);
+         PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+      }
+   }
+
+   //Import SNMP objects
+   foreach ($ocsResult['SNMP'] as $ID => $snmpids) {
+      foreach ($snmpids as $key => $snmpid) {
+         $id = $ID . "_" . $snmpid['ID'];
+         $action = PluginOcsinventoryngSnmplinkRework::importSnmp($id, $ocsServerId, []);
          PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
       }
    }

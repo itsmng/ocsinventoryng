@@ -1,5 +1,3 @@
-ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers` ADD `import_bitlocker` TINYINT(1) NOT NULL DEFAULT '0';
-
 CREATE TABLE `glpi_plugin_ocsinventoryng_snmplinkreworks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `object` varchar(255) NOT NULL,

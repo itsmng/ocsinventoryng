@@ -476,8 +476,8 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
                }
 
                if (($check & $checksum) || $complete > 0) {
-                  $query   = "SELECT * 
-                              FROM `" . $table . "` 
+                  $query   = "SELECT *
+                              FROM `" . $table . "`
                               WHERE `ID` IN (" . implode(',', $ids) . ")";
                   $request = $this->db->query($query);
                   while ($hardware = $this->db->fetchAssoc($request)) {
@@ -485,6 +485,33 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
                         $computers[$hardware['ID']][strtoupper($table)][] = $hardware;
                      } else {
                         $computers[$hardware['ID']][strtoupper($table)] = $hardware;
+                     }
+                  }
+                  # Get subnet name
+                  $query = "SELECT NAME as SUB_NAME, NETID, HARDWARE_ID as ID
+                            FROM `subnet`
+                            LEFT JOIN `networks` ON networks.IPSUBNET = subnet.NETID
+                            WHERE networks.STATUS = 'Up' 
+                            AND HARDWARE_ID IN (" . implode(',', $ids) . ")";
+                  $request = $this->db->query($query);
+                  while ($subnet = $this->db->fetchAssoc($request)) {
+                     $computers[$subnet['ID']][strtoupper($table)]['SUB_NAME'] = $subnet['SUB_NAME'];
+                     $computers[$subnet['ID']][strtoupper($table)]['NETID'] = $subnet['NETID'];
+                  }
+               }
+               break;
+            case "networks" :
+               if (($check & $checksum) || $complete > 0) {
+                  $query   = "SELECT * , subnet.NAME as SUBNET_NAME
+                             FROM `" . $table . "` 
+                             LEFT JOIN subnet ON subnet.NETID = ".$table.".IPSUBNET
+                             WHERE `HARDWARE_ID` IN (" . implode(',', $ids) . ")";
+                  $request = $this->db->query($query);
+                  while ($reg = $this->db->fetchAssoc($request)) {
+                     if ($multi) {
+                        $computers[$reg['HARDWARE_ID']][strtoupper($table)][] = $reg;
+                     } else {
+                        $computers[$reg['HARDWARE_ID']][strtoupper($table)] = $reg;
                      }
                   }
                }
@@ -1072,7 +1099,6 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
          }
 
          $res["COMPUTERS"] = $this->getComputerSections($hardwareids, $checksum, $wanted, $plugins, $complete);
-
       } else {
 
          $res = [];

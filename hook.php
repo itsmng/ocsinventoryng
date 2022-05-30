@@ -214,6 +214,14 @@ function plugin_ocsinventoryng_install() {
          $DB->queryOrDie($query, "1.1.0 update table glpi_plugin_ocsinventoryng_ocslinks");
       }
 
+      if ($DB->tableExists("glpi_plugin_ocsinventoryng_ocslinks")
+          && !$DB->fieldExists('glpi_plugin_ocsinventoryng_ocslinks', 'net_name')) {
+
+         $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ocslinks` 
+               ADD `net_name` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT NULL;";
+         $DB->queryOrDie($query, "1.7.5 update table glpi_plugin_ocsinventoryng_ocslinks");
+      }
+
       if ($DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
           && !$DB->fieldExists('glpi_plugin_ocsinventoryng_ocsservers', 'import_device_bios')) {
 

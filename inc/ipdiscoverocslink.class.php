@@ -301,25 +301,37 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
          return [];
       } else {
          $macAdresses  = self::parseArrayToString($knownMacAdresses);
-         $percentQuery = " SELECT * from (select inv.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', ipdiscover.c as 'IPDISCOVER', ident.c as 'IDENTIFIED', inv.name as 'NAME', CASE WHEN ident.c IS NULL and ipdiscover.c IS NULL THEN 100 WHEN non_ident.c IS NULL and ipdiscover.c IS NOT NULL THEN 100 WHEN ident.c IS NULL THEN round(inv.c * 100 / (non_ident.c + inv.c),1) ELSE round((inv.c + ident.c) * 100 / (non_ident.c + inv.c),1) END as 'PERCENT' 
-from (SELECT COUNT(DISTINCT hardware_id) as c, 'IPDISCOVER' as TYPE, tvalue as RSX FROM devices WHERE name = 'IPDISCOVER' and tvalue in (" . $Nets . ")
-GROUP BY tvalue) ipdiscover 
-right join 
-(SELECT count(distinct(hardware_id)) as c, 'INVENTORIED' as TYPE, ipsubnet as RSX, subnet.name as name FROM networks left join subnet on networks.ipsubnet = subnet.netid WHERE ipsubnet in (" . $Nets . ")
-and status = 'Up' GROUP BY ipsubnet) inv on ipdiscover.RSX = inv.RSX left join (SELECT COUNT(DISTINCT mac) as c, 'IDENTIFIED' as TYPE, netid as RSX FROM netmap WHERE mac IN (SELECT DISTINCT(macaddr) FROM network_devices ) and netid in (" . $Nets . ")
-GROUP BY netid) ident on ipdiscover.RSX = ident.RSX left join (SELECT COUNT(DISTINCT mac) as c, 'NON IDENTIFIED' as TYPE, netid as RSX FROM netmap n LEFT JOIN networks ns ON ns.macaddr = n.mac WHERE n.mac NOT IN (SELECT DISTINCT(macaddr) FROM network_devices) and (ns.macaddr IS NULL OR ns.IPSUBNET <> n.netid) and n.netid in (" . $Nets . ")
-GROUP BY netid) non_ident on non_ident.RSX = inv.RSX )nonidentified order by IP asc";
+         $percentQuery = "SELECT * FROM ( SELECT n.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', ipdiscover.c as 'IPDISCOVER', ident.c as 'IDENTIFIED', inv.name as 'NAME', n.TAG, 
+         n.PASS, CASE WHEN ident.c IS NULL and ipdiscover.c IS NULL THEN 100 WHEN non_ident.c IS NULL and ipdiscover.c IS NOT NULL THEN 100 WHEN ident.c IS NULL THEN round(inv.c * 100 / (non_ident.c + inv.c),1) 
+         ELSE round((inv.c + ident.c) * 100 / (non_ident.c + inv.c),1) END as 'PERCENT' FROM ( SELECT netid AS RSX, CONCAT(netid,';',ifnull(tag,'')) AS PASS, 
+         TAG FROM netmap WHERE netid IN (" . $Nets . ") GROUP BY netid ) n LEFT JOIN (
+         SELECT COUNT(DISTINCT d.hardware_id) as c, 'IPDISCOVER' as TYPE, d.tvalue as RSX, a.tag, CONCAT(d.tvalue,';',ifnull(a.tag,'')) as PASS FROM devices d
+         LEFT JOIN accountinfo a ON a.HARDWARE_ID = d.HARDWARE_ID WHERE d.name = 'IPDISCOVER' and d.tvalue in (" . $Nets . ") GROUP BY d.tvalue
+         ) ipdiscover ON n.RSX=ipdiscover.RSX LEFT JOIN ( SELECT count(DISTINCT h.ID) as c, 'INVENTORIED' as TYPE, n.ipsubnet as RSX, s.TAG as TAG, 
+         CONCAT(n.ipsubnet,';',ifnull(s.tag,'')) as PASS, s.NAME as name FROM networks n LEFT JOIN hardware h ON h.ID = n.HARDWARE_ID LEFT JOIN accountinfo a ON a.HARDWARE_ID = h.ID 
+         LEFT JOIN subnet s ON a.TAG = s.TAG OR s.NETID = n.IPSUBNET WHERE ipsubnet in (" . $Nets . ") and status = 'Up' GROUP BY n.ipsubnet
+         ) inv ON n.RSX=inv.RSX LEFT JOIN ( SELECT COUNT(DISTINCT mac) as c, 'IDENTIFIED' as TYPE, netid as RSX, TAG, CONCAT(netid,';',ifnull(tag,'')) as PASS
+         FROM netmap WHERE mac IN (SELECT DISTINCT(macaddr) FROM network_devices ) and netid in (" . $Nets . ") GROUP BY netid) ident ON n.RSX=ident.RSX 
+         LEFT JOIN (SELECT COUNT(DISTINCT mac) as c, 'NON IDENTIFIED' as TYPE, n.netid as RSX, n.TAG, CONCAT(n.netid,';',ifnull(n.tag,'')) as PASS FROM netmap n
+         LEFT JOIN networks ns ON ns.macaddr = n.mac LEFT JOIN accountinfo a ON a.TAG = n.TAG WHERE n.mac NOT IN (SELECT DISTINCT(macaddr) FROM network_devices
+         ) and (ns.macaddr IS NULL) and n.netid in (" . $Nets . ") GROUP BY netid) non_ident on n.RSX=non_ident.RSX) nonidentified
+         ORDER BY IP asc";
          //this is for the right percentage
          $percent = $DBOCS->query($percentQuery);
 
-         $query = " SELECT * from (select inv.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', ipdiscover.c as 'IPDISCOVER', ident.c as 'IDENTIFIED', inv.name as 'NAME'
-from (SELECT COUNT(DISTINCT hardware_id) as c, 'IPDISCOVER' as TYPE, tvalue as RSX FROM devices WHERE name = 'IPDISCOVER' and tvalue in (" . $Nets . ")
-GROUP BY tvalue) ipdiscover 
-right join 
-(SELECT count(distinct(hardware_id)) as c, 'INVENTORIED' as TYPE, ipsubnet as RSX, subnet.name as name FROM networks left join subnet on networks.ipsubnet = subnet.netid WHERE ipsubnet in (" . $Nets . ")
-and status = 'Up' GROUP BY ipsubnet) inv on ipdiscover.RSX = inv.RSX left join (SELECT COUNT(DISTINCT mac) as c, 'IDENTIFIED' as TYPE, netid as RSX FROM netmap WHERE mac IN (SELECT DISTINCT(macaddr) FROM network_devices WHERE `network_devices`.`MACADDR` NOT IN($macAdresses)) and netid in (" . $Nets . ")
-GROUP BY netid) ident on ipdiscover.RSX = ident.RSX left join (SELECT COUNT(DISTINCT mac) as c, 'NON IDENTIFIED' as TYPE, netid as RSX FROM netmap n LEFT JOIN networks ns ON ns.macaddr = n.mac WHERE n.mac NOT IN (SELECT DISTINCT(macaddr) FROM network_devices) and (ns.macaddr IS NULL OR ns.IPSUBNET <> n.netid) and n.netid in (" . $Nets . ")
-GROUP BY netid) non_ident on non_ident.RSX = inv.RSX )nonidentified order by IP asc";
+         $query = "SELECT * FROM ( SELECT n.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', ipdiscover.c as 'IPDISCOVER', ident.c as 'IDENTIFIED', inv.name as 'NAME', n.TAG, 
+         n.PASS FROM ( SELECT netid AS RSX, CONCAT(netid,';',ifnull(tag,'')) AS PASS, TAG FROM netmap WHERE netid IN (" . $Nets . ") GROUP BY netid ) n LEFT JOIN (
+         SELECT COUNT(DISTINCT d.hardware_id) as c, 'IPDISCOVER' as TYPE, d.tvalue as RSX, a.tag, CONCAT(d.tvalue,';',ifnull(a.tag,'')) as PASS FROM devices d
+         LEFT JOIN accountinfo a ON a.HARDWARE_ID = d.HARDWARE_ID WHERE d.name = 'IPDISCOVER' and d.tvalue in (" . $Nets . ") GROUP BY d.tvalue
+         ) ipdiscover ON n.RSX=ipdiscover.RSX LEFT JOIN ( SELECT count(DISTINCT h.ID) as c, 'INVENTORIED' as TYPE, n.ipsubnet as RSX, s.TAG as TAG, 
+         CONCAT(n.ipsubnet,';',ifnull(s.tag,'')) as PASS, s.name as name FROM networks n LEFT JOIN hardware h ON h.ID = n.HARDWARE_ID LEFT JOIN accountinfo a ON a.HARDWARE_ID = h.ID 
+         LEFT JOIN subnet s ON a.TAG = s.TAG OR s.NETID = n.IPSUBNET WHERE ipsubnet in (" . $Nets . ") and status = 'Up' GROUP BY n.ipsubnet
+         ) inv ON n.RSX=inv.RSX LEFT JOIN ( SELECT COUNT(DISTINCT mac) as c, 'IDENTIFIED' as TYPE, netid as RSX, TAG, CONCAT(netid,';',ifnull(tag,'')) as PASS
+         FROM netmap WHERE mac IN (SELECT DISTINCT(macaddr) FROM network_devices ) and netid in (" . $Nets . ") GROUP BY netid) ident ON n.RSX=ident.RSX 
+         LEFT JOIN (SELECT COUNT(DISTINCT mac) as c, 'NON IDENTIFIED' as TYPE, n.netid as RSX, n.TAG, CONCAT(n.netid,';',ifnull(n.tag,'')) as PASS FROM netmap n
+         LEFT JOIN networks ns ON ns.macaddr = n.mac LEFT JOIN accountinfo a ON a.TAG = n.TAG WHERE n.mac NOT IN (SELECT DISTINCT(macaddr) FROM network_devices
+         ) and (ns.macaddr IS NULL) and n.netid in (" . $Nets . ") GROUP BY netid) non_ident on n.RSX=non_ident.RSX) nonidentified
+         ORDER BY IP asc";
 
          $result = $DBOCS->query($query);
          while ($details = $DBOCS->fetchAssoc($result)) {

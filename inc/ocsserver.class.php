@@ -143,6 +143,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab('PluginOcsinventoryngSnmpOcslink', $ong, $options);
+      $this->addStandardTab('PluginOcsinventoryngIpdiscoverOcslinkrework', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
       return $ong;
 

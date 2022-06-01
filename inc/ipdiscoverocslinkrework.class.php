@@ -109,7 +109,12 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
 
         return $types;
     }
-
+    
+    /**
+     * getItemType
+     *
+     * @return void
+     */
     private function getItemType() {
         return [
             '0' => '-----',
@@ -255,7 +260,13 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         // Data
         echo "</table></div>";
     }
-
+    
+    /**
+     * checkIfConfExists
+     *
+     * @param  mixed $ID
+     * @return void
+     */
     public function checkIfConfExists($ID) {
         global $DB;
 
@@ -269,7 +280,13 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt', ['plugin_ocsinventoryng_ocsservers_id' => $ID, 'ocs_type' => $ocstype]);
         return count($req);
     }
-
+    
+    /**
+     * insertNewIdtConf
+     *
+     * @param  mixed $post
+     * @return void
+     */
     public function insertNewIdtConf($post) {
         global $DB;
 
@@ -281,7 +298,13 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
             ]
         );
     }
-
+    
+    /**
+     * insertNewConf
+     *
+     * @param  mixed $post
+     * @return void
+     */
     public function insertNewConf($post) {
         global $DB;
 
@@ -312,7 +335,13 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
             ]
         );
     }
-
+    
+    /**
+     * updateExistingConf
+     *
+     * @param  mixed $post
+     * @return void
+     */
     public function updateExistingConf($post) {
         global $DB;
 
@@ -346,7 +375,13 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
             ]
         );
     }
-
+    
+    /**
+     * removeIdtConf
+     *
+     * @param  mixed $id
+     * @return void
+     */
     public function removeIdtConf($id) {
         global $DB;
         

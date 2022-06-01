@@ -549,6 +549,31 @@ function plugin_ocsinventoryng_install() {
          }
       }
 
+      /******************* Migration 1.7.5 *******************/
+      // Update 1.7.5
+      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv")) {
+         $query = "CREATE TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `ocs_type` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `link_field` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `plugin_ocsinventoryng_ocsservers_id` INT(11) NOT NULL DEFAULT '0',
+             PRIMARY KEY (`id`)
+             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+         $DB->queryOrDie($query, "1.7.5 add table glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv");
+      }
+
+      // Update 1.7.5
+      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt")) {
+         $query = "CREATE TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `ocs_type` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `glpi_obj` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `plugin_ocsinventoryng_ocsservers_id` INT(11) NOT NULL DEFAULT '0',
+             PRIMARY KEY (`id`)
+             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+         $DB->queryOrDie($query, "1.7.5 add table glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt");
+      }
+
    }
    //Notifications
    addNotifications();
@@ -649,7 +674,9 @@ function plugin_ocsinventoryng_uninstall() {
               "glpi_plugin_ocsinventoryng_teamviewers",
               "glpi_plugin_ocsinventoryng_notificationstates",
               "glpi_plugin_ocsinventoryng_ocsalerts",
-              "glpi_plugin_ocsinventoryng_snmplinkreworks"];
+              "glpi_plugin_ocsinventoryng_snmplinkreworks",
+              "glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt",
+              "glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");

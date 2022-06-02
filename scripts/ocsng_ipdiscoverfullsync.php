@@ -32,25 +32,25 @@ ini_set("max_execution_time", "0");
 
 # Converts cli parameter to web parameter for compatibility
 if (isset ($_SERVER["argv"]) && !isset ($argv)) {
-   $argv = $_SERVER["argv"];
-}
-if ($argv) {
-   for ($i = 1; $i < count($argv); $i++) {
-      $it = explode("=", $argv[$i], 2);
-      $it[0] = preg_replace('/^--/', '', $it[0]);
-      if(isset($it[1])) {
-         $_GET[$it[0]] = $it[1];
-      } else {
-         $_GET[$it[0]] = 1;
-      }
-   }
-}
+    $argv = $_SERVER["argv"];
+ }
+ if ($argv) {
+    for ($i = 1; $i < count($argv); $i++) {
+       $it = explode("=", $argv[$i], 2);
+       $it[0] = preg_replace('/^--/', '', $it[0]);
+       if(isset($it[1])) {
+          $_GET[$it[0]] = $it[1];
+       } else {
+          $_GET[$it[0]] = 1;
+       }
+    }
+ }
+ 
+ // Can't run on MySQL replicate
+ $USEDBREPLICATE = 0;
+ $DBCONNECTION_REQUIRED = 1;
 
-// Can't run on MySQL replicate
-$USEDBREPLICATE = 0;
-$DBCONNECTION_REQUIRED = 1;
-
-// MASS IMPORT for OCSNG
+ // MASS IMPORT for OCSNG
 include('../../../inc/includes.php');
 
 $_SESSION["glpicronuserrunning"] = $_SESSION["glpiname"] = 'ocsinventoryng';
@@ -83,7 +83,6 @@ $fields = array();
 
 //Get script configuration
 $config = new PluginOcsinventoryngConfig();
-//$notimport = new PluginOcsinventoryngNotimportedcomputer();
 $config->getFromDB(1);
 
 if (!isset ($_GET["ocs_server_id"]) || ($_GET["ocs_server_id"] == '')) {
@@ -115,6 +114,22 @@ if (isset($_GET["thread_nbr"]) || isset ($_GET["thread_id"])) {
 if (isset ($_GET["process_id"])) {
    $fields["processid"] = $_GET["process_id"];
 }
+
+$ipd_to_inventory = array(
+    "full",
+    "identified",
+    "noninventoried"
+);
+
+if(isset($_GET["ipd_to_inventory"]) && in_array($_GET["ipd_to_inventory"], $ipd_to_inventory)) {
+    $fields["ipd_to_inventory"] = $_GET["ipd_to_inventory"];
+} elseif(isset($_GET["ipd_to_inventory"]) && !in_array($_GET["ipd_to_inventory"], $ipd_to_inventory)) {
+    echo("ipd_to_inventory invalid: ipd_to_inventory must be full, identified or noninventoried\n\n");
+    exit (1);
+} else {
+    $fields["ipd_to_inventory"] = "full";
+}
+
 $thread = new PluginOcsinventoryngThread();
 
 //Prepare datas to log in db
@@ -122,44 +137,32 @@ $fields["start_time"] = date("Y-m-d H:i:s");
 $fields["threadid"] = $threadid;
 $fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_STARTED;
 $fields["plugin_ocsinventoryng_ocsservers_id"] = $ocsservers_id;
-$fields["synchronized_snmp_number"] = 0;
-$fields["notupdated_snmp_number"] = 0;
+$fields["synchronized_ipd_number"] = 0;
+$fields["notupdated_ipd_number"] = 0;
 $fields["total_number_machines"] = 0;
 $fields["error_msg"] = '';
-//TODO create thread & update it ?
-//$tid = $thread->add($fields);
-//$fields["id"] = $tid;
 $tid = $threadid;
 
 if ($ocsservers_id != -1) {
-   $result = launchSync($tid, $ocsservers_id, $thread_nbr, $threadid, $fields, $config);
-   if ($result) {
-      $fields = $result;
-   }
+    $result = launchSync($tid, $ocsservers_id, $thread_nbr, $threadid, $fields, $config);
+    if ($result) {
+        $fields = $result;
+    }
 } else {
-   //Import from all the OCS servers
-   $query = "SELECT `id`, `name`
-                FROM `glpi_plugin_ocsinventoryng_ocsservers`
-                WHERE `is_active`
-                  AND `use_massimport`";
-   $res = $DB->query($query);
+    //Import from all the OCS servers
+    $query = "SELECT `id`, `name`
+                    FROM `glpi_plugin_ocsinventoryng_ocsservers`
+                    WHERE `is_active`
+                    AND `use_massimport`";
+    $res = $DB->query($query);
 
-   while ($ocsservers = $DB->fetchArray($res)) {
-      $result = launchSync($tid, $ocsservers["id"], $thread_nbr, $threadid, $fields, $config);
-      if ($result) {
-         $fields = $result;
-      }
-   }
+    while ($ocsservers = $DB->fetchArray($res)) {
+        $result = launchSync($tid, $ocsservers["id"], $thread_nbr, $threadid, $fields, $config);
+        if ($result) {
+            $fields = $result;
+        }
+    }
 }
-
-//Write in db all the informations about this thread
-// TODO create thread & update it ?
-//$fields["total_number_machines"] = $fields["synchronized_snmp_number"]
-//   + $fields["notupdated_snmp_number"];
-//$fields["end_time"] = date("Y-m-d H:i:s");
-//$fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_FINISHED;
-//$fields["error_msg"] = "";
-//$thread->update($fields);
 
 echo "\tThread #" . $threadid . ": done!!\n";
 echo "=====================================================\n";
@@ -175,8 +178,7 @@ echo "=====================================================\n";
  *
  * @return bool|mixed
  */
-function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields, $config)
-{
+function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields, $config) {
 
    $server = new PluginOcsinventoryngServer();
    $ocsserver = new PluginOcsinventoryngOcsServer();
@@ -193,62 +195,48 @@ function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields
 
    $cfg_ocs = PluginOcsinventoryngOcsServer::getConfig($ocsservers_id);
 
-   return importSNMPFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr,
-      $threadid, $fields, $config);
+   return importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config);
 }
 
 
-/**
- * @param $threads_id
- * @param $cfg_ocs
- * @param $server
- * @param $thread_nbr
- * @param $threadid
- * @param $fields
- * @param $config
- *
- * @return mixed
- */
-function importSNMPFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr,
-                                 $threadid, $fields, $config)
-{
-   global $DB;
 
-   echo "\tThread #" . $threadid . ": synchronize SNMP objects from server: '" . $cfg_ocs["name"] . "'\n";
 
-   $multiThread = false;
-   if ($threadid != -1 && $thread_nbr > 1) {
-      $multiThread = true;
-   }
+function importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config) {
+    global $DB;
 
-   $ocsServerId = $cfg_ocs['id'];
-   $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
+    echo "\tThread #" . $threadid . ": synchronize IpDiscover objects from server: '" . $cfg_ocs["name"] . "'\n";
 
-   $ocsResult = $ocsClient->getSnmpRework($ocsServerId);
-   $ocsImported = $ocsClient->getSnmpReworkAlreadyImported($ocsServerId);
-   
-   //Update SNMP objects
-   foreach ($ocsImported['SNMP'] as $ID => $snmpids) {
-      foreach ($snmpids as $key => $snmpid) {
-         $id = $ID . "_" . $snmpid['ID'];
-         $action = PluginOcsinventoryngSnmplinkRework::updateSnmp($id, $ocsServerId);
-         PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
-      }
-   }
+    $multiThread = false;
+    if ($threadid != -1 && $thread_nbr > 1) {
+        $multiThread = true;
+    }
 
-   //Import SNMP objects
-   foreach ($ocsResult['SNMP'] as $ID => $snmpids) {
-      foreach ($snmpids as $key => $snmpid) {
-         $id = $ID . "_" . $snmpid['ID'];
-         $action = PluginOcsinventoryngSnmplinkRework::importSnmp($id, $ocsServerId, []);
-         PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
-      }
-   }
-   $nb = count($ocsImported['SNMP']);
+    $ocsServerId = $cfg_ocs['id'];
+    $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
 
-   echo "\tThread #$threadid: $nb object(s)\n";
+    $ocsResult = $ocsClient->getIpDiscover($ocsServerId, $fields["ipd_to_inventory"]);
 
-   $fields["total_number_machines"] += $nb;
+    /*$ocsImported = $ocsClient->getSnmpReworkAlreadyImported($ocsServerId);
+    
+    //Update SNMP objects
+    foreach ($ocsImported['SNMP'] as $ID => $snmpids) {
+        foreach ($snmpids as $key => $snmpid) {
+            $id = $ID . "_" . $snmpid['ID'];
+            $action = PluginOcsinventoryngSnmplinkRework::updateSnmp($id, $ocsServerId);
+            PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+        }
+    }*/
 
-   return $fields;
+    //Import SNMP objects
+    foreach ($ocsResult['IPDISCOVER'] as $mac => $ipdDatas) {
+        $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($ipdDatas, $ocsServerId, ["inventory_type" => $fields["ipd_to_inventory"]]);
+        //PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+    }
+    /*$nb = count($ocsImported['SNMP']);
+
+    echo "\tThread #$threadid: $nb object(s)\n";
+
+    $fields["total_number_machines"] += $nb;
+
+    return $fields;*/
 }

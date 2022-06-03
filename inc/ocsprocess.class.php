@@ -94,6 +94,8 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
    const IPDISCOVER_NOTUPDATED    = 16; //IPDISCOVER should not be updated, nothing to do
    const IPDISCOVER_FAILED_IMPORT = 17; //IPDISCOVER cannot be imported - no itemtype
    const IPDISCOVER_SYNCHRONIZED  = 18; //IPDISCOVER is synchronized
+   const IPDISCOVER_REMOVED       = 19; //IPDISCOVER is removed
+   const IPDISCOVER_FAILED_REMOVE = 20; //IPDISCOVER failed to remove item
 
    /**
     *
@@ -1575,7 +1577,9 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
          $stats = ['imported_ipdiscover_number'        => __('IPDISCOVER objects imported', 'ocsinventoryng'),
                    'synchronized_ipdiscover_number'    => __('IPDISCOVER objects synchronized', 'ocsinventoryng'),
                    'notupdated_ipdiscover_number'      => __('IPDISCOVER objects not updated', 'ocsinventoryng'),
-                   'failed_imported_ipdiscover_number' => __("IPDISCOVER objects not imported", 'ocsinventoryng')];
+                   'failed_imported_ipdiscover_number' => __("IPDISCOVER objects not imported", 'ocsinventoryng'),
+                   'removed_ipdiscover_number'         => __("IPDISCOVER object removed", 'ocsinventoryng'),
+                   'failed_removed_ipdiscover_number'  => __("IPDISCOVER object not removed", 'ocsinventoryng')];
       }
 
       return $stats;
@@ -1658,6 +1662,14 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
 
          case self::IPDISCOVER_SYNCHRONIZED:
             $statistics["synchronized_ipdiscover_number"]++;
+            break;
+
+         case self::IPDISCOVER_REMOVED:
+            $statistics["removed_ipdiscover_number"]++;
+            break;
+
+         case self::IPDISCOVER_FAILED_REMOVE:
+            $statistics["failed_removed_ipdiscover_number"]++;
             break;
       }
    }

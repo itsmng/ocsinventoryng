@@ -137,14 +137,19 @@ $fields["start_time"] = date("Y-m-d H:i:s");
 $fields["threadid"] = $threadid;
 $fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_STARTED;
 $fields["plugin_ocsinventoryng_ocsservers_id"] = $ocsservers_id;
-$fields["synchronized_ipd_number"] = 0;
-$fields["notupdated_ipd_number"] = 0;
+$fields["imported_ipdiscover_number"] = 0;
+$fields["notupdated_ipdiscover_number"] = 0;
+$fields["failed_imported_ipdiscover_number"] = 0;
+$fields["synchronized_ipdiscover_number"] = 0;
+$fields["removed_ipdiscover_number"] = 0;
+$fields["failed_removed_ipdiscover_number"] = 0;
 $fields["total_number_machines"] = 0;
 $fields["error_msg"] = '';
+$force = (isset($_GET['force'])) ? true : false;
 $tid = $threadid;
 
 if ($ocsservers_id != -1) {
-    $result = launchSync($tid, $ocsservers_id, $thread_nbr, $threadid, $fields, $config);
+    $result = launchSync($tid, $ocsservers_id, $thread_nbr, $threadid, $fields, $config, $force);
     if ($result) {
         $fields = $result;
     }
@@ -157,7 +162,7 @@ if ($ocsservers_id != -1) {
     $res = $DB->query($query);
 
     while ($ocsservers = $DB->fetchArray($res)) {
-        $result = launchSync($tid, $ocsservers["id"], $thread_nbr, $threadid, $fields, $config);
+        $result = launchSync($tid, $ocsservers["id"], $thread_nbr, $threadid, $fields, $config, $force);
         if ($result) {
             $fields = $result;
         }
@@ -178,7 +183,7 @@ echo "=====================================================\n";
  *
  * @return bool|mixed
  */
-function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields, $config) {
+function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields, $config, $force = false) {
 
    $server = new PluginOcsinventoryngServer();
    $ocsserver = new PluginOcsinventoryngOcsServer();
@@ -195,48 +200,85 @@ function launchSync($threads_id, $ocsservers_id, $thread_nbr, $threadid, $fields
 
    $cfg_ocs = PluginOcsinventoryngOcsServer::getConfig($ocsservers_id);
 
-   return importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config);
+   return importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config, $force);
 }
 
 
 
 
-function importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config) {
-    global $DB;
+function importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $threadid, $fields, $config, $force = false) {
+   global $DB;
 
-    echo "\tThread #" . $threadid . ": synchronize IpDiscover objects from server: '" . $cfg_ocs["name"] . "'\n";
+   echo "\tThread #" . $threadid . ": synchronize IpDiscover objects from server: '" . $cfg_ocs["name"] . "'\n";
 
-    $multiThread = false;
-    if ($threadid != -1 && $thread_nbr > 1) {
-        $multiThread = true;
-    }
+   $multiThread = false;
+   if ($threadid != -1 && $thread_nbr > 1) {
+      $multiThread = true;
+   }
 
-    $ocsServerId = $cfg_ocs['id'];
-    $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
+   $ocsServerId = $cfg_ocs['id'];
+   $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
 
-    $ocsResult = $ocsClient->getIpDiscover($ocsServerId, $fields["ipd_to_inventory"]);
-
-    /*$ocsImported = $ocsClient->getSnmpReworkAlreadyImported($ocsServerId);
-    
-    //Update SNMP objects
-    foreach ($ocsImported['SNMP'] as $ID => $snmpids) {
-        foreach ($snmpids as $key => $snmpid) {
-            $id = $ID . "_" . $snmpid['ID'];
-            $action = PluginOcsinventoryngSnmplinkRework::updateSnmp($id, $ocsServerId);
+   $ocsResult = $ocsClient->getIpDiscover($ocsServerId, $fields["ipd_to_inventory"]);
+   $ocsImported = $ocsClient->getIpDiscoverAlreadyImported($ocsServerId, $fields["ipd_to_inventory"], $force);
+   
+   //Update Ipd objects
+   if($ocsImported['TOTAL_COUNT'] != 0) {
+      foreach ($ocsImported['IPDISCOVER'] as $mac => $ipdDatas) {
+         if($fields["ipd_to_inventory"] != 'full') {
+            $action = PluginOcsinventoryngIpdiscoverOcslinkrework::updateIpDiscover($ipdDatas, $ocsServerId, ["inventory_type" => $fields["ipd_to_inventory"]]);
             PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
-        }
-    }*/
+         } else {
+            foreach($ipdDatas as $addmac => $ipdDatasBis) {
+               $action = PluginOcsinventoryngIpdiscoverOcslinkrework::updateIpDiscover($ipdDatasBis, $ocsServerId, ["inventory_type" => $mac]);
+               PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+            }
+         }  
+      }
+   }
 
-    //Import SNMP objects
-    foreach ($ocsResult['IPDISCOVER'] as $mac => $ipdDatas) {
-        $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($ipdDatas, $ocsServerId, ["inventory_type" => $fields["ipd_to_inventory"]]);
-        //PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
-    }
-    /*$nb = count($ocsImported['SNMP']);
+   // Remove before insert
+   if(isset($ocsImported['UNKNOW_IPD'])) {
+      foreach($ocsImported['UNKNOW_IPD'] as $mac) {
+         $action = PluginOcsinventoryngIpdiscoverOcslinkrework::removeIpDiscover($mac, $ocsServerId);
+         PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+      }
+   }
 
-    echo "\tThread #$threadid: $nb object(s)\n";
+   //Import Ipd objects
+   if($ocsResult['TOTAL_COUNT'] != 0) {
+      foreach ($ocsResult['IPDISCOVER'] as $mac => $ipdDatas) {
+         if($fields["ipd_to_inventory"] != 'full') {
+            $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($ipdDatas, $ocsServerId, ["inventory_type" => $fields["ipd_to_inventory"]]);
+            PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+         } else {
+            foreach($ipdDatas as $addmac => $ipdDatasBis) {
+               $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($ipdDatasBis, $ocsServerId, ["inventory_type" => $mac]);
+               PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+            }
+         }  
+      }
+   }
 
-    $fields["total_number_machines"] += $nb;
+   switch ($fields["ipd_to_inventory"]) {
+      case 'noninventoried':
+      case 'identified':
+         $nb  = (isset($ocsResult['IPDISCOVER'])) ? count($ocsResult['IPDISCOVER']) : 0;
+         $nbUpdate = (isset($ocsImported['IPDISCOVER'])) ? count($ocsImported['IPDISCOVER']) : 0;
+         $nbRemoved = (isset($ocsImported['UNKNOW_IPD'])) ? count($ocsImported['UNKNOW_IPD']) : 0;
+         break;
+      default:
+         $nb  = ((isset($ocsResult['IPDISCOVER']['noninventoried'])) ? count($ocsResult['IPDISCOVER']['noninventoried']) : 0) + ((isset($ocsResult['IPDISCOVER']['identified'])) ? count($ocsResult['IPDISCOVER']['identified']) : 0);
+         $nbUpdate  = ((isset($ocsImported['IPDISCOVER']['noninventoried'])) ? count($ocsImported['IPDISCOVER']['noninventoried']) : 0) + ((isset($ocsImported['IPDISCOVER']['identified'])) ? count($ocsImported['IPDISCOVER']['identified']) : 0);
+         $nbRemoved = (isset($ocsImported['UNKNOW_IPD'])) ? count($ocsImported['UNKNOW_IPD']) : 0;
+         break;
+   }
 
-    return $fields;*/
+   echo "\tThread #$threadid: $nb object(s) imported\n";
+   echo "\tThread #$threadid: $nbUpdate object(s) updated\n";
+   echo "\tThread #$threadid: $nbRemoved object(s) removed\n";
+
+   $fields["total_number_machines"] += $nb + $nbUpdate;
+
+   return $fields;
 }

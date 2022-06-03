@@ -11,6 +11,7 @@ runningpid=""
 scriptname="ocsng_ipdiscoverfullsync.sh"
 logfilename="ocsng_ipdiscoverfullsync.log"
 options=""
+force=""
 
 
 # Predefined settings
@@ -30,6 +31,7 @@ usage()
    echo "  --ipd_to_inventory=[full, noninventoried, identified]: Default full"
    echo "  --nolog: output to console"
    echo "  --debug: run in debug mode"
+   echo "  --force: force update on all IpDiscover datas"
 }
 
 exit_if_soft_lock()
@@ -63,6 +65,9 @@ read_argv()
          ;;
          --debug)
          options="--debug"
+         ;;
+         --force)
+         force="--force"
          ;;
          *)
          usage
@@ -144,7 +149,7 @@ sh -c "$cmd"
   
 while [ $cpt -lt $thread_nbr ]; do 
    cpt=$(($cpt+1))
-   cmd="php ocsng_ipdiscoverfullsync.php $options --ocs_server_id=$server_id --thread_nbr=$thread_nbr --thread_id=$cpt --process_id=$PROCESS_ID --ipd_to_inventory=$ipd_to_inventory"
+   cmd="php ocsng_ipdiscoverfullsync.php $options $force --ocs_server_id=$server_id --thread_nbr=$thread_nbr --thread_id=$cpt --process_id=$PROCESS_ID --ipd_to_inventory=$ipd_to_inventory"
    sh -c "$cmd"&
    runningpid="$runningpid $!"
    sleep 1

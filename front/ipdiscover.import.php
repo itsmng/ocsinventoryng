@@ -38,6 +38,7 @@ Html::header('OCS Inventory NG', '', "tools", "pluginocsinventoryngmenu", "impor
 $plugin = new Plugin();
 if ($plugin->isActivated("ocsinventoryng")) {
    $ip = new PluginOcsinventoryngIpdiscoverOcslink();
+   $ipRework = new PluginOcsinventoryngIpdiscoverOcslinkrework();
 
    if (!isset($_GET['action'])) {
       $_GET['action'] = "import";
@@ -112,7 +113,8 @@ if ($plugin->isActivated("ocsinventoryng")) {
          }
       } else if (isset($_SESSION["ocs_importipdiscover"]["datas"])) {
          $action = null;
-
+         error_log(print_r($_SESSION["ocs_importipdiscover"]["datas"],true));
+         error_log(print_r('ici',true));
 
          while ($ipObject = array_pop($_SESSION["ocs_importipdiscover"]["datas"]["ipObjects"])) {
             $percent = min(100, round(100 * (sizeof($_SESSION["ocs_importipdiscover"]["datas"]["macAdresses"]) - sizeof($_SESSION["ocs_importipdiscover"]["datas"]["ipObjects"])) / sizeof($_SESSION["ocs_importipdiscover"]["datas"]["macAdresses"]), 0));
@@ -154,18 +156,15 @@ if ($plugin->isActivated("ocsinventoryng")) {
             Html::redirect($_SERVER['PHP_SELF'] . "?ip=$ipAdress&status=$status");
          }
       }
-   } else if (isset($_POST["IdentifyAndImport"])
-              || isset($_SESSION["ocs_importipdiscover"]["datas"])
-   ) {
-
+   } else if (isset($_POST["IdentifyAndImport"]) || isset($_SESSION["ocs_importipdiscover"]["datas"])) {
       $percent = 0;
       if (isset($_POST["IdentifyAndImport"])
           && isset($_POST["mactoimport"])
           && sizeof($_POST["mactoimport"]) > 0
       ) {
          $macAdresses      = $_POST["mactoimport"];
-         $glpiItemsTypes   = $_POST["glpiitemstype"];
-         $itemsNames       = $_POST["itemsname"];
+         $glpiItemsTypes   = $ipRework->associateGlpiType($_POST["ocsitemstype"]);
+         $itemsNames       = $_POST["itemsdescription"];
          $itemsDescription = $_POST["itemsdescription"];
          $ocsItemstypes    = $_POST["ocsitemstype"];
          $itemsIp          = $_POST["itemsip"];

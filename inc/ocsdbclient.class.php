@@ -1791,7 +1791,7 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
 
    }
 
-   public function getIpdiscover($ocs_srv = 1, $inventory) {
+   public function getIpdiscover($ocs_srv = 1, $inventory, $mac = null) {
       global $DB, $CFG_GLPI;
 
       $res = [];
@@ -1841,8 +1841,10 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
 
             $query = "SELECT n.type, n.description, a.ip, a.mac, a.mask, a.netid, a.name, a.date, n.user, s.name as subnet, s.tag as tag, s.id as id 
                FROM network_devices n LEFT JOIN netmap a ON a.mac=n.macaddr LEFT JOIN subnet s ON s.netid = a.netid"; 
-            if(!empty($glpi_ipd)) {
+            if(!empty($glpi_ipd) && is_null($mac)) {
                $query .= " WHERE a.mac NOT IN (".$glpi_ipd.")";
+            } elseif(!is_null($mac)) {
+               $query .= " WHERE a.mac IN ('".$mac."')";
             }
             $query .= " order by type";
 

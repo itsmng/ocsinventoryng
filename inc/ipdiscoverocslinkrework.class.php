@@ -1459,4 +1459,20 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         
         $DBOCS->query($ocsQuery);
     }
+    
+    /**
+     * cleanNonIdentified
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    static function cleanNonIdentified($id) {
+        global $DB;
+
+        $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['id' => $id]);
+        $item = $req->next();
+        $sup = $DB->delete('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['id' => $item['id']]);
+
+        return $item['macaddress'];
+    }
 }

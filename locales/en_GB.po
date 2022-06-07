@@ -2089,3 +2089,59 @@ msgstr ""
 #: inc/winuser.class.php:200
 msgid "SID"
 msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:393
+msgid "See Setup : IPDiscover Import before"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:445
+msgid "IpDiscover manual import"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:390
+msgid "IpDiscover automatic import"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:403
+msgid "Import IpDiscover non-inventoried equipments"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:408
+msgid "Import IpDiscover identified equipments"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:413
+msgid "Import all IpDiscover equipments"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:421
+msgid "Synchronize IpDiscover equipments already imported"
+msgstr ""
+
+#: inc/ipdiscoverocslink.class.php:426
+msgid "Synchronize IpDiscover equipments already imported (force)"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:168
+msgid "IpDiscover Non-Inventoried Equipment configurations"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:207
+msgid "IpDiscover Identified Equipment configurations"
+msgstr ""
+
+#: inc/ocsprocess.class.php:1581
+msgid "IPDISCOVER object removed"
+msgstr ""
+
+#: inc/ocsprocess.class.php:1582
+msgid "IPDISCOVER object not removed"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:976
+msgid "Non Imported"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.form.php:65
+msgid "OCS Type and GLPI type cannot be empty"
+msgstr ""

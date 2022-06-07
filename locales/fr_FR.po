@@ -2196,3 +2196,7 @@ msgstr "Non importé"
 #: inc/ipdiscoverocslinkrework.form.php:65
 msgid "OCS Type and GLPI type cannot be empty"
 msgstr "Le type OCS et le type GLPI ne peuvent pas être vide"
+
+#: inc/ipdiscoverocslinkrework.form.php:52
+msgid "Fields cannot be identical"
+msgstr "Les champs ne peuvent pas être identiques"

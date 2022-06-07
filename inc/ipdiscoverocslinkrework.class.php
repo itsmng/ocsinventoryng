@@ -532,6 +532,9 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
                         $objId[$configNonInv[$key]] = $id['id'];
                     }
                 }
+                if(in_array($configNonInv[$key], array('comment', 'contact'))) {
+                    $objId[$configNonInv[$key]] = $value;
+                }
             }
         }
         

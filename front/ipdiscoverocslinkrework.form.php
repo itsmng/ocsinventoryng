@@ -36,7 +36,10 @@ $ipd = new PluginOcsinventoryngIpdiscoverOcslinkrework();
 Html::header('OCS Inventory NG', '', "tools", "pluginocsinventoryngmenu", "ocsserver");
 
 if(isset($_POST['submitipdconfignoninv'])) {
-    if($_POST['subnet'] != $_POST['id'] && $_POST['subnet'] != $_POST['tag'] && $_POST['tag'] != $_POST['id']) {
+    if(($_POST['subnet'] != $_POST['id'] && $_POST['subnet'] != $_POST['tag'] && $_POST['tag'] != $_POST['id'])
+    || ($_POST['subnet'] == "0" && $_POST['tag'] == "0")
+    || ($_POST['subnet'] == "0" &&  $_POST['id'] == "0")
+    || ($_POST['tag'] == "0" && $_POST['id'] == "0")) {
         $checkConf = $ipd->checkIfConfExists($_POST['ocsserver_id']);
 
         if($checkConf > 0) {

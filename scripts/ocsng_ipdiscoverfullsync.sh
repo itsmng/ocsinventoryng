@@ -143,9 +143,6 @@ rm -f "$GLPI_LOCK_DIR/lock_entity*"
 cpt=0
 
 echo $(date) $0 started
-
-cmd="php ocsng_ipdiscoverfullsync.php --ocs_server_id=$server_id"
-sh -c "$cmd"
   
 while [ $cpt -lt $thread_nbr ]; do 
    cpt=$(($cpt+1))

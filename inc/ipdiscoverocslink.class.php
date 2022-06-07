@@ -910,7 +910,7 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
 
             echo "<tr class='tab_bg_2'><td class='center'>" . __('IP address') . "</td>";
             echo "<td class=''>" . $ipAdress . "</td></tr>";
-            echo "<tr class='tab_bg_2'><td class='center' colspan='4'>" . __('Subnet mask') . "</td>";
+            echo "<tr class='tab_bg_2'><td class='center'>" . __('Subnet mask') . "</td>";
             echo "<td>";
             echo Html::input('SubnetMask', ['type'     => 'text',
                                             'required' => 'required']);

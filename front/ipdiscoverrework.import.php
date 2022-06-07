@@ -98,15 +98,20 @@ if ($plugin->isActivated("ocsinventoryng")) {
                 $equipmentToImport = PluginOcsinventoryngIpdiscoverOcslinkrework::getEquipmentDetails(key($mac), $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
 
                 if(!empty($equipmentToImport)) {
-                    $equipmentToImport["description"] = $_POST["itemsdescription"][$key];
-                    $equipmentToImport["type"] = $_POST["ocsitemstype"][$key];
-                    $equipmentToImport["user"] = $_SESSION["glpiname"];
-
-                    $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"], ["inventory_type" => "identified"]);
-                    if($action['status'] == PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED) {
-                        PluginOcsinventoryngIpdiscoverOcslinkrework::updateOCSLink($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                    if(trim($_POST["itemsdescription"][$key]) != "" && $_POST["ocsitemstype"][$key] != "0") {
+                        $equipmentToImport["description"] = $_POST["itemsdescription"][$key];
+                        $equipmentToImport["type"] = $_POST["ocsitemstype"][$key];
+                        $equipmentToImport["user"] = $_SESSION["glpiname"];
+    
+                        $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"], ["inventory_type" => "identified"]);
+                        if($action['status'] == PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED) {
+                            PluginOcsinventoryngIpdiscoverOcslinkrework::updateOCSLink($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                        }
+                        PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
+                    } else {
+                        $action['status'] = PluginOcsinventoryngOcsProcess::IPDISCOVER_NOTUPDATED;
+                        PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
                     }
-                    PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
                 }
             }
 
@@ -126,15 +131,20 @@ if ($plugin->isActivated("ocsinventoryng")) {
                 $equipmentToImport = PluginOcsinventoryngIpdiscoverOcslinkrework::getEquipmentDetails($mac, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
 
                 if(!empty($equipmentToImport)) {
-                    $equipmentToImport["description"] = $_POST["itemsdescription"][$key];
-                    $equipmentToImport["type"] = $_POST["ocsitemstype"][$key];
-                    $equipmentToImport["user"] = $_SESSION["glpiname"];
+                    if(trim($_POST["itemsdescription"][$key]) != "" && $_POST["ocsitemstype"][$key] != "0") {
+                        $equipmentToImport["description"] = $_POST["itemsdescription"][$key];
+                        $equipmentToImport["type"] = $_POST["ocsitemstype"][$key];
+                        $equipmentToImport["user"] = $_SESSION["glpiname"];
 
-                    $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"], ["inventory_type" => "identified"]);
-                    if($action['status'] == PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED) {
-                        PluginOcsinventoryngIpdiscoverOcslinkrework::updateOCSLink($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                        $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"], ["inventory_type" => "identified"]);
+                        if($action['status'] == PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED) {
+                            PluginOcsinventoryngIpdiscoverOcslinkrework::updateOCSLink($equipmentToImport, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                        }
+                        PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
+                    } else {
+                        $action['status'] = PluginOcsinventoryngOcsProcess::IPDISCOVER_NOTUPDATED;
+                        PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
                     }
-                    PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status'], false, true);
                 }
 
             }

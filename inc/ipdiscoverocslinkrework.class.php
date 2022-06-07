@@ -186,6 +186,14 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         Dropdown::showFromArray('tag', $linkFields, ['value' => ($configNonInv['tag']) ? $configNonInv['tag'] : 0]);
         echo "</td></tr>";
 
+        echo "<tr class='tab_bg_2'><td class='center'>".__('Behavior to the deletion of a Non-Inventoried', 'ocsinventoryng')."</td>";
+        echo "<td>";
+        $actions[0] = Dropdown::EMPTY_VALUE;
+        $actions[1] = __('Put in trashbin');
+        $actions[2] = __('Purge');
+        Dropdown::showFromArray('deleted_behavior', $actions, ['value' => ($configNonInv['deleted_behavior']) ? $configNonInv['deleted_behavior'] : 0]);
+        echo "</td></tr>";
+
         echo "<tr class='tab_bg_1'>";
         echo "<td></td>";
         echo "<td>";
@@ -680,6 +688,8 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
      */
     static function removeIpDiscover($mac, $ocsServerID) {
         global $DB;
+
+        $status = false;
 
         foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerID, 'macaddress' => $mac]) as $value) {
             $equipment = new $value['itemtype']();
@@ -1461,18 +1471,71 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     }
     
     /**
-     * cleanNonIdentified
+     * cleanNonIventoried
      *
      * @param  mixed $id
      * @return void
      */
-    static function cleanNonIdentified($id) {
+    static function cleanNonIventoried($id) {
         global $DB;
 
         $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['id' => $id]);
         $item = $req->next();
         $sup = $DB->delete('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['id' => $item['id']]);
 
+        $class = new $item['itemtype']();
+
+        $class->delete(['id' => $item['items_id']]);
+
         return $item['macaddress'];
+    }
+        
+    /**
+     * deleteMACFromOCS
+     *
+     * @param  mixed $plugin_ocsinventoryng_ocsservers_id
+     * @param  mixed $macAdresses
+     * @return void
+     */
+    static function deleteMACFromOCS($plugin_ocsinventoryng_ocsservers_id, $mac) {
+        $ocsClient = new PluginOcsinventoryngOcsServer();
+        $DBOCS     = $ocsClient->getDBocs($plugin_ocsinventoryng_ocsservers_id)->getDB();
+
+        $query = " DELETE FROM `netmap` WHERE `MAC`='$mac' ";
+        $DBOCS->query($query);
+
+        $query = " DELETE FROM `network_devices` WHERE `MACADDR`='$mac' ";
+        $DBOCS->query($query);
+    }
+    
+    /**
+     * unlinkMACFromOCS
+     *
+     * @param  mixed $plugin_ocsinventoryng_ocsservers_id
+     * @param  mixed $mac
+     * @return void
+     */
+    static function unlinkMACFromOCS($plugin_ocsinventoryng_ocsservers_id, $mac) {
+        $ocsClient = new PluginOcsinventoryngOcsServer();
+        $DBOCS     = $ocsClient->getDBocs($plugin_ocsinventoryng_ocsservers_id)->getDB();
+
+        $query = " DELETE FROM `network_devices` WHERE `MACADDR`='$mac' ";
+        $DBOCS->query($query);
+    }
+    
+    /**
+     * getMacAdressKeyVal
+     *
+     * @param  mixed $macAdresses
+     * @return void
+     */
+    static function getMacAdressKeyVal($macAdresses) {
+        $keys = [];
+        foreach ($macAdresses as $key => $val) {
+            foreach ($val as $mac => $on) {
+                $keys[$key] = $mac;
+            }
+        }
+        return $keys;
     }
 }

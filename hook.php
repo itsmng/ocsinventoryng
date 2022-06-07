@@ -526,8 +526,6 @@ function plugin_ocsinventoryng_install() {
          $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.4-update.sql");
       }/*1.7.4*/
 
-      $migration->executeMigration();
-
       /******************* Migration 1.7.2 *******************/
       // encrypt existing keys if not yet encrypted
       // if it can be base64 decoded then json decoded, we can consider that it was not encrypted
@@ -543,29 +541,6 @@ function plugin_ocsinventoryng_install() {
 
       /******************* Migration 1.7.5 *******************/
       // Update 1.7.5
-      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv")) {
-         $query = "CREATE TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv` (
-            `id` INT(11) NOT NULL AUTO_INCREMENT,
-            `ocs_type` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-            `link_field` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-            `plugin_ocsinventoryng_ocsservers_id` INT(11) NOT NULL DEFAULT '0',
-             PRIMARY KEY (`id`)
-             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-         $DB->queryOrDie($query, "1.7.5 add table glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv");
-      }
-
-      // Update 1.7.5
-      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt")) {
-         $query = "CREATE TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt` (
-            `id` INT(11) NOT NULL AUTO_INCREMENT,
-            `ocs_type` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-            `glpi_obj` VARCHAR(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-            `plugin_ocsinventoryng_ocsservers_id` INT(11) NOT NULL DEFAULT '0',
-             PRIMARY KEY (`id`)
-             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-         $DB->queryOrDie($query, "1.7.5 add table glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt");
-      }
-
       if ($DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinks")
           && !$DB->fieldExists('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', 'status')) {
 
@@ -573,6 +548,12 @@ function plugin_ocsinventoryng_install() {
                ADD `status` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT 'inventoried';";
          $DB->queryOrDie($query, "1.7.5 update table glpi_plugin_ocsinventoryng_ipdiscoverocslinks");
       }
+
+      if (!$DB->tableExists('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv')) {
+         $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.5-update.sql");
+      }/*1.7.5*/
+
+      $migration->executeMigration();
 
    }
    //Notifications

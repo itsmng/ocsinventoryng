@@ -62,7 +62,7 @@ if(isset($_POST['submitipdconfigidt'])) {
         }
         Html::back();
     } else {
-        Session::addMessageAfterRedirect(__('Error'), false, ERROR);
+        Session::addMessageAfterRedirect(__('OCS Type and GLPI type cannot be empty'), false, ERROR);
         Html::back();
     }
 }

@@ -171,27 +171,19 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         echo "<tr class='tab_bg_1'>";
         echo "<td class='center'>" . __('Network name') . "</td>";
         echo "<td colspan='4'>";
-        Dropdown::showFromArray('subnet', $linkFields, ['value' => ($configNonInv['subnet']) ? $configNonInv['subnet'] : 0]);
+        Dropdown::showFromArray('subnet', $linkFields, ['value' => (isset($configNonInv['subnet'])) ? $configNonInv['subnet'] : 0]);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='center'>" . __('ID') . "</td>";
         echo "<td colspan='4'>";
-        Dropdown::showFromArray('id', $linkFields, ['value' => ($configNonInv['id']) ? $configNonInv['id'] : 0]);
+        Dropdown::showFromArray('id', $linkFields, ['value' => (isset($configNonInv['id'])) ? $configNonInv['id'] : 0]);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='center'>" . __('TAG') . "</td>";
         echo "<td colspan='4'>";
-        Dropdown::showFromArray('tag', $linkFields, ['value' => ($configNonInv['tag']) ? $configNonInv['tag'] : 0]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_2'><td class='center'>".__('Behavior to the deletion of a Non-Inventoried', 'ocsinventoryng')."</td>";
-        echo "<td>";
-        $actions[0] = Dropdown::EMPTY_VALUE;
-        $actions[1] = __('Put in trashbin');
-        $actions[2] = __('Purge');
-        Dropdown::showFromArray('deleted_behavior', $actions, ['value' => ($configNonInv['deleted_behavior']) ? $configNonInv['deleted_behavior'] : 0]);
+        Dropdown::showFromArray('tag', $linkFields, ['value' => (isset($configNonInv['tag'])) ? $configNonInv['tag'] : 0]);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -288,7 +280,14 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv', ['plugin_ocsinventoryng_ocsservers_id' => $ID]);
         return count($req);
     }
-
+    
+    /**
+     * checkIfConfIdtExists
+     *
+     * @param  mixed $ID
+     * @param  mixed $ocstype
+     * @return void
+     */
     public function checkIfConfIdtExists($ID, $ocstype) {
         global $DB;
 

@@ -127,8 +127,8 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         return [
             '0' => '-----',
             'Computer' => __('Computer'), 
-            'NetworkEquipment' => __('NetworkEquipment'), 
-            'Peripheral' => __('Peripheral'), 
+            'NetworkEquipment' => __('Network device'), 
+            'Peripheral' => __('Device'), 
             'Phone' => __('Phone'), 
             'Printer' => __('Printer')
         ];

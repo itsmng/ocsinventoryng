@@ -220,12 +220,11 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
       $unknownIP = [];
       $knownIP   = [];
       //$IP        = array();
-      $query     = "SELECT DISTINCT `networks`.`IPSUBNET`,`subnet`.`NAME`,`subnet`.`ID`
-                     FROM `networks` 
+      $query     = "SELECT DISTINCT `netmap`.`NETID` as IPSUBNET,`subnet`.`NAME`,`subnet`.`ID`
+                     FROM `netmap` 
                      LEFT JOIN `subnet` 
-                     ON (`networks`.`IPSUBNET` = `subnet`.`NETID`) ,`accountinfo`
-                     WHERE `networks`.`HARDWARE_ID`=`accountinfo`.`HARDWARE_ID`
-                     AND `networks`.`STATUS`='Up'";
+                     ON (`netmap`.`NETID` = `subnet`.`NETID`)
+                     GROUP BY `netmap`.`NETID`";
       $ocsClient = new PluginOcsinventoryngOcsServer();
       $DBOCS     = $ocsClient->getDBocs($plugin_ocsinventoryng_ocsservers_id)->getDB();
       $result    = $DBOCS->query($query);
@@ -318,7 +317,7 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
          }
          $Macs = self::parseArrayToString($noninv_mac);
 
-         $query = "SELECT * FROM ( SELECT n.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', inv.name as 'NAME', n.TAG, 
+         $query = "SELECT * FROM ( SELECT n.RSX as IP, inv.c as 'INVENTORIED', non_ident.c as 'NON_INVENTORIED', sub.name as 'NAME', n.TAG, 
          n.PASS FROM ( SELECT netid AS RSX, CONCAT(netid,';',ifnull(tag,'')) AS PASS, TAG FROM netmap WHERE netid IN (" . $Nets . ") GROUP BY netid ) n LEFT JOIN ( SELECT count(DISTINCT h.ID) as c, 'INVENTORIED' as TYPE, n.ipsubnet as RSX, s.TAG as TAG, 
          CONCAT(n.ipsubnet,';',ifnull(s.tag,'')) as PASS, s.name as name FROM networks n LEFT JOIN hardware h ON h.ID = n.HARDWARE_ID LEFT JOIN accountinfo a ON a.HARDWARE_ID = h.ID 
          LEFT JOIN subnet s ON a.TAG = s.TAG OR s.NETID = n.IPSUBNET WHERE ipsubnet in (" . $Nets . ") and status = 'Up' GROUP BY n.ipsubnet
@@ -330,7 +329,7 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
             $query .= " AND n.mac NOT IN ($Macs)";
          }
          
-         $query .= " GROUP BY netid) non_ident on n.RSX=non_ident.RSX) nonidentified
+         $query .= " GROUP BY netid) non_ident on n.RSX=non_ident.RSX LEFT JOIN (SELECT subnet.NAME as NAME, netmap.NETID as RSX FROM netmap LEFT JOIN subnet ON netmap.NETID = subnet.NETID GROUP BY subnet.NAME) sub on n.RSX=sub.RSX) nonidentified
          ORDER BY IP asc";
 
          $result = $DBOCS->query($query);

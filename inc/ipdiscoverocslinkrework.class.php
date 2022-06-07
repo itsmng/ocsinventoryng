@@ -1107,6 +1107,9 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         if ($subnet >= 0) {
             $back = __('Back');
             echo "<div class='center'><a href='$return?$returnargs'>$back</div>";
+        } else {
+            $back = __('Back');
+            echo "<div class='center'><a href='$return?subnetsChoice=1&action=$action'>$back</div>";
         }
 
         echo Html::printPager($start, count($hardware), $link, $reload);

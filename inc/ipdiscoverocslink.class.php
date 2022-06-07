@@ -399,8 +399,8 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
 
          echo "<td class='center b' colspan='1'>";
          echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsngipdiscoverrework.import.php?action=noninventoried&serverid=" . $_SESSION["plugin_ocsinventoryng_ocsservers_id"] . "'>";
-         echo "<i style='color:cornflowerblue' class='fas fa-plus fa-3x' title=\"" . __s('Import IpDiscover non inventoried equipments', 'ocsinventoryng') . "\"></i>";
-         echo "<br>" . __('Import IpDiscover non inventoried equipments', 'ocsinventoryng') . " </a></td>";
+         echo "<i style='color:cornflowerblue' class='fas fa-plus fa-3x' title=\"" . __s('Import IpDiscover non-inventoried equipments', 'ocsinventoryng') . "\"></i>";
+         echo "<br>" . __('Import IpDiscover non-inventoried equipments', 'ocsinventoryng') . " </a></td>";
 
          echo "<td class='center b' colspan='1'>";
          echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsngipdiscoverrework.import.php?action=identified&serverid=" . $_SESSION["plugin_ocsinventoryng_ocsservers_id"] . "'>";

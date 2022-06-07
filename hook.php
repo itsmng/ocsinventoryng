@@ -545,7 +545,7 @@ function plugin_ocsinventoryng_install() {
           && !$DB->fieldExists('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', 'status')) {
 
          $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` 
-               ADD `status` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT 'inventoried';";
+               ADD `status` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT 'identified';";
          $DB->queryOrDie($query, "1.7.5 update table glpi_plugin_ocsinventoryng_ipdiscoverocslinks");
       }
 

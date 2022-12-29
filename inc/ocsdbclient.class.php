@@ -476,8 +476,8 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
                }
 
                if (($check & $checksum) || $complete > 0) {
-                  $query   = "SELECT * 
-                              FROM `" . $table . "` 
+                  $query   = "SELECT *
+                              FROM `" . $table . "`
                               WHERE `ID` IN (" . implode(',', $ids) . ")";
                   $request = $this->db->query($query);
                   while ($hardware = $this->db->fetchAssoc($request)) {
@@ -485,6 +485,33 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
                         $computers[$hardware['ID']][strtoupper($table)][] = $hardware;
                      } else {
                         $computers[$hardware['ID']][strtoupper($table)] = $hardware;
+                     }
+                  }
+                  # Get subnet name
+                  $query = "SELECT NAME as SUB_NAME, NETID, HARDWARE_ID as ID
+                            FROM `subnet`
+                            LEFT JOIN `networks` ON networks.IPSUBNET = subnet.NETID
+                            WHERE networks.STATUS = 'Up' 
+                            AND HARDWARE_ID IN (" . implode(',', $ids) . ")";
+                  $request = $this->db->query($query);
+                  while ($subnet = $this->db->fetchAssoc($request)) {
+                     $computers[$subnet['ID']][strtoupper($table)]['SUB_NAME'] = $subnet['SUB_NAME'];
+                     $computers[$subnet['ID']][strtoupper($table)]['NETID'] = $subnet['NETID'];
+                  }
+               }
+               break;
+            case "networks" :
+               if (($check & $checksum) || $complete > 0) {
+                  $query   = "SELECT * , subnet.NAME as SUBNET_NAME
+                             FROM `" . $table . "` 
+                             LEFT JOIN subnet ON subnet.NETID = ".$table.".IPSUBNET
+                             WHERE `HARDWARE_ID` IN (" . implode(',', $ids) . ")";
+                  $request = $this->db->query($query);
+                  while ($reg = $this->db->fetchAssoc($request)) {
+                     if ($multi) {
+                        $computers[$reg['HARDWARE_ID']][strtoupper($table)][] = $reg;
+                     } else {
+                        $computers[$reg['HARDWARE_ID']][strtoupper($table)] = $reg;
                      }
                   }
                }
@@ -1072,7 +1099,6 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
          }
 
          $res["COMPUTERS"] = $this->getComputerSections($hardwareids, $checksum, $wanted, $plugins, $complete);
-
       } else {
 
          $res = [];
@@ -1763,6 +1789,274 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
 
       return $res;
 
+   }
+
+   public function getIpdiscover($ocs_srv = 1, $inventory, $mac = null) {
+      global $DB, $CFG_GLPI;
+
+      $res = [];
+      $count = 0;
+
+      switch($inventory) {
+         case "noninventoried":
+            $glpi_ipd = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'noninventoried']) as $id => $values) {
+               $glpi_ipd[$values['macaddress']] = $values['macaddress'];
+            }
+
+            if(count($glpi_ipd) != 0) {
+               $glpi_ipd = "'".implode("','", $glpi_ipd)."'";
+            }
+
+            $query = "SELECT n.ip, n.mac, n.mask, n.date, n.name, n.TAG as nTag, s.name as subnet, s.id as id, s.tag as tag, n.netid
+               FROM netmap n LEFT JOIN networks ns ON ns.macaddr=n.mac 
+               LEFT JOIN subnet s ON n.NETID = s.NETID
+               WHERE n.mac NOT IN ( SELECT DISTINCT(macaddr) FROM network_devices ) 
+               AND (ns.macaddr IS NULL)";
+            if(!empty($glpi_ipd)) {
+               $query .= " AND n.mac NOT IN (".$glpi_ipd.")";
+            }
+            $query .= " GROUP BY mac";
+
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+               while ($ipd = $this->db->fetchAssoc($request)) {
+                  $res['IPDISCOVER'][$ipd["mac"]] = $ipd;
+                  $count++;
+               }
+            }
+            break;
+         case "identified":
+            $glpi_ipd = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'identified']) as $id => $values) {
+               $glpi_ipd[$values['macaddress']] = $values['macaddress'];
+            }
+
+            if(count($glpi_ipd) != 0) {
+               $glpi_ipd = "'".implode("','", $glpi_ipd)."'";
+            }
+
+            $query = "SELECT n.type, n.description, a.ip, a.mac, a.mask, a.netid, a.name, a.date, n.user, s.name as subnet, s.tag as tag, s.id as id 
+               FROM network_devices n LEFT JOIN netmap a ON a.mac=n.macaddr LEFT JOIN subnet s ON s.netid = a.netid"; 
+            if(!empty($glpi_ipd) && is_null($mac)) {
+               $query .= " WHERE a.mac NOT IN (".$glpi_ipd.")";
+            } elseif(!is_null($mac)) {
+               $query .= " WHERE a.mac IN ('".$mac."')";
+            }
+            $query .= " order by type";
+
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+               while ($ipd = $this->db->fetchAssoc($request)) {
+                  $res['IPDISCOVER'][$ipd["mac"]] = $ipd;
+                  $count++;
+               }
+            }
+            break;
+         default:
+            $glpi_ipd_noninv = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'noninventoried']) as $id => $values) {
+               $glpi_ipd_noninv[$values['macaddress']] = $values['macaddress'];
+            }
+
+            if(count($glpi_ipd_noninv) != 0) {
+               $glpi_ipd_noninv = "'".implode("','", $glpi_ipd_noninv)."'";
+            }
+
+            $query = "SELECT n.ip, n.mac, n.mask, n.date, n.name, n.TAG as nTag, s.name as subnet, s.id as id, s.tag as tag, n.netid
+               FROM netmap n LEFT JOIN networks ns ON ns.macaddr=n.mac 
+               LEFT JOIN subnet s ON n.NETID = s.NETID
+               WHERE n.mac NOT IN ( SELECT DISTINCT(macaddr) FROM network_devices ) 
+               AND (ns.macaddr IS NULL)";
+            if(!empty($glpi_ipd_noninv)) {
+               $query .= " AND n.mac NOT IN (".$glpi_ipd_noninv.")";
+            }
+            $query .= " GROUP BY mac";
+
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+               while ($ipd = $this->db->fetchAssoc($request)) {
+                  $res['IPDISCOVER']['noninventoried'][$ipd["mac"]] = $ipd;
+                  $count++;
+               }
+            }
+
+            $glpi_ipd_ident = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'identified']) as $id => $values) {
+               $glpi_ipd_ident[$values['macaddress']] = $values['macaddress'];
+            }
+
+            if(count($glpi_ipd_ident) != 0) {
+               $glpi_ipd_ident = "'".implode("','", $glpi_ipd_ident)."'";
+            }
+
+            $query = "SELECT n.type, n.description, a.ip, a.mac, a.mask, a.netid, a.name, a.date, n.user, s.name as subnet, s.tag as tag, s.id as id 
+               FROM network_devices n LEFT JOIN netmap a ON a.mac=n.macaddr LEFT JOIN subnet s ON s.netid = a.netid"; 
+            if(!empty($glpi_ipd_ident)) {
+               $query .= " WHERE a.mac NOT IN (".$glpi_ipd_ident.")";
+            }
+            $query .= " order by type";
+
+            $request = $this->db->query($query);
+
+            if ($this->db->numrows($request)) {
+               while ($ipd = $this->db->fetchAssoc($request)) {
+                  $res['IPDISCOVER']['identified'][$ipd["mac"]] = $ipd;
+                  $count++;
+               }
+            }
+            break;
+      }
+
+      $res["TOTAL_COUNT"] = $count;
+      return $res;
+   }
+
+   public function getIpDiscoverAlreadyImported($ocs_srv = 1, $inventory, $force = false) {
+      global $DB, $CFG_GLPI;
+
+      $res = [];
+      $count = 0;
+
+      switch($inventory) {
+         case "noninventoried":
+            $glpi_ipd = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'noninventoried']) as $id => $values) {
+               $glpi_ipd[$values['macaddress']] = $values['last_update'];
+            }
+
+            if(!empty($glpi_ipd)) {
+               foreach($glpi_ipd as $mac => $last_update) {
+                  $query = "SELECT n.ip, n.mac, n.mask, n.date, n.name, n.TAG as nTag, s.name as subnet, s.id as id, s.tag as tag, n.netid
+                     FROM netmap n LEFT JOIN networks ns ON ns.macaddr=n.mac 
+                     LEFT JOIN subnet s ON n.NETID = s.NETID
+                     WHERE n.mac NOT IN ( SELECT DISTINCT(macaddr) FROM network_devices ) 
+                     AND (ns.macaddr IS NULL) AND n.mac IN ('".$mac."') GROUP BY mac";
+
+                  $request = $this->db->query($query);
+
+                  $last_update = ($force) ? 'force' : $last_update;
+
+                  if ($this->db->numrows($request)) {
+                     while ($ipd = $this->db->fetchAssoc($request)) {
+                        if($ipd['date'] != $last_update) {
+                           $res['IPDISCOVER'][$ipd["mac"]] = $ipd;
+                           $count++;
+                        }
+                     }
+                  } else {
+                     // Maybe is removed or identified ?
+                     $res['UNKNOW_IPD'][$mac] = $mac;
+                  }
+               }
+            }
+            break;
+         case "identified":
+            $glpi_ipd = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'identified']) as $id => $values) {
+               $glpi_ipd[$values['macaddress']] = $values['last_update'];
+            }
+
+            if(!empty($glpi_ipd)) {
+               foreach($glpi_ipd as $mac => $last_update) {
+                  $query = "SELECT n.type, n.description, a.ip, a.mac, a.mask, a.netid, a.name, a.date, n.user, s.name as subnet, s.tag as tag, s.id as id 
+                     FROM network_devices n LEFT JOIN netmap a ON a.mac=n.macaddr LEFT JOIN subnet s ON s.netid = a.netid
+                     WHERE a.mac IN ('".$mac."') order by type"; 
+
+                  $request = $this->db->query($query);
+
+                  $last_update = ($force) ? 'force' : $last_update;
+
+                  if ($this->db->numrows($request)) {
+                     while ($ipd = $this->db->fetchAssoc($request)) {
+                        if($ipd['date'] != $last_update) {
+                           $res['IPDISCOVER'][$ipd["mac"]] = $ipd;
+                           $count++;
+                        }
+                     }
+                  } else {
+                     // Maybe is removed ?
+                     $res['UNKNOW_IPD'][$mac] = $mac;
+                  }
+               }
+            }
+            break;
+         default:
+            $glpi_ipd_noninv = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'noninventoried']) as $id => $values) {
+               $glpi_ipd_noninv[$values['macaddress']] = $values['last_update'];
+            }
+
+            if(!empty($glpi_ipd_noninv)) {
+               foreach($glpi_ipd_noninv as $mac => $last_update) {
+                  $query = "SELECT n.ip, n.mac, n.mask, n.date, n.name, n.TAG as nTag, s.name as subnet, s.id as id, s.tag as tag, n.netid
+                     FROM netmap n LEFT JOIN networks ns ON ns.macaddr=n.mac 
+                     LEFT JOIN subnet s ON n.NETID = s.NETID
+                     WHERE n.mac NOT IN ( SELECT DISTINCT(macaddr) FROM network_devices ) 
+                     AND (ns.macaddr IS NULL) AND n.mac IN ('".$mac."') GROUP BY mac";
+
+                  $request = $this->db->query($query);
+
+                  $last_update = ($force) ? 'force' : $last_update;
+                  
+                  if ($this->db->numrows($request)) {
+                     while ($ipd = $this->db->fetchAssoc($request)) {
+                        if($ipd['date'] != $last_update) {
+                           $res['IPDISCOVER']['noninventoried'][$ipd["mac"]] = $ipd;
+                           $count++;
+                        }
+                     }
+                  } else {
+                     // Maybe is removed or identified ?
+                     $res['UNKNOW_IPD'][$mac] = $mac;
+                  }
+               }
+            }
+
+            $glpi_ipd_ident = [];
+
+            foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocs_srv, 'status' => 'identified']) as $id => $values) {
+               $glpi_ipd_ident[$values['macaddress']] = $values['last_update'];
+            }
+
+            if(!empty($glpi_ipd_ident)) {
+               foreach($glpi_ipd_ident as $mac => $last_update) {
+                  $query = "SELECT n.type, n.description, a.ip, a.mac, a.mask, a.netid, a.name, a.date, n.user, s.name as subnet, s.tag as tag, s.id as id 
+                     FROM network_devices n LEFT JOIN netmap a ON a.mac=n.macaddr LEFT JOIN subnet s ON s.netid = a.netid
+                     WHERE a.mac IN ('".$mac."') order by type"; 
+
+                  $request = $this->db->query($query);
+
+                  $last_update = ($force) ? 'force' : $last_update;
+
+                  if ($this->db->numrows($request)) {
+                     while ($ipd = $this->db->fetchAssoc($request)) {
+                        if($ipd['date'] != $last_update) {
+                           $res['IPDISCOVER']['identified'][$ipd["mac"]] = $ipd;
+                           $count++;
+                        }
+                     }
+                  } else {
+                     // Maybe is removed ?
+                     $res['UNKNOW_IPD'][$mac] = $mac;
+                  }
+               }
+            }
+            break;
+      }
+
+      $res["TOTAL_COUNT"] = $count;
+      return $res;
    }
 
    public function getOCSColumnNameByTableAndGlpiName($tableId, $glpiName) {

@@ -526,8 +526,6 @@ function plugin_ocsinventoryng_install() {
          $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.4-update.sql");
       }/*1.7.4*/
 
-      $migration->executeMigration();
-
       /******************* Migration 1.7.2 *******************/
       // encrypt existing keys if not yet encrypted
       // if it can be base64 decoded then json decoded, we can consider that it was not encrypted
@@ -540,6 +538,22 @@ function plugin_ocsinventoryng_install() {
                                 'ocs_db_passwd' => Toolbox::sodiumEncrypt($ocs["ocs_db_passwd"])]);
          }
       }
+
+      /******************* Migration 1.7.5 *******************/
+      // Update 1.7.5
+      if ($DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoverocslinks")
+          && !$DB->fieldExists('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', 'status')) {
+
+         $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` 
+               ADD `status` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT 'identified';";
+         $DB->queryOrDie($query, "1.7.5 update table glpi_plugin_ocsinventoryng_ipdiscoverocslinks");
+      }
+
+      if (!$DB->tableExists('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv')) {
+         $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.5-update.sql");
+      }/*1.7.5*/
+
+      $migration->executeMigration();
 
    }
    //Notifications
@@ -641,7 +655,9 @@ function plugin_ocsinventoryng_uninstall() {
               "glpi_plugin_ocsinventoryng_teamviewers",
               "glpi_plugin_ocsinventoryng_notificationstates",
               "glpi_plugin_ocsinventoryng_ocsalerts",
-              "glpi_plugin_ocsinventoryng_snmplinkreworks"];
+              "glpi_plugin_ocsinventoryng_snmplinkreworks",
+              "glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt",
+              "glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");

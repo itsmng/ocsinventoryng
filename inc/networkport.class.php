@@ -69,7 +69,7 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
     */
    static private function updateNetworkPort($mac, $name, $computers_id, $instantiation_type,
                                              $inst_input, $ips, $check_name, $cfg_ocs,
-                                             $already_known_ports, $mask, $gateway, $subnet, $entities_id, $speed = 0) {
+                                             $already_known_ports, $mask, $gateway, $subnet, $entities_id, $subnet_name = null, $speed = 0) {
       global $DB;
 
       $network_port = new NetworkPort();
@@ -187,7 +187,7 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
                                 'is_dynamic'  => 1,
                                 'is_deleted'  => 0,
                                 '_no_history' => !$install_network_history,
-                                'name'        => $comp->getName()];
+                                'name'        => ($subnet_name != null && $subnet_name != '') ? $subnet_name : $comp->getName()];
             $networknames_id = $network_name->add($name_input);
          } else {
             $line            = $names->next();
@@ -442,13 +442,14 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
                $subnet  = $main['result']['IPSUBNET'];
                $speed   = $main['result']['SPEED'];
                $status  = $main['result']['STATUS'];
+               $subnet_name = $main['result']['SUBNET_NAME'];
                //               if ($status == "Up") {
                $networkports_id = self::updateNetworkPort($main['result']['MACADDR'], $main['name'], $computers_id,
                                                           $type->fields['instantiation_type'],
                                                           $inst_input, $main['ip'], false,
                                                           $cfg_ocs,
                                                           $already_known_ports,
-                                                          $mask, $gateway, $subnet, $entities_id, $speed);
+                                                          $mask, $gateway, $subnet, $entities_id, $subnet_name, $speed);
                //               }
             }
             if ($networkports_id < 0) {
@@ -470,12 +471,13 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
                   $subnet     = $port['result']['IPSUBNET'];
                   $status     = $port['result']['STATUS'];
                   $speed      = $port['result']['SPEED'];
+                  $subnet_name = $port['result']['SUBNET_NAME'];
                   $inst_input = ['networkports_id_alias' => $networkports_id];
                   //                  if ($status == "Up") {
                   $id = self::updateNetworkPort($port['result']['MACADDR'], $port['name'], $computers_id,
                                                 'NetworkPortAlias', $inst_input, $port['ip'],
                                                 true, $cfg_ocs, $already_known_ports,
-                                                $mask, $gateway, $subnet, $entities_id, $speed);
+                                                $mask, $gateway, $subnet, $entities_id, $subnet_name, $speed);
                   //                  }
                   if ($id > 0) {
                      $already_known_ports[] = $id;

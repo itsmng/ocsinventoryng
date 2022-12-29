@@ -2140,3 +2140,63 @@ msgstr "Désactivée"
 #: inc/winuser.class.php:200
 msgid "SID"
 msgstr "SID"
+
+#: inc/ipdiscoverocslink.class.php:393
+msgid "See Setup : IPDiscover Import before"
+msgstr "Voir la configuration : Import IpDiscover avant"
+
+#: inc/ipdiscoverocslink.class.php:445
+msgid "IpDiscover manual import"
+msgstr "IpDiscover import manuel"
+
+#: inc/ipdiscoverocslink.class.php:390
+msgid "IpDiscover automatic import"
+msgstr "IpDiscover import automatique"
+
+#: inc/ipdiscoverocslink.class.php:403
+msgid "Import IpDiscover non-inventoried equipments"
+msgstr "Import des équipements IpDiscover non-inventoriés"
+
+#: inc/ipdiscoverocslink.class.php:408
+msgid "Import IpDiscover identified equipments"
+msgstr "Import des équipements IpDiscover identifiés"
+
+#: inc/ipdiscoverocslink.class.php:413
+msgid "Import all IpDiscover equipments"
+msgstr "Import de tous les équipements IpDiscover"
+
+#: inc/ipdiscoverocslink.class.php:421
+msgid "Synchronize IpDiscover equipments already imported"
+msgstr "Synchronisation des équipements IpDiscover déjà importés"
+
+#: inc/ipdiscoverocslink.class.php:426
+msgid "Synchronize IpDiscover equipments already imported (force)"
+msgstr "Synchronisation des équipements IpDiscover déjà importés (force)"
+
+#: inc/ipdiscoverocslinkrework.class.php:168
+msgid "IpDiscover Non-Inventoried Equipment configurations"
+msgstr "Configurations des équipements IpDiscover Non-Inventoriés"
+
+#: inc/ipdiscoverocslinkrework.class.php:207
+msgid "IpDiscover Identified Equipment configurations"
+msgstr "Configurations des équipements IpDiscover Identifiés"
+
+#: inc/ocsprocess.class.php:1581
+msgid "IPDISCOVER object removed"
+msgstr "Objects IpDiscover supprimés"
+
+#: inc/ocsprocess.class.php:1582
+msgid "IPDISCOVER object not removed"
+msgstr "Objects IpDiscover non supprimés"
+
+#: inc/ipdiscoverocslinkrework.class.php:976
+msgid "Non Imported"
+msgstr "Non importé"
+
+#: inc/ipdiscoverocslinkrework.form.php:65
+msgid "OCS Type and GLPI type cannot be empty"
+msgstr "Le type OCS et le type GLPI ne peuvent pas être vide"
+
+#: inc/ipdiscoverocslinkrework.form.php:52
+msgid "Fields cannot be identical"
+msgstr "Les champs ne peuvent pas être identiques"

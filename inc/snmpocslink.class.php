@@ -69,7 +69,7 @@ class PluginOcsinventoryngSnmpOcslink extends CommonDBTM {
             $version = $client->getTextConfig('GUI_VERSION');
             $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
 
-            if ($version > PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
+            if ($version < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
                return __('SNMP Import', 'ocsinventoryng');
             }
          }

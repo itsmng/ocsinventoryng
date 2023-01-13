@@ -931,7 +931,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
             }
 
             // update last_update and and last_ocs_update
-            if($computer_ocs["HARDWARE"]["SUB_NAME"] != null && $computer_ocs["HARDWARE"]["SUB_NAME"] != '') {
+            if(array_key_exists("SUB_NAME", $computer_ocs["HARDWARE"]) && $computer_ocs["HARDWARE"]["SUB_NAME"] != null && $computer_ocs["HARDWARE"]["SUB_NAME"] != '') {
                $subname = $computer_ocs["HARDWARE"]["SUB_NAME"]." (".$computer_ocs["HARDWARE"]["NETID"].")";
             } else {
                $subname = null;

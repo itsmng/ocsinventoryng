@@ -199,7 +199,7 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
             }
          }
 
-         if(is_null($networknames_id)) $networknames_id = 0;
+         if(empty($networknames_id)) $networknames_id = 0;
          
          $ip_address              = new IPAddress();
          $already_known_addresses = [];

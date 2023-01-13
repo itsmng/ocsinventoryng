@@ -942,7 +942,6 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                              `ocs_agent_version` = '" . $computer_ocs["HARDWARE"]["USERAGENT"] . " ',
                              `last_ocs_conn` = '" . $computer_ocs["HARDWARE"]["LASTCOME"] . " ',
                              `ip_src` = '" . $computer_ocs["HARDWARE"]["IPSRC"] . " ',
-                             `net_name` = '" . $subname . "',
                              `ocs_deviceid` = '" . $computer_ocs["HARDWARE"]["DEVICEID"] . "'
                              WHERE `id` = $ID";
             $DB->query($query);

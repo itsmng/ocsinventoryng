@@ -421,11 +421,14 @@ JAVASCRIPT;
          echo "<div class='center'><table class='tab_cadre_fixe' width='40%'>";
          echo "<tr><th colspan='4'>";
          echo __('OCSNG SNMP import', 'ocsinventoryng');
-         echo "<br>";
-         echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsserver.form.php?id=" . $plugin_ocsinventoryng_ocsservers_id . "&forcetab=PluginOcsinventoryngSnmpOcslink\$1'>";
-         echo __('See Setup : SNMP Import before', 'ocsinventoryng');
-         echo "</a>";
-         echo "</th></tr>";
+
+         if($client->getTextConfig('GUI_VERSION') < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT) {
+            echo "<br>";
+            echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsserver.form.php?id=" . $plugin_ocsinventoryng_ocsservers_id . "&forcetab=PluginOcsinventoryngSnmpOcslink\$1'>";
+            echo __('See Setup : SNMP Import before', 'ocsinventoryng');
+            echo "</a>";
+            echo "</th></tr>";
+         }
 
          // SNMP device link feature
          echo "<tr class='tab_bg_1'><td class='center b' colspan='2'>
@@ -2271,14 +2274,14 @@ JAVASCRIPT;
       $target = $CFG_GLPI['root_doc'] . '/plugins/ocsinventoryng/front/snmplinkrework.form.php';
 
       $glpi_types = [
-        'glpi_computers' => 'Computer',
-        'glpi_monitors' => 'Monitor',
-        'glpi_networkequipments' => 'NetworkEquipment',
-        'glpi_peripherals' => 'Peripheral',
-        'glpi_phones' => 'Phone',
-        'glpi_printers' => 'Printer',
-        'glpi_softwarelicenses' => 'SoftwareLicense',
-        'glpi_certificates' => 'Certificate',
+        'glpi_computers' => __('Computer'),
+        'glpi_monitors' => __('Monitor'),
+        'glpi_networkequipments' => __('Network device'),
+        'glpi_peripherals' => __('Peripheral'),
+        'glpi_phones' => __('Phone'),
+        'glpi_printers' => __('Printer'),
+        'glpi_softwarelicenses' => __('SoftwareLicense'),
+        'glpi_certificates' => __('Certificate'),
       ];
 
       /*echo "<pre>" , var_dump($CFG_GLPI) , "</pre>";
@@ -2452,17 +2455,26 @@ JAVASCRIPT;
       $snmpTypes = $ocsClient->getSnmpTypes();
 
       $snmpLinks = [];
+      $glpi_types = [
+         'glpi_computers' => __('Computer'),
+         'glpi_monitors' => __('Monitor'),
+         'glpi_networkequipments' => __('Network device'),
+         'glpi_peripherals' => __('Peripheral'),
+         'glpi_phones' => __('Phone'),
+         'glpi_printers' => __('Printer'),
+         'glpi_softwarelicenses' => __('SoftwareLicense'),
+         'glpi_certificates' => __('Certificate'),
+      ];
 
       if ($DB->numrows($result_glpi) > 0) {
          $i = 0;
          while ($data = $DB->fetchArray($result_glpi)) {
-            $snmpLinks[$i]['object'] = $CFG_GLPI["glpiitemtypetables"][$data["object"]];
+            $snmpLinks[$i]['object'] = $glpi_types[$data["object"]];
             $snmpLinks[$i]['type'] = $snmpTypes[$data['ocs_snmp_type_id']];
             $snmpLinks[$i]['typeId'] = $data['ocs_snmp_type_id'];
             $i++;
          }
       }
-      //echo "<pre>", var_dump($CFG_GLPI), "</pre>";
  
       echo "<table class='tab_cadrehov'>";
       echo "<tr class='tab_bg_1'>";
@@ -2589,7 +2601,7 @@ JAVASCRIPT;
       $glpi_types = [
          'glpi_computers' => 'Computer',
          'glpi_monitors' => 'Monitor',
-         'glpi_networkequipments' => 'NetworkEquipment',
+         'glpi_networkequipments' => 'Network device',
          'glpi_peripherals' => 'Peripheral',
          'glpi_phones' => 'Phone',
          'glpi_printers' => 'Printer',
@@ -2838,7 +2850,7 @@ JAVASCRIPT;
             $glpi_types = [
                'glpi_computers' => 'Computer',
                'glpi_monitors' => 'Monitor',
-               'glpi_networkequipments' => 'NetworkEquipment',
+               'glpi_networkequipments' => 'Network device',
                'glpi_peripherals' => 'Peripheral',
                'glpi_phones' => 'Phone',
                'glpi_printers' => 'Printer',

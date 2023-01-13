@@ -142,14 +142,6 @@ class PluginOcsinventoryngOcslink extends CommonDBTM {
                         echo "<td colspan='2'></td>";
                      }
 
-                     if (isset($data["net_name"])) {
-                        echo "<tr class='tab_bg_1'>";
-                        echo "<td></td>";
-                        echo "<td></td>";
-                        echo "<td>" . __('Network Name');
-                        echo "</td><td>" . $data["net_name"] . "</td>";
-                     }
-
                      echo "<tr class='tab_bg_1'>";
                      echo "<td>" . __('OCSNG TAG', 'ocsinventoryng') .
                           "</td>";

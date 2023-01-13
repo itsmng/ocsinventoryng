@@ -1791,7 +1791,7 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
 
    }
 
-   public function getIpdiscover($ocs_srv = 1, $inventory, $mac = null) {
+   public function getIpdiscover($inventory, $ocs_srv = 1, $mac = null) {
       global $DB, $CFG_GLPI;
 
       $res = [];
@@ -1919,7 +1919,7 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
       return $res;
    }
 
-   public function getIpDiscoverAlreadyImported($ocs_srv = 1, $inventory, $force = false) {
+   public function getIpDiscoverAlreadyImported($inventory, $ocs_srv = 1, $force = false) {
       global $DB, $CFG_GLPI;
 
       $res = [];

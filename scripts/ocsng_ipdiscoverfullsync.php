@@ -219,8 +219,8 @@ function importIPDFromOcsServer($threads_id, $cfg_ocs, $server, $thread_nbr, $th
    $ocsServerId = $cfg_ocs['id'];
    $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsServerId);
 
-   $ocsResult = $ocsClient->getIpDiscover($ocsServerId, $fields["ipd_to_inventory"]);
-   $ocsImported = $ocsClient->getIpDiscoverAlreadyImported($ocsServerId, $fields["ipd_to_inventory"], $force);
+   $ocsResult = $ocsClient->getIpDiscover($fields["ipd_to_inventory"], $ocsServerId);
+   $ocsImported = $ocsClient->getIpDiscoverAlreadyImported($fields["ipd_to_inventory"], $ocsServerId, $force);
    
    //Update Ipd objects
    if($ocsImported['TOTAL_COUNT'] != 0) {

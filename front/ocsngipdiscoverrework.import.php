@@ -64,7 +64,7 @@ if(isset($_GET["action"]) && isset($_GET["serverid"]) && in_array($_GET["action"
     $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
     $ocsConf = PluginOcsinventoryngOcsServer::getConfig($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
 
-    $ocsResult = $ocsClient->getIpDiscover($_SESSION["plugin_ocsinventoryng_ocsservers_id"], $_GET["action"]);
+    $ocsResult = $ocsClient->getIpDiscover($_GET["action"], $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
 
     $_SESSION["ocs_importipdiscover"]['statistics']["imported_ipdiscover_number"] = 0;
     $_SESSION["ocs_importipdiscover"]['statistics']["notupdated_ipdiscover_number"] = 0;

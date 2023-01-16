@@ -123,7 +123,9 @@ $fields["threadid"] = $threadid;
 $fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_STARTED;
 $fields["plugin_ocsinventoryng_ocsservers_id"] = $ocsservers_id;
 $fields["synchronized_snmp_number"] = 0;
-$fields["notupdated_snmp_number"] = 0;
+$fields["imported_snmp_number"] = 0;
+$fields["synchronized_snmp_number"] = 0;
+$fields["failed_imported_snmp_number"] = 0;
 $fields["total_number_machines"] = 0;
 $fields["error_msg"] = '';
 //TODO create thread & update it ?

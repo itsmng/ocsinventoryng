@@ -903,7 +903,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
 
          if (is_array($computer_ocs)
              && count($computer_ocs) > 0
-             && (strtotime($computer_ocs["META"]["LASTDATE"]) > strtotime($line['last_update']) || $force)) {
+             && (strtotime($computer_ocs["META"]["LASTDATE"] ?? '') > strtotime($line['last_update']) || $force)) {
             // automatic transfer computer
             if ($CFG_GLPI['transfers_id_auto'] > 0
                 && Session::isMultiEntitiesMode()

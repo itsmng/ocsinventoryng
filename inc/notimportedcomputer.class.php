@@ -351,15 +351,15 @@ class PluginOcsinventoryngNotimportedcomputer extends CommonDropdown {
       if ((isset($computer["HARDWARE"]) && $computer["HARDWARE"])
           && (isset($computer["BIOS"]) && $computer["BIOS"])) {
          $input["_ocs"]                                = true;
-         $input["name"]                                = isset($computer["META"]["NAME"]) ? $computer["META"]["NAME"] : 'null';
-         $input["domain"]                              = isset($computer["HARDWARE"]["WORKGROUP"]) ? $computer["HARDWARE"]["WORKGROUP"] : 'null';
+         $input["name"]                                = isset($computer["META"]["NAME"]) ? $computer["META"]["NAME"] : '';
+         $input["domain"]                              = isset($computer["HARDWARE"]["WORKGROUP"]) ? $computer["HARDWARE"]["WORKGROUP"] : '';
          $input["tag"]                                 = $computer["META"]["TAG"];
          $input["ocs_deviceid"]                        = $computer["HARDWARE"]["DEVICEID"];
-         $input["ipaddr"]                              = isset($computer["HARDWARE"]["IPSRC"]) ? $computer["HARDWARE"]["IPSRC"] : 'null';
+         $input["ipaddr"]                              = isset($computer["HARDWARE"]["IPSRC"]) ? $computer["HARDWARE"]["IPSRC"] : '';
          $input["plugin_ocsinventoryng_ocsservers_id"] = $ocsservers_id;
          $input["ocsid"]                               = $ocsid;
          $input["last_inventory"]                      = $computer["HARDWARE"]["LASTCOME"];
-         $input["useragent"]                           = isset($computer["HARDWARE"]["USERAGENT"]) ? $computer["HARDWARE"]["USERAGENT"] : 'null';
+         $input["useragent"]                           = isset($computer["HARDWARE"]["USERAGENT"]) ? $computer["HARDWARE"]["USERAGENT"] : '';
          $input["serial"]                              = isset($computer["BIOS"]["SSN"]) ? $computer["BIOS"]["SSN"] : '';
          $input["reason"]                              = $reason['status'];
          $input["comment"]                             = "";

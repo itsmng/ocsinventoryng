@@ -366,20 +366,19 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
    // Filter only useful computers
    // Some conditions can't be sent to OCS, so we have to do this in a loop
    // Maybe add this to SOAP ?
-   //   if (isset($ocsResult['COMPUTERS'])) {
-   //      $excludeIds = array();
-   //      foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
-   //         if ($ID <= intval($server->fields["max_ocsid"]) and (!$multiThread or ($ID % $thread_nbr) == ($threadid - 1))) {
-   //            $ocsComputers[$ID] = $computer;
-   //         }
-   //         $excludeIds [] = $ID;
-   //      }
-   //
-   //      $secondQueryOptions['FILTER']['EXCLUDE_IDS'] = $excludeIds;
-   //   }
-   //
-   //   $secondQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
+   if (isset($ocsResult['COMPUTERS'])) {
+      $excludeIds = array();
+      foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
+         if ($ID <= intval($server->fields["max_ocsid"]) and (!$multiThread or ($ID % $thread_nbr) == ($threadid - 1))) {
+            $ocsComputers[$ID] = $computer;
+         }
+         $excludeIds [] = $ID;
+      }
 
+      $secondQueryOptions['FILTER']['EXCLUDE_IDS'] = $excludeIds;
+   }
+
+   $secondQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
    //   $ocsResult = $ocsClient->getComputers($secondQueryOptions);
 
    // Filter only useful computers
@@ -406,6 +405,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
                                     `last_update`,
                                     `name`";
             $result_glpi = $DB->query($query_glpi);
+
             if ($DB->numrows($result_glpi) > 0) {
                while ($data = $DB->fetchAssoc($result_glpi)) {
                   if (strtotime($computer['META']["LASTDATE"]) > strtotime($data["last_update"])) {

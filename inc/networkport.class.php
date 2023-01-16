@@ -199,6 +199,8 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
             }
          }
 
+         if(empty($networknames_id)) $networknames_id = 0;
+         
          $ip_address              = new IPAddress();
          $already_known_addresses = [];
          $query                   = "SELECT `id`, `name`, `is_dynamic`, `mainitems_id`
@@ -344,8 +346,8 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
          //    3°) if the networkport is issued by VMWare
          if (((isset($line['VIRTUALDEV'])) && ($line['VIRTUALDEV'] == '1'))
              || (isset($network_ports[$typen]['main']))
-             || (preg_match('/^vm(k|nic)([0-9]+)$/', $name))
-             || (preg_match('/(V|v)irtual/', $name))) {
+             || (preg_match('/^vm(k|nic)([0-9]+)$/', $name ?? ''))
+             || (preg_match('/(V|v)irtual/', $name ?? ''))) {
             $network_ports[$typen]['virtual'] [] = $values;
          } else {
             $network_ports[$typen]['main'] = $values;

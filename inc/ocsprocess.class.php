@@ -903,7 +903,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
 
          if (is_array($computer_ocs)
              && count($computer_ocs) > 0
-             && (strtotime($computer_ocs["META"]["LASTDATE"]) > strtotime($line['last_update']) || $force)) {
+             && (strtotime($computer_ocs["META"]["LASTDATE"] ?? '') > strtotime($line['last_update']) || $force)) {
             // automatic transfer computer
             if ($CFG_GLPI['transfers_id_auto'] > 0
                 && Session::isMultiEntitiesMode()
@@ -931,7 +931,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
             }
 
             // update last_update and and last_ocs_update
-            if($computer_ocs["HARDWARE"]["SUB_NAME"] != null && $computer_ocs["HARDWARE"]["SUB_NAME"] != '') {
+            if(array_key_exists("SUB_NAME", $computer_ocs["HARDWARE"]) && $computer_ocs["HARDWARE"]["SUB_NAME"] != null && $computer_ocs["HARDWARE"]["SUB_NAME"] != '') {
                $subname = $computer_ocs["HARDWARE"]["SUB_NAME"]." (".$computer_ocs["HARDWARE"]["NETID"].")";
             } else {
                $subname = null;
@@ -942,7 +942,6 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                              `ocs_agent_version` = '" . $computer_ocs["HARDWARE"]["USERAGENT"] . " ',
                              `last_ocs_conn` = '" . $computer_ocs["HARDWARE"]["LASTCOME"] . " ',
                              `ip_src` = '" . $computer_ocs["HARDWARE"]["IPSRC"] . " ',
-                             `net_name` = '" . $subname . "',
                              `ocs_deviceid` = '" . $computer_ocs["HARDWARE"]["DEVICEID"] . "'
                              WHERE `id` = $ID";
             $DB->query($query);

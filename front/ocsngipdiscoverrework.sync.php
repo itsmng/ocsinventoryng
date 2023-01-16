@@ -68,7 +68,7 @@ if(isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
         $force = true;
     }
 
-    $ocsImported = $ocsClient->getIpDiscoverAlreadyImported($_SESSION["plugin_ocsinventoryng_ocsservers_id"], "full", $force);
+    $ocsImported = $ocsClient->getIpDiscoverAlreadyImported("full", $_SESSION["plugin_ocsinventoryng_ocsservers_id"], $force);
 
     $_SESSION["ocs_importipdiscover"]['statistics']["imported_ipdiscover_number"] = 0;
     $_SESSION["ocs_importipdiscover"]['statistics']["notupdated_ipdiscover_number"] = 0;
@@ -94,7 +94,7 @@ if(isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
                     $action = PluginOcsinventoryngIpdiscoverOcslinkrework::removeIpDiscover($mac, $_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
                     PluginOcsinventoryngOcsProcess::manageImportStatistics($_SESSION["ocs_importipdiscover"]['statistics'], $action['status']);
                     // new Identified ?
-                    $ocsResult = $ocsClient->getIpDiscover($_SESSION["plugin_ocsinventoryng_ocsservers_id"], "identified", $mac);
+                    $ocsResult = $ocsClient->getIpDiscover("identified", $_SESSION["plugin_ocsinventoryng_ocsservers_id"], $mac);
                     if($ocsResult['TOTAL_COUNT'] != 0) {
                         foreach ($ocsResult['IPDISCOVER'] as $mac => $ipdDatas) {
                             $action = PluginOcsinventoryngIpdiscoverOcslinkrework::importIpDiscover($ipdDatas, $_SESSION["plugin_ocsinventoryng_ocsservers_id"], ["inventory_type" => "identified"]);

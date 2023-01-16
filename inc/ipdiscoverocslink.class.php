@@ -746,17 +746,17 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
             echo Search::showNewLine($output_type, $row_num % 2);
             $ip   = $subnets[$i]["IP"];
             $link = $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ipdiscover.modifynetwork.php?ip=$ip";
-            echo "<td class='center'><a href=\"$link\"" . Search::showItem($output_type, $name, $item_num, $row_num) . "</a></td>";
+            echo "<td><a href=\"$link\"" . Search::showItem($output_type, $name, $item_num, $row_num) . "</a></td>";
             echo Search::showItem($output_type, $ip, $item_num, $row_num);
 
             // NON IMPORTED
             if($subnets[$i]["NON_INVENTORIED"] != null) {
                $link = $hardwareNetwork . "?ip=$ip&status=nonimported&action=$action";
-               echo "<td class='center'><a href=\"$link\"" . Search::showItem($output_type,
+               echo "<td><a href=\"$link\"" . Search::showItem($output_type,
                                                                               $subnets[$i]["NON_INVENTORIED"],
                                                                               $item_num, $row_num) . "</a></td>";
             } else {
-               echo "<td class='center'>0</td>";
+               echo "<td>0</td>";
             }
             
             // NON INVENTORIED
@@ -771,22 +771,22 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
             }
             if ($noninv_count > 0) {
                $link = $hardwareNetwork . "?ip=$ip&status=noninventoried&action=$action";
-               echo "<td class='center'><a href=\"$link\"" . Search::showItem($output_type,
+               echo "<td><a href=\"$link\"" . Search::showItem($output_type,
                                                                               $noninv_count,
                                                                               $item_num,
                                                                               $row_num) . "</a></td>";
             } else {
-               echo "<td class='center'>0</td>";
+               echo "<td>0</td>";
             }
 
             // INVENTORIED
             if($subnets[$i]["INVENTORIED"] != null) {
                $link = $hardwareNetwork . "?ip=$ip&status=inventoried&action=$action";
-               echo "<td class='center'><a href=\"$link\"" . Search::showItem($output_type,
+               echo "<td><a href=\"$link\"" . Search::showItem($output_type,
                                                                               $subnets[$i]["INVENTORIED"],
                                                                               $item_num, $row_num) . "</a></td>";
             } else {
-               echo "<td class='center'>0</td>";
+               echo "<td>0</td>";
             }
 
             // IDENTIFIED
@@ -801,12 +801,12 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
             }
             if ($imported_count > 0) {
                $link = $hardwareNetwork . "?ip=$ip&status=identified&action=$action";
-               echo "<td class='center'><a href=\"$link\"" . Search::showItem($output_type,
+               echo "<td><a href=\"$link\"" . Search::showItem($output_type,
                                                                               $imported_count,
                                                                               $item_num,
                                                                               $row_num) . "</a></td>";
             } else {
-               echo "<td class='center'>0</td>";
+               echo "<td>0</td>";
             }
          }
       }

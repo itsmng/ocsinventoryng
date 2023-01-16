@@ -520,7 +520,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
 
         foreach($ipdDatas as $key => $value) {
             if(array_key_exists($key, $configNonInv) && $configNonInv[$key] != "0") {
-                if(array_key_exists($configNonInv[$key], self::$corr) && trim($value) != "") {
+                if(array_key_exists($configNonInv[$key], self::$corr) && trim($value ?? "") != "") {
                     $obj = new self::$corr[$configNonInv[$key]]();
                     $verif = $obj->find(["name" => $value]);
                     if(count($verif) == 0) {
@@ -568,7 +568,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
 
         $port_input = [
             'name'                     => $ipdDatas['description'],
-            'mac'                      => (strpos($ipdDatas['mac'], '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
+            'mac'                      => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
             'items_id'                 => $equipment,
             'itemtype'                 => $className,
             'instantiation_type'       => "NetworkPortEthernet",
@@ -577,7 +577,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
             "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
             '_create_children'         => 1,
             'is_deleted'               => 0,
-            'comment'                  => (strpos($ipdDatas['mac'], '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
+            'comment'                  => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
         ];
 
         $NetworkPort->add($port_input);

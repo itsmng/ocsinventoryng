@@ -366,20 +366,19 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
    // Filter only useful computers
    // Some conditions can't be sent to OCS, so we have to do this in a loop
    // Maybe add this to SOAP ?
-   //   if (isset($ocsResult['COMPUTERS'])) {
-   //      $excludeIds = array();
-   //      foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
-   //         if ($ID <= intval($server->fields["max_ocsid"]) and (!$multiThread or ($ID % $thread_nbr) == ($threadid - 1))) {
-   //            $ocsComputers[$ID] = $computer;
-   //         }
-   //         $excludeIds [] = $ID;
-   //      }
-   //
-   //      $secondQueryOptions['FILTER']['EXCLUDE_IDS'] = $excludeIds;
-   //   }
-   //
-   //   $secondQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
+   if (isset($ocsResult['COMPUTERS'])) {
+      $excludeIds = array();
+      foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
+         if ($ID <= intval($server->fields["max_ocsid"]) and (!$multiThread or ($ID % $thread_nbr) == ($threadid - 1))) {
+            $ocsComputers[$ID] = $computer;
+         }
+         $excludeIds [] = $ID;
+      }
 
+      $secondQueryOptions['FILTER']['EXCLUDE_IDS'] = $excludeIds;
+   }
+
+   $secondQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
    //   $ocsResult = $ocsClient->getComputers($secondQueryOptions);
 
    // Filter only useful computers
@@ -406,6 +405,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
                                     `last_update`,
                                     `name`";
             $result_glpi = $DB->query($query_glpi);
+
             if ($DB->numrows($result_glpi) > 0) {
                while ($data = $DB->fetchAssoc($result_glpi)) {
                   if (strtotime($computer['META']["LASTDATE"]) > strtotime($data["last_update"])) {
@@ -423,7 +423,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
       }
    }
    $nb = count($ocsComputers);
-   echo "\tThread #$threadid: $nb computer(s)\n";
+   echo "\tThread #$threadid: $nb computer(s) found\n";
 
    $fields["total_number_machines"] += $nb;
 
@@ -431,6 +431,15 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
    $notimport = new PluginOcsinventoryngNotimportedcomputer();
 
    $i = 0;
+
+   $nbImported = 0;
+   $nbSynchronized = 0;
+   $nbLinked = 0;
+   $nbFailedImport = 0;
+   $nbNotUpdated = 0;
+   $nbNotUnique = 0;
+   $nbLinkRefused = 0;
+
    foreach ($ocsComputers as $ID => $ocsComputer) {
       if ($i == $config->fields["thread_log_frequency"]) {
          $fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_RUNNING;
@@ -448,6 +457,14 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
 
       $action = PluginOcsinventoryngOcsProcess::processComputer($process_params);
       PluginOcsinventoryngOcsProcess::manageImportStatistics($fields, $action['status']);
+
+      if($action['status'] == 0) $nbImported++;
+      if($action['status'] == 1) $nbSynchronized++;
+      if($action['status'] == 2) $nbLinked++;
+      if($action['status'] == 3) $nbFailedImport++;
+      if($action['status'] == 4) $nbNotUpdated++;
+      if($action['status'] == 5) $nbNotUnique++;
+      if($action['status'] == 6) $nbLinkRefused++;
 
       switch ($action['status']) {
          case PluginOcsinventoryngOcsProcess::COMPUTER_NOT_UNIQUE :
@@ -489,6 +506,14 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
       $update["max_glpidate"] = $max_date;
       $server->update($update);
    }
+
+   echo "\tThread #$threadid: $nbImported computer(s) imported\n";
+   echo "\tThread #$threadid: $nbSynchronized computer(s) synchronized\n";
+   echo "\tThread #$threadid: $nbLinked computer(s) linked\n";
+   echo "\tThread #$threadid: $nbFailedImport computer(s) failed import\n";
+   echo "\tThread #$threadid: $nbNotUpdated computer(s) not updated\n";
+   echo "\tThread #$threadid: $nbNotUnique computer(s) not unique\n";
+   echo "\tThread #$threadid: $nbLinkRefused computer(s) link refused\n";
 
    return $fields;
 }

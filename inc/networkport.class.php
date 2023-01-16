@@ -346,8 +346,8 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
          //    3°) if the networkport is issued by VMWare
          if (((isset($line['VIRTUALDEV'])) && ($line['VIRTUALDEV'] == '1'))
              || (isset($network_ports[$typen]['main']))
-             || (preg_match('/^vm(k|nic)([0-9]+)$/', $name))
-             || (preg_match('/(V|v)irtual/', $name))) {
+             || (preg_match('/^vm(k|nic)([0-9]+)$/', $name ?? ''))
+             || (preg_match('/(V|v)irtual/', $name ?? ''))) {
             $network_ports[$typen]['virtual'] [] = $values;
          } else {
             $network_ports[$typen]['main'] = $values;

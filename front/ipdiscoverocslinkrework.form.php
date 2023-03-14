@@ -70,6 +70,17 @@ if(isset($_POST['submitipdconfigidt'])) {
     }
 }
 
+if(isset($_POST['submitipdconfigsnmp'])) {
+    $checkConf = $ipd->checkIfConfRecontExists($_POST['ocsserver_id']);
+
+    if($checkConf == 0) {
+        $ipd->insertNewReconConf($_POST);
+    }else {
+        $ipd->updateReconConf($_POST);
+    }
+    Html::back();
+}
+
 if(isset($_GET['delete']) && $_GET['delete'] == 'idt') {
     $ipd->removeIdtConf($_GET['id']);
     Html::back();

@@ -96,6 +96,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
    const IPDISCOVER_SYNCHRONIZED  = 18; //IPDISCOVER is synchronized
    const IPDISCOVER_REMOVED       = 19; //IPDISCOVER is removed
    const IPDISCOVER_FAILED_REMOVE = 20; //IPDISCOVER failed to remove item
+   const IPDISCOVER_MERGED_WITH_SNMP_EQUIPEMENT = 21; //IPDISCOVER merged with SNMP equipment
 
    /**
     *
@@ -1558,27 +1559,34 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
     */
    static function getAvailableStatistics($snmp = false, $ipdiscover = false) {
 
-      $stats = ['imported_machines_number'     => __('Computers imported', 'ocsinventoryng'),
-                'synchronized_machines_number' => __('Computers synchronized', 'ocsinventoryng'),
-                'linked_machines_number'       => __('Computers linked', 'ocsinventoryng'),
-                'notupdated_machines_number'   => __('Computers not updated', 'ocsinventoryng'),
-                'failed_rules_machines_number' => __("Computers don't check any rule", 'ocsinventoryng'),
-                'not_unique_machines_number'   => __('Duplicate computers', 'ocsinventoryng'),
-                'link_refused_machines_number' => __('Computers whose import is refused by a rule', 'ocsinventoryng')];
+      $stats = [
+         'imported_machines_number'     => __('Computers imported', 'ocsinventoryng'),
+         'synchronized_machines_number' => __('Computers synchronized', 'ocsinventoryng'),
+         'linked_machines_number'       => __('Computers linked', 'ocsinventoryng'),
+         'notupdated_machines_number'   => __('Computers not updated', 'ocsinventoryng'),
+         'failed_rules_machines_number' => __("Computers don't check any rule", 'ocsinventoryng'),
+         'not_unique_machines_number'   => __('Duplicate computers', 'ocsinventoryng'),
+         'link_refused_machines_number' => __('Computers whose import is refused by a rule', 'ocsinventoryng')
+      ];
       if ($snmp) {
-         $stats = ['imported_snmp_number'        => __('SNMP objects imported', 'ocsinventoryng'),
-                   'synchronized_snmp_number'    => __('SNMP objects synchronized', 'ocsinventoryng'),
-                   'linked_snmp_number'          => __('SNMP objects linked', 'ocsinventoryng'),
-                   'notupdated_snmp_number'      => __('SNMP objects not updated', 'ocsinventoryng'),
-                   'failed_imported_snmp_number' => __("SNMP objects not imported", 'ocsinventoryng')];
+         $stats = [
+            'imported_snmp_number'        => __('SNMP objects imported', 'ocsinventoryng'),
+            'synchronized_snmp_number'    => __('SNMP objects synchronized', 'ocsinventoryng'),
+            'linked_snmp_number'          => __('SNMP objects linked', 'ocsinventoryng'),
+            'notupdated_snmp_number'      => __('SNMP objects not updated', 'ocsinventoryng'),
+            'failed_imported_snmp_number' => __("SNMP objects not imported", 'ocsinventoryng')
+         ];
       }
       if ($ipdiscover) {
-         $stats = ['imported_ipdiscover_number'        => __('IPDISCOVER objects imported', 'ocsinventoryng'),
-                   'synchronized_ipdiscover_number'    => __('IPDISCOVER objects synchronized', 'ocsinventoryng'),
-                   'notupdated_ipdiscover_number'      => __('IPDISCOVER objects not updated', 'ocsinventoryng'),
-                   'failed_imported_ipdiscover_number' => __("IPDISCOVER objects not imported", 'ocsinventoryng'),
-                   'removed_ipdiscover_number'         => __("IPDISCOVER object removed", 'ocsinventoryng'),
-                   'failed_removed_ipdiscover_number'  => __("IPDISCOVER object not removed", 'ocsinventoryng')];
+         $stats = [
+            'imported_ipdiscover_number'        => __('IPDISCOVER objects imported', 'ocsinventoryng'),
+            'synchronized_ipdiscover_number'    => __('IPDISCOVER objects synchronized', 'ocsinventoryng'),
+            'merged_with_snmp_equipment'        => __("IPDISCOVER objects merged with SNMP object", 'ocsinventoryng'),
+            'notupdated_ipdiscover_number'      => __('IPDISCOVER objects not updated', 'ocsinventoryng'),
+            'failed_imported_ipdiscover_number' => __("IPDISCOVER objects not imported", 'ocsinventoryng'),
+            'removed_ipdiscover_number'         => __("IPDISCOVER object removed", 'ocsinventoryng'),
+            'failed_removed_ipdiscover_number'  => __("IPDISCOVER object not removed", 'ocsinventoryng')
+         ];
       }
 
       return $stats;
@@ -1669,6 +1677,10 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
 
          case self::IPDISCOVER_FAILED_REMOVE:
             $statistics["failed_removed_ipdiscover_number"]++;
+            break;
+
+         case self::IPDISCOVER_MERGED_WITH_SNMP_EQUIPEMENT:
+            $statistics["merged_with_snmp_equipment"]++;
             break;
       }
    }

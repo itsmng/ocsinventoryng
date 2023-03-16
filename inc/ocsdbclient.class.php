@@ -1646,33 +1646,37 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
       return $res;
    }
 
-   /**
+      /**
     * @param array $options
     *
     * @return array
     * @see PluginOcsinventoryngOcsClient::getSnmp()
     *
     */
-   public function getSnmpRework($ocs_srv = 1) {
-      global $DB, $CFG_GLPI;
+    public function getSnmpRework($ocs_srv = 1) {
+      global $DB;
 
-      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE a.ocs_srv = $ocs_srv GROUP BY `ocs_snmp_type_id`;";
-      $results = $DB->query($glpiQuery);
+      $tableToObject = [
+         "glpi_computers" => "Computer",
+         "glpi_networkequipments" => "NetworkEquipment",
+         "glpi_peripherals" => "Peripheral",
+         "glpi_phones" => "Phone",
+         "glpi_printers" => "Printer"
+      ];
 
-      $snmpLinks = [];
-      if ($DB->numrows($results) > 0) {
-         $i = 0;
-         while ($data = $DB->fetchArray($results)) {
-            $snmpLinks[$i]['object'] = $data["object"];
-            $snmpLinks[$i]['typeId'] = $data['ocs_snmp_type_id'];
-            $snmpLinks[$i]['reconsiliation'] = explode(',', $data['reconciliation']);
-            $i++;
-         }
+      $glpiQuery = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE ocs_srv=$ocs_srv GROUP BY ocs_snmp_type_id";
+      $glpiResult = $DB->query($glpiQuery);
+
+      $typeConfigured = [];
+
+      if($glpiResult) foreach($glpiResult as $id => $value) {
+         $typeConfigured[$value["ocs_snmp_type_id"]] = $tableToObject[$value["object"]];
       }
+
       $res["TOTAL_COUNT"] = 0;
 
-      foreach ($snmpLinks as $key => $value) {
-         $queryTable = "SELECT * FROM snmp_types WHERE ID = " . $value['typeId'];
+      foreach($typeConfigured as $ocsTypeId => $itemType) {
+         $queryTable = "SELECT * FROM `snmp_types` WHERE ID = " . $ocsTypeId;
          $table = $this->db->query($queryTable);
 
          if ($this->db->numrows($table)) {
@@ -1684,35 +1688,25 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
             $request = $this->db->query($query);
 
             if ($this->db->numrows($request)) {
-
                $count = 0;
                $snmpids = [];
-               while ($snmpid = $this->db->fetchAssoc($request)) {
-                  $where = " WHERE ";
-                  foreach ($value['reconsiliation'] as $reconciliationKey => $reconciliationValue) {
-                     if (isset($reconciliationValue) && $reconciliationValue != "") {
-                        $where .= $reconciliationValue . " = '" . $snmpid[$this->getOCSColumnNameByTableAndGlpiName($value['typeId'], $reconciliationValue)] . "' AND ";
-                        $haveReconsiliation = true;
-                     } else {
-                        $haveReconsiliation = false;
-                     }
-                  }
-                  if ($haveReconsiliation) {
-                     $where = rtrim($where, ' AND ');
-                  } else {
-                     $where = rtrim($where, ' WHERE ');
-                  }
 
-                  $queryExist = "SELECT * FROM `" . $value['object'] . "`" . $where;
-                  $requestExist = $DB->query($queryExist);
-                  if ($DB->numrows($requestExist) == 0 || !$haveReconsiliation) {
+               while ($snmpid = $this->db->fetchAssoc($request)) {
+                  $ocsId = $snmpid["ID"];
+
+                  $queryExists = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmpocslinks` WHERE plugin_ocsinventoryng_ocsservers_id=$ocs_srv 
+                     AND ocstype=$ocsTypeId AND itemtype='$itemType' AND ocs_id=$ocsId";
+                  $queryResult = $DB->query($queryExists);
+
+                  if($queryResult->num_rows == 0) {
                      $snmpids[] = $snmpid;
                      $count++;
                   }
                }
+
                $res["TOTAL_COUNT"] += $count;
                $complete = 1;
-               $res["SNMP"][$value['typeId']] = $snmpids;
+               $res["SNMP"][$ocsTypeId] = $snmpids;
                $snmpids = [];
             }
          }
@@ -1721,26 +1715,37 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
       return $res;
    }
 
+   
+   /**
+    * getSnmpReworkAlreadyImported
+    *
+    * @param  mixed $ocs_srv
+    * @return void
+    */
    public function getSnmpReworkAlreadyImported($ocs_srv = 1){
-      global $DB, $CFG_GLPI;
+      global $DB;
 
-      $glpiQuery = "SELECT `object`, `ocs_snmp_type_id`, (SELECT GROUP_CONCAT(glpi_col) FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` b WHERE a.ocs_snmp_type_id = b.ocs_snmp_type_id AND is_reconsiliation = 1 ) AS reconciliation FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` a WHERE a.ocs_srv = $ocs_srv GROUP BY `ocs_snmp_type_id`;";
-      $results = $DB->query($glpiQuery);
+      $tableToObject = [
+         "glpi_computers" => "Computer",
+         "glpi_networkequipments" => "NetworkEquipment",
+         "glpi_peripherals" => "Peripheral",
+         "glpi_phones" => "Phone",
+         "glpi_printers" => "Printer"
+      ];
 
-      $snmpLinks = [];
-      if ($DB->numrows($results) > 0) {
-         $i = 0;
-         while ($data = $DB->fetchArray($results)) {
-            $snmpLinks[$i]['object'] = $data["object"];
-            $snmpLinks[$i]['typeId'] = $data['ocs_snmp_type_id'];
-            $snmpLinks[$i]['reconsiliation'] = explode(',', $data['reconciliation']);
-            $i++;
-         }
+      $glpiQuery = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmplinkreworks` WHERE ocs_srv=$ocs_srv GROUP BY ocs_snmp_type_id";
+      $glpiResult = $DB->query($glpiQuery);
+
+      $typeConfigured = [];
+
+      if($glpiResult) foreach($glpiResult as $id => $value) {
+         $typeConfigured[$value["ocs_snmp_type_id"]] = $tableToObject[$value["object"]];
       }
+
       $res["TOTAL_COUNT"] = 0;
 
-      foreach ($snmpLinks as $key => $value) {
-         $queryTable = "SELECT * FROM snmp_types WHERE ID = " . $value['typeId'];
+      foreach($typeConfigured as $ocsTypeId => $itemType) {
+         $queryTable = "SELECT * FROM `snmp_types` WHERE ID = " . $ocsTypeId;
          $table = $this->db->query($queryTable);
 
          if ($this->db->numrows($table)) {
@@ -1752,36 +1757,25 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
             $request = $this->db->query($query);
 
             if ($this->db->numrows($request)) {
-               $snmpids = [];
                $count = 0;
+               $snmpids = [];
+
                while ($snmpid = $this->db->fetchAssoc($request)) {
-                  $where = " WHERE ";
-                  foreach ($value['reconsiliation'] as $reconciliationKey => $reconciliationValue) {
-                     if (isset($reconciliationValue) && $reconciliationValue != "") {
-                        $where .= $reconciliationValue . " = '" . $snmpid[$this->getOCSColumnNameByTableAndGlpiName($value['typeId'], $reconciliationValue)] . "' AND ";
-                        $haveReconsiliation = true;
-                     } else {
-                        $haveReconsiliation = false;
-                     }
-                  }
-                  if ($haveReconsiliation) {
-                     $where = rtrim($where, ' AND ');
-                  } else {
-                     $where = rtrim($where, ' WHERE ');
-                  }
+                  $ocsId = $snmpid["ID"];
 
-                  if ($haveReconsiliation) {
-                     $queryExist = "SELECT * FROM `" . $value['object'] . "`" . $where;
-                     $requestExist = $DB->query($queryExist);
-                     if ($DB->numrows($requestExist) > 0) {
-                        $snmpids[] = $snmpid;
-                        $count++;
-                     }
+                  $queryExists = "SELECT * FROM `glpi_plugin_ocsinventoryng_snmpocslinks` WHERE plugin_ocsinventoryng_ocsservers_id=$ocs_srv 
+                     AND ocstype=$ocsTypeId AND itemtype='$itemType' AND ocs_id=$ocsId";
+                  $queryResult = $DB->query($queryExists);
+                  
+                  if($queryResult->num_rows > 0) {
+                     $snmpids[] = $snmpid;
+                     $count++;
                   }
-
                }
+
                $res["TOTAL_COUNT"] += $count;
-               $res["SNMP"][$value['typeId']] = $snmpids;
+               $complete = 1;
+               $res["SNMP"][$ocsTypeId] = $snmpids;
                $snmpids = [];
             }
          }

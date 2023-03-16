@@ -562,7 +562,7 @@ function plugin_ocsinventoryng_install() {
          $DB->queryOrDie($query, "1.7.6 update table glpi_plugin_ocsinventoryng_snmpocslinks");
       }
       
-      if ($DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation")) {
+      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation")) {
          $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.6-update.sql");
       }/*1.7.6*/
 

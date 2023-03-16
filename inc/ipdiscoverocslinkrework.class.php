@@ -903,13 +903,22 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
                     $itemId = $equipment['id'];
                     $itemType = $equipment['itemtype'];
 
+                    $checkIfExists = "SELECT id FROM `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` WHERE `macaddress`='$mac' AND `status`='noninventoried'";
+                    $checkIfExistsResult = $DB->query($checkIfExists);
+
+                    if($checkIfExistsResult->num_rows > 0) {
+                        // Delete before insert
+                        $deleteIpd = "DELETE FROM `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` WHERE `macaddress`='$mac'";
+                        $DB->query($deleteIpd);
+                    }
+
                     $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
                         (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
                         VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerId, 'identified')";
     
                     $check = $DB->query($glpiQuery);
 
-                    if(!is_null($configReconciliation["switch"])) {
+                    if($check && !is_null($configReconciliation["switch"])) {
                         $equipmentData = [
                             "mac" => $mac,
                             "type" => $configReconciliation["switch"],

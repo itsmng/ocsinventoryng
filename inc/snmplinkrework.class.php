@@ -427,7 +427,7 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 			}
 
 			$Equipment = new $object();
-
+			
 			if(count($input) > 1) {
 				// If no reconciliation add equipment without check
 				if(empty($reconciliation)) {
@@ -448,6 +448,8 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 						if(count($ifExists) == 0) {
 							$objId = $Equipment->add($input);
 						}
+					} elseif(array_key_exists($reconciliationColumn, self::$networkColumns)) {
+						$objId = $Equipment->add($input);
 					}
 				}
 
@@ -480,7 +482,10 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 					}
 
 					if(isset($data["networks_macaddress_id"]) && trim($OCSSnmpRowData[$data["networks_macaddress_id"]])!= "") {
-						$inputNetwork["mac"] = (strpos($OCSSnmpRowData[$data["networks_macaddress_id"]] ?? "", '.') !== false) ? '' : $OCSSnmpRowData[$data["networks_macaddress_id"]];
+						if(strlen($OCSSnmpRowData[$data["networks_macaddress_id"]]) == 14) $mac = "00:".$OCSSnmpRowData[$data["networks_macaddress_id"]];
+						else $mac = $OCSSnmpRowData[$data["networks_macaddress_id"]];
+
+						$inputNetwork["mac"] = (strpos($mac ?? "", '.') !== false) ? '' : $mac;
 					}
 
 					$defaultInputNetwork = [
@@ -612,7 +617,10 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 					}
 
 					if(isset($data["networks_macaddress_id"]) && trim($OCSSnmpRowData[$data["networks_macaddress_id"]])!= "") {
-						$inputNetwork["mac"] = (strpos($OCSSnmpRowData[$data["networks_macaddress_id"]] ?? "", '.') !== false) ? '' : $OCSSnmpRowData[$data["networks_macaddress_id"]];
+						if(strlen($OCSSnmpRowData[$data["networks_macaddress_id"]]) == 14) $mac = "00:".$OCSSnmpRowData[$data["networks_macaddress_id"]];
+						else $mac = $OCSSnmpRowData[$data["networks_macaddress_id"]];
+
+						$inputNetwork["mac"] = (strpos($mac ?? "", '.') !== false) ? '' : $mac;
 					}
 
 					if(!empty($inputNetwork)) {

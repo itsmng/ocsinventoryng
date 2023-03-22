@@ -143,6 +143,7 @@ $fields["failed_imported_ipdiscover_number"] = 0;
 $fields["synchronized_ipdiscover_number"] = 0;
 $fields["removed_ipdiscover_number"] = 0;
 $fields["failed_removed_ipdiscover_number"] = 0;
+$fields["merged_with_snmp_equipment"] = 0;
 $fields["total_number_machines"] = 0;
 $fields["error_msg"] = '';
 $force = (isset($_GET['force'])) ? true : false;

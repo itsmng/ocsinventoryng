@@ -2200,3 +2200,19 @@ msgstr "Le type OCS et le type GLPI ne peuvent pas être vide"
 #: inc/ipdiscoverocslinkrework.form.php:52
 msgid "Fields cannot be identical"
 msgstr "Les champs ne peuvent pas être identiques"
+
+#: inc/ipdiscoverocslinkrework.class.php:177
+msgid "Configuring the binding of IpDiscover and SNMP equipments"
+msgstr "Configuration de la liaison des équipements IpDiscover et SNMP"
+
+#: inc/ipdiscoverocslinkrework.class.php:181
+msgid "Merge IpDiscover equipment with SNMP equipment if IP address matches"
+msgstr "Fusionner l'équipement IpDiscover avec l'équipement SNMP si l'adresse IP correspond"
+
+#: inc/ocsprocess.class.php:1584
+msgid "IPDISCOVER objects merged with SNMP object"
+msgstr "Objets IPDISCOVER fusionnés avec un objet SNMP"
+
+#: inc/ipdiscoverocslinkrework.class.php:187
+msgid "Switch the equipment to identified on OCS with type"
+msgstr "Passer l'équipement à identifié dans OCS avec le type"

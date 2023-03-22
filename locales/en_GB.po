@@ -2149,3 +2149,19 @@ msgstr ""
 #: inc/ipdiscoverocslinkrework.form.php:52
 msgid "Fields cannot be identical"
 msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:177
+msgid "Configuring the binding of IpDiscover and SNMP equipments"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:181
+msgid "Merge IpDiscover equipment with SNMP equipment if IP address matches"
+msgstr ""
+
+#: inc/ocsprocess.class.php:1584
+msgid "IPDISCOVER objects merged with SNMP object"
+msgstr ""
+
+#: inc/ipdiscoverocslinkrework.class.php:187
+msgid "Switch the equipment to identified on OCS with type"
+msgstr ""

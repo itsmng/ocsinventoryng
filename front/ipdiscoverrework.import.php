@@ -45,6 +45,7 @@ if ($plugin->isActivated("ocsinventoryng")) {
     $_SESSION["ocs_importipdiscover"]['statistics']["synchronized_ipdiscover_number"] = 0;
     $_SESSION["ocs_importipdiscover"]['statistics']["removed_ipdiscover_number"] = 0;
     $_SESSION["ocs_importipdiscover"]['statistics']["failed_removed_ipdiscover_number"] = 0;
+    $_SESSION["ocs_importipdiscover"]['statistics']["merged_with_snmp_equipment"] = 0;
     $_SESSION["ocs_importipdiscover"]['statistics']["total_number_machines"] = 0;
 
     if (!isset($_GET['action'])) {

@@ -104,8 +104,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     static function getOCSTypes() {
         $ocsClient = new PluginOcsinventoryngOcsServer();
         $DBOCS     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"])->getDB();
-        $query     = "SELECT `devicetype`.`id` , `devicetype`.`name`
-                      FROM `devicetype`";
+        $query     = "SELECT `devicetype`.`id` , `devicetype`.`name` FROM `devicetype`";
         $result    = $DBOCS->query($query);
         $types = [
             0 => '-----'
@@ -145,6 +144,9 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
 
         $configNonInv = [];
 
+        $configReconciliation = 0;
+        $configOCSType = 0;
+
         $linkFields = [
             '0' => '-----',
             'locations_id' => __('Location'),
@@ -159,6 +161,43 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv', ['plugin_ocsinventoryng_ocsservers_id' => $ID]) as $id => $row) {
             $configNonInv[$row['ocs_type']] = $row['link_field'];
         }
+
+        foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', ['plugin_ocsinventoryng_ocsservers_id' => $ID]) as $id => $row) {
+            $configReconciliation = $row['merge_ipd_in_snmp'];
+            $configOCSType = $row['switch_to_identified_type'];
+        }
+
+        $ocsTypes = self::getOCSTypes();
+
+        echo "<div>";
+        echo "<form name='formipdconfigsnmp' id='formipdconfigsnmp' action='" . Toolbox::getItemTypeFormURL("PluginOcsinventoryngIpdiscoverOcslinkrework") . "' method='post'>";
+        echo "<table class='tab_cadre_fixe'>\n";
+
+        echo "<tr><th colspan ='4'>";
+        echo __('Configuring the binding of IpDiscover and SNMP equipments', 'ocsinventoryng');
+        echo "</th></tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Merge IpDiscover equipment with SNMP equipment if IP address matches', 'ocsinventoryng') . "</td>";
+        echo "<td>";
+        Dropdown::showFromArray('merge_ipd_in_snmp', [0 => __("No"), 1 => __("Yes")], ['value' => $configReconciliation]);
+        echo "</td></tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Switch the equipment to identified on OCS with type', 'ocsinventoryng') . "</td>";
+        echo "<td>";
+        Dropdown::showFromArray('ocstype_identified', $ocsTypes, ["value" => $configOCSType]);
+        echo "</td></tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td class='center' colspan ='4'>";
+        echo "<input type='hidden' name='ocsserver_id' value='".$ID."'>";
+        echo "<input type='submit' name='submitipdconfigsnmp' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
+        echo "</td></tr>";
+
+        echo "</table>\n";
+        Html::closeForm();
+        echo "</div>";
 
         echo "<div>";
         echo "<form name='formipdconfignoninv' id='formipdconfignoninv' action='" . Toolbox::getItemTypeFormURL("PluginOcsinventoryngIpdiscoverOcslinkrework") . "' method='post'>";
@@ -196,8 +235,6 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         echo "</table>\n";
         Html::closeForm();
         echo "</div>";
-
-        $ocsTypes = self::getOCSTypes();
 
         echo "<div>";
         echo "<form name='formipdconfigidt' id='formipdconfigidt' action='" . Toolbox::getItemTypeFormURL("PluginOcsinventoryngIpdiscoverOcslinkrework") . "' method='post'>";
@@ -308,6 +345,56 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
             'glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt', [
                'ocs_type' => $post['ocstype'],
                'glpi_obj' => $post['glpitype'],
+               'plugin_ocsinventoryng_ocsservers_id' => $post['ocsserver_id']
+            ]
+        );
+    }
+    
+    /**
+     * checkIfConfRecontExists
+     *
+     * @param  mixed $ID
+     * @return void
+     */
+    public function checkIfConfRecontExists($ID) {
+        global $DB;
+
+        $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', ['plugin_ocsinventoryng_ocsservers_id' => $ID]);
+        return count($req);
+    }
+    
+    /**
+     * insertNewReconConf
+     *
+     * @param  mixed $post
+     * @return void
+     */
+    public function insertNewReconConf($post) {
+        global $DB;
+
+        $DB->insert(
+            'glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', [
+               'merge_ipd_in_snmp' => $post['merge_ipd_in_snmp'],
+               'switch_to_identified_type' => ($post['ocstype_identified'] == "0") ? null : $post['ocstype_identified'],
+               'plugin_ocsinventoryng_ocsservers_id' => $post['ocsserver_id']
+            ]
+        );
+    }
+    
+    /**
+     * updateReconConf
+     *
+     * @param  mixed $post
+     * @return void
+     */
+    public function updateReconConf($post) {
+        global $DB;
+
+        $DB->update(
+            'glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', [
+               'merge_ipd_in_snmp'  => $post['merge_ipd_in_snmp'],
+               'switch_to_identified_type' => ($post['ocstype_identified'] == "0") ? null : $post['ocstype_identified'],
+            ], [
                'plugin_ocsinventoryng_ocsservers_id' => $post['ocsserver_id']
             ]
         );
@@ -449,6 +536,11 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
 
         $configNonInv = [];
         $configIdent = [];
+        $configReconciliation = [
+            "merged" => 0,
+            "switch" => null
+        ];
+
         // Get IpDiscover config non-ident
         foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerID]) as $value) {
             $configNonInv[$value["ocs_type"]] = $value["link_field"];
@@ -457,6 +549,12 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         // Get Ipdiscover config ident
         foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworkidt', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerID]) as $value) {
             $configIdent[$value["ocs_type"]] = $value["glpi_obj"];
+        }
+
+        // Get Ipdiscover config reconciliation with SNMP
+        foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerID]) as $value) {
+            $configReconciliation["merged"] = $value["merge_ipd_in_snmp"];
+            $configReconciliation["switch"] = $value["switch_to_identified_type"];
         }
 
         // Create a new element status for NetworkEquipment ipdiscover inventory
@@ -496,9 +594,9 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         }
 
         if($params['inventory_type'] == "noninventoried") {
-            $status = self::importNonInventoried($ipdDatas, $ocsServerID, $stateid, $configNonInv);
+            $status = self::importNonInventoried($ipdDatas, $ocsServerID, $stateid, $configNonInv, $configReconciliation);
         } elseif($params['inventory_type'] == "identified") {
-            $status = self::importIdentified($ipdDatas, $ocsServerID, $configNonInv, $configIdent, $stateidentid);
+            $status = self::importIdentified($ipdDatas, $ocsServerID, $configNonInv, $configIdent, $stateidentid, $configReconciliation);
         } else {
             $status = ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_NOTUPDATED];
         }
@@ -515,88 +613,114 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
      * @param  mixed $configIdent
      * @return void
      */
-    static function importIdentified($ipdDatas, $ocsServerID, $configNonInv, $configIdent, $stateidentid) {
+    static function importIdentified($ipdDatas, $ocsServerID, $configNonInv, $configIdent, $stateidentid, $configReconciliation) {
         global $DB;
 
-        foreach($ipdDatas as $key => $value) {
-            if(array_key_exists($key, $configNonInv) && $configNonInv[$key] != "0") {
-                if(array_key_exists($configNonInv[$key], self::$corr) && trim($value ?? "") != "") {
-                    $obj = new self::$corr[$configNonInv[$key]]();
-                    $verif = $obj->find(["name" => $value]);
-                    if(count($verif) == 0) {
-                        $obj->add([
-                            "name" => $value
-                        ]);
+        $ipExists = [];
+
+        if($configReconciliation["merged"]) {
+            $IpAddress = new IpAddress();
+            $ipExists = $IpAddress->find(["name" => $ipdDatas['ip']]); 
+        }
+
+        if(empty($ipExists)) {
+            foreach($ipdDatas as $key => $value) {
+                if(array_key_exists($key, $configNonInv) && $configNonInv[$key] != "0") {
+                    if(array_key_exists($configNonInv[$key], self::$corr) && trim($value ?? "") != "") {
+                        $obj = new self::$corr[$configNonInv[$key]]();
+                        $verif = $obj->find(["name" => $value]);
+                        if(count($verif) == 0) {
+                            $obj->add([
+                                "name" => $value
+                            ]);
+                        }
+                        foreach($obj->find(["name" => $value]) as $id) {
+                            $objId[$configNonInv[$key]] = $id['id'];
+                        }
                     }
-                    foreach($obj->find(["name" => $value]) as $id) {
-                        $objId[$configNonInv[$key]] = $id['id'];
+                    if(in_array($configNonInv[$key], array('comment', 'contact'))) {
+                        $objId[$configNonInv[$key]] = $value;
                     }
-                }
-                if(in_array($configNonInv[$key], array('comment', 'contact'))) {
-                    $objId[$configNonInv[$key]] = $value;
                 }
             }
-        }
-        
-        if(isset($configIdent[$ipdDatas['type']])) {
-            $Equipment = new $configIdent[$ipdDatas['type']]();
-            $className = $configIdent[$ipdDatas['type']];
+            
+            if(isset($configIdent[$ipdDatas['type']])) {
+                $Equipment = new $configIdent[$ipdDatas['type']]();
+                $className = $configIdent[$ipdDatas['type']];
+            } else {
+                $Equipment = new NetworkEquipment();
+                $className = 'NetworkEquipment';
+            }
+
+            $input = [
+                'is_dynamic'   => 1,
+                'locations_id' => 0,
+                'entities_id'  => 0,
+                'name'         => $ipdDatas['description'],
+                'comment'      => '',
+                'contact'      => $ipdDatas['user'],
+                'states_id'    => $stateidentid
+            ];
+            
+            if(isset($objId)) {
+                foreach($objId as $column => $data) {
+                    $input[$column] = $data;
+                }
+            }
+
+            $equipment = $Equipment->add($input);
+
+            $NetworkPort = new NetworkPort();
+
+            $port_input = [
+                'name'                     => $ipdDatas['description'],
+                'mac'                      => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
+                'items_id'                 => $equipment,
+                'itemtype'                 => $className,
+                'instantiation_type'       => "NetworkPortEthernet",
+                "entities_id"              => 0,
+                "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? str_replace(" ", "", $ipdDatas['subnet']) : $ipdDatas['ip'],
+                "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
+                '_create_children'         => 1,
+                'is_deleted'               => 0,
+                'comment'                  => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
+            ];
+
+            $NetworkPort->add($port_input);
+
+            $mac = $ipdDatas['mac'];
+            $date = $ipdDatas['date'];
+            $subnet = $ipdDatas['netid'];
+
+            $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                VALUES($equipment,'$className','$mac','$date','$subnet',$ocsServerID, 'identified')";
+
+            $check = $DB->query($glpiQuery);
+
+            if(!$check) {
+                return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_FAILED_IMPORT];
+            }
+            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED];
         } else {
-            $Equipment = new NetworkEquipment();
-            $className = 'NetworkEquipment';
-        }
+            
+            $mac = $ipdDatas['mac'];
+            $date = $ipdDatas['date'];
+            $subnet = $ipdDatas['netid'];
 
-        $input = [
-            'is_dynamic'   => 1,
-            'locations_id' => 0,
-            'entities_id'  => 0,
-            'name'         => $ipdDatas['description'],
-            'comment'      => '',
-            'contact'      => $ipdDatas['user'],
-            'states_id'    => $stateidentid
-        ];
-        
-        if(isset($objId)) {
-            foreach($objId as $column => $data) {
-                $input[$column] = $data;
+            foreach($ipExists as $data) {
+                $itemId = $data["mainitems_id"];
+                $itemType = $data["mainitemtype"];
             }
+    
+            $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerID, 'identified')";
+    
+            $check = $DB->query($glpiQuery);
+
+            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_MERGED_WITH_SNMP_EQUIPEMENT];
         }
-
-        $equipment = $Equipment->add($input);
-
-        $NetworkPort = new NetworkPort();
-
-        $port_input = [
-            'name'                     => $ipdDatas['description'],
-            'mac'                      => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
-            'items_id'                 => $equipment,
-            'itemtype'                 => $className,
-            'instantiation_type'       => "NetworkPortEthernet",
-            "entities_id"              => 0,
-            "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? str_replace(" ", "", $ipdDatas['subnet']) : $ipdDatas['ip'],
-            "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
-            '_create_children'         => 1,
-            'is_deleted'               => 0,
-            'comment'                  => (strpos($ipdDatas['mac'] ?? "", '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
-        ];
-
-        $NetworkPort->add($port_input);
-
-        $mac = $ipdDatas['mac'];
-        $date = $ipdDatas['date'];
-        $subnet = $ipdDatas['netid'];
-
-        $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
-            (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
-            VALUES($equipment,'$className','$mac','$date','$subnet',$ocsServerID, 'identified')";
-
-        $check = $DB->query($glpiQuery);
-
-        if(!$check) {
-            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_FAILED_IMPORT];
-        }
-        return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED];
-        
     }
     
     /**
@@ -608,77 +732,115 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
      * @param  mixed $configNonInv
      * @return void
      */
-    static function importNonInventoried($ipdDatas, $ocsServerID, $stateid, $configNonInv) {
+    static function importNonInventoried($ipdDatas, $ocsServerID, $stateid, $configNonInv, $configReconciliation) {
         global $DB;
 
-        foreach($ipdDatas as $key => $value) {
-            if(array_key_exists($key, $configNonInv) && $configNonInv[$key] != "0") {
-                if(array_key_exists($configNonInv[$key], self::$corr) && trim($value) != "") {
-                    $obj = new self::$corr[$configNonInv[$key]]();
-                    $verif = $obj->find(["name" => $value]);
-                    if(count($verif) == 0) {
-                        $obj->add([
-                            "name" => $value
-                        ]);
-                    }
-                    foreach($obj->find(["name" => $value]) as $id) {
-                        $objId[$configNonInv[$key]] = $id['id'];
+        $ipExists = [];
+
+        if($configReconciliation["merged"]) {
+            $IpAddress = new IpAddress();
+            $ipExists = $IpAddress->find(["name" => $ipdDatas['ip']]); 
+        }
+
+        if(empty($ipExists)) {
+            foreach($ipdDatas as $key => $value) {
+                if(array_key_exists($key, $configNonInv) && $configNonInv[$key] != "0") {
+                    if(array_key_exists($configNonInv[$key], self::$corr) && trim($value) != "") {
+                        $obj = new self::$corr[$configNonInv[$key]]();
+                        $verif = $obj->find(["name" => $value]);
+                        if(count($verif) == 0) {
+                            $obj->add([
+                                "name" => $value
+                            ]);
+                        }
+                        foreach($obj->find(["name" => $value]) as $id) {
+                            $objId[$configNonInv[$key]] = $id['id'];
+                        }
                     }
                 }
             }
-        }
-        
-        $NetworkEquipment = new NetworkEquipment();
-        
-        $input = [
-            'is_dynamic'   => 1,
-            'locations_id' => 0,
-            'entities_id'  => 0,
-            'name'         => $ipdDatas['ip'],
-            'comment'      => '',
-            'states_id'    => $stateid,
-        ];
-        
-        if(isset($objId)) {
-            foreach($objId as $column => $data) {
-                $input[$column] = $data;
+            
+            $NetworkEquipment = new NetworkEquipment();
+            
+            $input = [
+                'is_dynamic'   => 1,
+                'locations_id' => 0,
+                'entities_id'  => 0,
+                'name'         => $ipdDatas['ip'],
+                'comment'      => '',
+                'states_id'    => $stateid,
+            ];
+            
+            if(isset($objId)) {
+                foreach($objId as $column => $data) {
+                    $input[$column] = $data;
+                }
             }
-        }
+    
+            $equipment = $NetworkEquipment->add($input);
+    
+            $NetworkPort = new NetworkPort();
+    
+            $port_input = [
+                'name'                     => $ipdDatas['ip'],
+                'mac'                      => (strpos($ipdDatas['mac'], '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
+                'items_id'                 => $equipment,
+                'itemtype'                 => "NetworkEquipment",
+                'instantiation_type'       => "NetworkPortEthernet",
+                "entities_id"              => 0,
+                "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? str_replace(" ", "", $ipdDatas['subnet']) : $ipdDatas['ip'],
+                "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
+                '_create_children'         => 1,
+                'is_deleted'               => 0,
+                'comment'                  => (strpos($ipdDatas['mac'], '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
+            ];
+    
+            $networkPortId = $NetworkPort->add($port_input);
+    
+            $mac = $ipdDatas['mac'];
+            $date = $ipdDatas['date'];
+            $subnet = $ipdDatas['netid'];
+    
+            $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                VALUES($equipment,'NetworkEquipment','$mac','$date','$subnet',$ocsServerID, 'noninventoried')";
+    
+            $check = $DB->query($glpiQuery);
+    
+            if(!$check) {
+                return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_FAILED_IMPORT];
+            }
+            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED];
+        } else {
 
-        $equipment = $NetworkEquipment->add($input);
+            if(!is_null($configReconciliation["switch"])) {
+                $equipment = [
+                    "mac" => $ipdDatas['mac'],
+                    "type" => $configReconciliation["switch"],
+                    "description" => "Inventoried SNMP device",
+                    "user" => $_SESSION["glpiname"] ?? null
+                ];
 
-        $NetworkPort = new NetworkPort();
+                self::updateOCSLink($equipment, $ocsServerID);
+            }
+            
+            $mac = $ipdDatas['mac'];
+            $date = $ipdDatas['date'];
+            $subnet = $ipdDatas['netid'];
 
-        $port_input = [
-            'name'                     => $ipdDatas['ip'],
-            'mac'                      => (strpos($ipdDatas['mac'], '.') !== false) ? 'ff:ff:ff:ff:ff:ff' : $ipdDatas['mac'],
-            'items_id'                 => $equipment,
-            'itemtype'                 => "NetworkEquipment",
-            'instantiation_type'       => "NetworkPortEthernet",
-            "entities_id"              => 0,
-            "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? str_replace(" ", "", $ipdDatas['subnet']) : $ipdDatas['ip'],
-            "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
-            '_create_children'         => 1,
-            'is_deleted'               => 0,
-            'comment'                  => (strpos($ipdDatas['mac'], '.') !== false) ? 'Remote scanned device from ipdiscover' : '',
-        ];
+            foreach($ipExists as $data) {
+                $itemId = $data["mainitems_id"];
+                $itemType = $data["mainitemtype"];
+            }
+    
+            $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerID, 'identified')";
+    
+            $check = $DB->query($glpiQuery);
 
-        $networkPortId = $NetworkPort->add($port_input);
-
-        $mac = $ipdDatas['mac'];
-        $date = $ipdDatas['date'];
-        $subnet = $ipdDatas['netid'];
-
-        $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
-            (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
-            VALUES($equipment,'NetworkEquipment','$mac','$date','$subnet',$ocsServerID, 'noninventoried')";
-
-        $check = $DB->query($glpiQuery);
-
-        if(!$check) {
-            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_FAILED_IMPORT];
-        }
-        return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_IMPORTED];
+            return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_MERGED_WITH_SNMP_EQUIPEMENT];
+        }  
     }
     
     /**
@@ -709,6 +871,69 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     }
     
     /**
+     * checkSnmpIp
+     *
+     * @param  mixed $ipadress
+     * @param  mixed $ocsServerId
+     * @param  mixed $equipment
+     * 
+     * @return void
+     */
+    static function checkSnmpIp($ipadress, $ocsServerId, $equipment, $configReconciliation) {
+        global $DB;
+
+        $IpAddress = new IpAddress();
+        $ipExists = $IpAddress->find(["name" => $ipadress]);
+
+        if(!empty($ipExists)) {
+            // Search if it's an ipd device
+            foreach($ipExists as $ipdata) {
+                $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', [
+                    'plugin_ocsinventoryng_ocsservers_id' => $ocsServerId, 
+                    'items_id' => $ipdata['mainitems_id'],
+                ]);
+                
+                if($ipd = $req->next()) {
+                    $Equipment = new $ipd["itemtype"]();
+                    $Equipment->delete(['id' => $ipd['items_id'], "purge" => 1], 1);
+
+                    $mac = $ipd['macaddress'];
+                    $date = $ipd['last_update'];
+                    $subnet = $ipd['subnet'];
+                    $itemId = $equipment['id'];
+                    $itemType = $equipment['itemtype'];
+
+                    $checkIfExists = "SELECT id FROM `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` WHERE `macaddress`='$mac' AND `status`='noninventoried'";
+                    $checkIfExistsResult = $DB->query($checkIfExists);
+
+                    if($checkIfExistsResult->num_rows > 0) {
+                        // Delete before insert
+                        $deleteIpd = "DELETE FROM `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` WHERE `macaddress`='$mac'";
+                        $DB->query($deleteIpd);
+                    }
+
+                    $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                        (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                        VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerId, 'identified')";
+    
+                    $check = $DB->query($glpiQuery);
+
+                    if($check && !is_null($configReconciliation["switch"])) {
+                        $equipmentData = [
+                            "mac" => $mac,
+                            "type" => $configReconciliation["switch"],
+                            "description" => "Inventoried SNMP device",
+                            "user" => $_SESSION["glpiname"] ?? null
+                        ];
+        
+                        self::updateOCSLink($equipmentData, $ocsServerId);
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * updateIpDiscover
      *
      * @param  mixed $ipdDatas
@@ -720,10 +945,20 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         global $DB;
 
         $configNonInv = [];
-        $configIdent = [];
+        $configReconciliation = [
+            "merged" => 0,
+            "switch" => null
+        ];
+
         // Get IpDiscover config non-ident
         foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinksreworknoninv', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerId]) as $value) {
             $configNonInv[$value["ocs_type"]] = $value["link_field"];
+        }
+
+        // Get Ipdiscover config reconciliation with SNMP
+        foreach($DB->request('glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerId]) as $value) {
+            $configReconciliation["merged"] = $value["merge_ipd_in_snmp"];
+            $configReconciliation["switch"] = $value["switch_to_identified_type"];
         }
 
         foreach($ipdDatas as $key => $value) {
@@ -746,28 +981,30 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
         $req = $DB->request('glpi_plugin_ocsinventoryng_ipdiscoverocslinks', ['plugin_ocsinventoryng_ocsservers_id' => $ocsServerId, 'macaddress' => $ipdDatas['mac']]);
 
         if ($ipd = $req->next()) {
-            $equipment = new $ipd['itemtype']();
+            if(!$configReconciliation["merged"] || ($configReconciliation["merged"] && !isset($ipdDatas['description']) && !isset($ipdDatas['user']))) {                
+                $equipment = new $ipd['itemtype']();
 
-            $input = [
-                'id'           => $ipd['items_id'],
-                'is_dynamic'   => 1,
-                'locations_id' => 0,
-                'entities_id'  => 0,
-                'name'         => (isset($ipdDatas['description']) && $ipdDatas['description'] != "") ? $ipdDatas['description'] : $ipdDatas['ip'],
-                'comment'      => '',
-                'contact'      => (isset($ipdDatas['user'])) ? $ipdDatas['user'] : '',
-            ];
-
-            if(isset($objId)) {
-                foreach($objId as $column => $data) {
-                    $input[$column] = $data;
+                $input = [
+                    'id'           => $ipd['items_id'],
+                    'is_dynamic'   => 1,
+                    'locations_id' => 0,
+                    'entities_id'  => 0,
+                    'name'         => (isset($ipdDatas['description']) && $ipdDatas['description'] != "") ? $ipdDatas['description'] : $ipdDatas['ip'],
+                    'comment'      => '',
+                    'contact'      => (isset($ipdDatas['user'])) ? $ipdDatas['user'] : '',
+                ];
+    
+                if(isset($objId)) {
+                    foreach($objId as $column => $data) {
+                        $input[$column] = $data;
+                    }
                 }
-            }
-
-            $result = $equipment->update($input);
-
-            if(!$result) {
-                return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_NOTUPDATED];
+    
+                $result = $equipment->update($input);
+    
+                if(!$result) {
+                    return ['status' => PluginOcsinventoryngOcsProcess::IPDISCOVER_NOTUPDATED];
+                }
             }
 
             $reqUpdate = $DB->update(

@@ -1,36 +1,38 @@
-# Plugin ocsinventoryng for GLPI
-![Logo ocsinventoryng](https://raw.githubusercontent.com/pluginsGLPI/ocsinventoryng/master/ocsinventoryng.png "Logo ocsinventoryng")
+# Plugin ocsinventoryng for ITSM-NG
 
-![Menu ocsinventoryng](https://raw.githubusercontent.com/pluginsGLPI/ocsinventoryng/master/wiki/menu.png "Menu ocsinventoryng")
+![Logo ocsinventoryng](https://raw.githubusercontent.com/itsmng/ocsinventoryng/master/ocsinventoryng.png "Logo ocsinventoryng")
 
-* Français
+![Menu ocsinventoryng](https://raw.githubusercontent.com/itsmng/ocsinventoryng/master/wiki/menu.png "Menu ocsinventoryng")
 
-Ce plugin permet de synchroniser GLPI avec la solution d'inventaire OCS Inventory NG (http://www.ocsinventory-ng.org/fr/).
+This plugin is connector between OCS Inventory software and ITSM-NG (https://ocsinventory-ng.org/).
 
-Il remplace le mode OCS natif de GLPI (en version 0.84) et d'apporter les fonctionnalités du plugin massocsimport afin d'offrir une meilleure compatibilité et évolutivité avec OCS Inventory.
+It bundle a lot of feature in order to import the following data from OCS Inventory :
+- Computers information
+- Softwares information
+- SNMP Scanned devices
+- IPDiscover scans
+- OCS' plugins information
 
-Automatisation de l'import OCSInventory-NG
-Il est composée d'un script (PHP ou Shell) permettant d'automatiser l'import et la mise à jour des machines.
-Une interface affiche la liste des scripts en cours ou terminés, ainsi que l'ensemble des données qui s'y rattachent.
+Supported plugin list : 
+- Office licences
+- Antivirus information
+- Windows update status
+- Uptime
+- Teamviewer
+- Windows users 
+- Proxy configuration
+- Extended operating system information
+- Services
+- Custom installed application
+- Network drives
+- Process list
+- Bitlocker
 
-WIKI : https://github.com/pluginsGLPI/ocsinventoryng/wiki
+Additional plugin can be supported if needed, please create an issue if you feel one plugin compatibility is missing !
 
-Archives (releases) : https://forge.glpi-project.org/projects/ocsinventoryng/files
+OCS Inventory plugin provide a automated import of the computers present in the OCS database.
+Its composed of a script in order to automate computer import and synchronization.
 
-Ce plugin est sur Transifex - Aidez-nous à le traduire : https://www.transifex.com/yllen/GLPI_ocsinventoryng/dashboard/
+A web page displays the list of running scripts and their status alongside all the data related to the import.
 
-* English
-
-This plugin allows you to synchronize with GLPI inventory solution OCS Inventory NG (http://www.ocsinventory-ng.org/fr/).
-
-It replace native mode OCS of GLPI (0.84 version) and use the plugin massocsimport functionalities to provide better compatibility and expandability with OCS.
-
-OCSInventory-NG import automation
-It's composed of a script (PHP or Shell) to automate import or synchronisation of computers.
-A graphical interface displays the list of scripts running or finished and all the datas related ot them.
-
-WIKI : https://github.com/pluginsGLPI/ocsinventoryng/wiki
-
-Archives (releases) : https://forge.glpi-project.org/projects/ocsinventoryng/files
-
-This plugin is on Transifex - Help us to translate : https://www.transifex.com/yllen/GLPI_ocsinventoryng/dashboard/
+__Note : This plugin is a fork of the former ocsinventoryng plugin__

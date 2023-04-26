@@ -74,7 +74,7 @@ msgstr "OCSNG"
 
 #: hook.php:920 hook.php:1052 inc/ocslink.class.php:119
 msgid "GLPI import date"
-msgstr "GLPI içine aktarılma tarihi"
+msgstr "ITSM-NG içine aktarılma tarihi"
 
 #: hook.php:927 inc/config.class.php:251 inc/config.class.php:293
 #: inc/ipdiscoverocslink.class.php:1289
@@ -185,7 +185,7 @@ msgstr "İçe aktarma reddedildi"
 
 #: hook.php:1508
 msgid "New computer created in GLPI"
-msgstr "GLPI içinde yeni bilgisayar oluşturuldu"
+msgstr "ITSM-NG içinde yeni bilgisayar oluşturuldu"
 
 #: hook.php:1520
 msgid "Link with computer"
@@ -257,7 +257,7 @@ msgstr "Lütfen bilgisayarları içe aktarmadan ya da eşitlemeden önce bunlar�
 #: front/ocsng.clean.php:65 inc/menu.class.php:108 inc/ocsserver.class.php:543
 #: inc/ocsserver.class.php:2078 inc/profile.class.php:269
 msgid "Clean links between GLPI and OCSNG"
-msgstr "GLPI ve OCSNG arasındaki bağlantıları temizle"
+msgstr "ITSM-NG ve OCSNG arasındaki bağlantıları temizle"
 
 #: front/ocsng.import.php:107 front/ocsngsnmp.import.php:95
 #: inc/ocsserver.class.php:850
@@ -337,7 +337,7 @@ msgstr "Kullanılmış uyarı yok, lütfen otomatik işlemleri etkinleştirin"
 #: inc/snmpocslink.class.php:657 inc/snmpocslink.class.php:794
 #: inc/snmpocslink.class.php:2735
 msgid "Import date in GLPI"
-msgstr "GLPI üzerindeki tarih içe aktarılsın"
+msgstr "ITSM-NG üzerindeki tarih içe aktarılsın"
 
 #: inc/config.class.php:260
 msgid "No new imported computer from OCS-NG"
@@ -355,7 +355,7 @@ msgstr "Hiç bir şeyin değişmediği işlemleri görüntüle"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "OCSNG güncellemesi yapılabilsin (Otomatik işlemlerle ya da GLPI bilgisayarları boşaltıldığında ajanlar boşaltılsın)"
+msgstr "OCSNG güncellemesi yapılabilsin (Otomatik işlemlerle ya da ITSM-NG bilgisayarları boşaltıldığında ajanlar boşaltılsın)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -576,7 +576,7 @@ msgstr "OCS Türü"
 
 #: inc/ipdiscoverocslink.class.php:1408 inc/ipdiscoverocslink.class.php:1539
 msgid "GLPI Type"
-msgstr "GLPI Türü"
+msgstr "ITSM-NG Türü"
 
 #: inc/ipdiscoverocslink.class.php:1410 inc/ipdiscoverocslink.class.php:1541
 #: inc/ocsserver.class.php:2672 inc/snmpocslink.class.php:2421
@@ -600,7 +600,7 @@ msgstr "Önceden içe aktarılmış bilgisayarlar eşitlensin"
 #: inc/menu.class.php:81 inc/ocsserver.class.php:488
 #: inc/ocsserver.class.php:489 inc/ocsserver.class.php:2400
 msgid "Link new OCSNG computers to existing GLPI computers"
-msgstr "Yeni OCSNG bilgisayarları var olan GLPI bilgisayarlarıyla bağlansın"
+msgstr "Yeni OCSNG bilgisayarları var olan ITSM-NG bilgisayarlarıyla bağlansın"
 
 #: inc/menu.class.php:85 inc/ocsserver.class.php:444
 #: inc/ocsserver.class.php:445
@@ -619,7 +619,7 @@ msgstr "Önceden içe aktarılmış SNMP aygıtları eşitlensin"
 #: inc/menu.class.php:121 inc/snmpocslink.class.php:430
 #: inc/snmpocslink.class.php:431
 msgid "Link SNMP devices to existing GLPI objects"
-msgstr "Yeni SNMP aygıtları var olan GLPI nesneleri ile bağlansın"
+msgstr "Yeni SNMP aygıtları var olan ITSM-NG nesneleri ile bağlansın"
 
 #: inc/menu.class.php:169
 msgid "Server Setup"
@@ -873,7 +873,7 @@ msgstr "UUID (%d) kara listeye alınmış olduğundan, bu bilgisayar ile bağlan
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "İçe aktarılamadı, GLPI bilgisayarı zaten bir OCSNG bileşeni ile ilişkilendirilmiş (%d)"
+msgstr "İçe aktarılamadı, ITSM-NG bilgisayarı zaten bir OCSNG bileşeni ile ilişkilendirilmiş (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -1430,7 +1430,7 @@ msgstr "Eklenemiyor. OCSNG sunucusu zaten var."
 
 #: inc/ocsserver.class.php:2099
 msgid "Existing in GLPI"
-msgstr "GLPI içinde var"
+msgstr "ITSM-NG içinde var"
 
 #: inc/ocsserver.class.php:2100
 msgid "Existing in OCSNG"
@@ -1917,7 +1917,7 @@ msgstr "IP adresine göre"
 
 #: inc/snmpocslink.class.php:2259
 msgid "Import new SNMP devices into glpi"
-msgstr "Yeni SNMP aygıtları GLPI içine aktarılsın"
+msgstr "Yeni SNMP aygıtları ITSM-NG içine aktarılsın"
 
 #: inc/snmpocslink.class.php:2413
 msgid "Contact SNMP"
@@ -1951,7 +1951,7 @@ msgstr "SNMP aygıtı OCSNG üzerinde güncellendi"
 
 #: inc/snmpocslink.class.php:2732
 msgid "GLPI Object"
-msgstr "GLPI Nesnesi"
+msgstr "ITSM-NG Nesnesi"
 
 #: inc/snmpocslink.class.php:2734
 msgid "OCS SNMP device"
@@ -2089,3 +2089,7 @@ msgstr "Devre Dışı"
 #: inc/winuser.class.php:200
 msgid "SID"
 msgstr "SID"
+
+#: inc/snmplinkrework.class.php:2795
+msgid "GLPI field"
+msgstr "ITSM-NG field"

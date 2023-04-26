@@ -74,7 +74,7 @@ msgstr ""
 
 #: hook.php:920 hook.php:1052 inc/ocslink.class.php:119
 msgid "GLPI import date"
-msgstr "Data de importação no GLPI"
+msgstr "Data de importação no ITSM-NG"
 
 #: hook.php:927 inc/config.class.php:251 inc/config.class.php:293
 #: inc/ipdiscoverocslink.class.php:1289
@@ -185,7 +185,7 @@ msgstr ""
 
 #: hook.php:1508
 msgid "New computer created in GLPI"
-msgstr ""
+msgstr "New computer created in ITSM-NG"
 
 #: hook.php:1520
 msgid "Link with computer"
@@ -257,7 +257,7 @@ msgstr ""
 #: front/ocsng.clean.php:65 inc/menu.class.php:108 inc/ocsserver.class.php:543
 #: inc/ocsserver.class.php:2078 inc/profile.class.php:269
 msgid "Clean links between GLPI and OCSNG"
-msgstr "Apagar vínculos entre GLPI e OCSNG"
+msgstr "Apagar vínculos entre ITSM-NG e OCSNG"
 
 #: front/ocsng.import.php:107 front/ocsngsnmp.import.php:95
 #: inc/ocsserver.class.php:850
@@ -337,7 +337,7 @@ msgstr ""
 #: inc/snmpocslink.class.php:657 inc/snmpocslink.class.php:794
 #: inc/snmpocslink.class.php:2735
 msgid "Import date in GLPI"
-msgstr "Data de importação no GLPI"
+msgstr "Data de importação no ITSM-NG"
 
 #: inc/config.class.php:260
 msgid "No new imported computer from OCS-NG"
@@ -355,7 +355,7 @@ msgstr "Mostrar processos em que nada foi alterado"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr ""
+msgstr "Authorize the OCSNG update (purge agents when purge ITSM-NG computers or from Automatic actions)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -576,7 +576,7 @@ msgstr ""
 
 #: inc/ipdiscoverocslink.class.php:1408 inc/ipdiscoverocslink.class.php:1539
 msgid "GLPI Type"
-msgstr ""
+msgstr "ITSM-NG Type"
 
 #: inc/ipdiscoverocslink.class.php:1410 inc/ipdiscoverocslink.class.php:1541
 #: inc/ocsserver.class.php:2672 inc/snmpocslink.class.php:2421
@@ -600,7 +600,7 @@ msgstr "Sincronizar computadores já importados"
 #: inc/menu.class.php:81 inc/ocsserver.class.php:488
 #: inc/ocsserver.class.php:489 inc/ocsserver.class.php:2400
 msgid "Link new OCSNG computers to existing GLPI computers"
-msgstr "Vincular novos computadores do OCSNG a computadores existentes do GLPI"
+msgstr "Vincular novos computadores do OCSNG a computadores existentes do ITSM-NG"
 
 #: inc/menu.class.php:85 inc/ocsserver.class.php:444
 #: inc/ocsserver.class.php:445
@@ -619,7 +619,7 @@ msgstr ""
 #: inc/menu.class.php:121 inc/snmpocslink.class.php:430
 #: inc/snmpocslink.class.php:431
 msgid "Link SNMP devices to existing GLPI objects"
-msgstr ""
+msgstr "Link SNMP devices to existing ITSM-NG objects"
 
 #: inc/menu.class.php:169
 msgid "Server Setup"
@@ -873,7 +873,7 @@ msgstr ""
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "Não foi possível importar. Computador do GLPI já é relacionado a um elemento de OCSNG (%d)"
+msgstr "Não foi possível importar. Computador do ITSM-NG já é relacionado a um elemento de OCSNG (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -1430,7 +1430,7 @@ msgstr "Não foi possível adicionar. O servidor OCSNG já existe."
 
 #: inc/ocsserver.class.php:2099
 msgid "Existing in GLPI"
-msgstr "Existente no GLPI"
+msgstr "Existente no ITSM-NG"
 
 #: inc/ocsserver.class.php:2100
 msgid "Existing in OCSNG"
@@ -1917,7 +1917,7 @@ msgstr ""
 
 #: inc/snmpocslink.class.php:2259
 msgid "Import new SNMP devices into glpi"
-msgstr ""
+msgstr "Import new SNMP devices into ITSM-NG"
 
 #: inc/snmpocslink.class.php:2413
 msgid "Contact SNMP"
@@ -1951,7 +1951,7 @@ msgstr ""
 
 #: inc/snmpocslink.class.php:2732
 msgid "GLPI Object"
-msgstr ""
+msgstr "ITSM-NG Object"
 
 #: inc/snmpocslink.class.php:2734
 msgid "OCS SNMP device"
@@ -2089,3 +2089,7 @@ msgstr ""
 #: inc/winuser.class.php:200
 msgid "SID"
 msgstr ""
+
+#: inc/snmplinkrework.class.php:2795
+msgid "GLPI field"
+msgstr "ITSM-NG field"

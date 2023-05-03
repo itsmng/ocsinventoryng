@@ -912,21 +912,27 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
                         $DB->query($deleteIpd);
                     }
 
-                    $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
-                        (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
-                        VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerId, 'identified')";
-    
-                    $check = $DB->query($glpiQuery);
+                    // check if already identified
+                    $checkIfExists2 = "SELECT id FROM `glpi_plugin_ocsinventoryng_ipdiscoverocslinks` WHERE `macaddress`='$mac' AND `status`='identified'";
+                    $checkIfExistsResult2 = $DB->query($checkIfExists2);
 
-                    if($check && !is_null($configReconciliation["switch"])) {
-                        $equipmentData = [
-                            "mac" => $mac,
-                            "type" => $configReconciliation["switch"],
-                            "description" => "Inventoried SNMP device",
-                            "user" => $_SESSION["glpiname"] ?? null
-                        ];
+                    if($checkIfExistsResult2->num_rows == 0) {
+                        $glpiQuery = "INSERT INTO `glpi_plugin_ocsinventoryng_ipdiscoverocslinks`
+                            (`items_id`,`itemtype`,`macaddress`,`last_update`,`subnet`,`plugin_ocsinventoryng_ocsservers_id`, `status`)
+                            VALUES($itemId,'$itemType','$mac','$date','$subnet',$ocsServerId, 'identified')";
         
-                        self::updateOCSLink($equipmentData, $ocsServerId);
+                        $check = $DB->query($glpiQuery);
+
+                        if($check && !is_null($configReconciliation["switch"])) {
+                            $equipmentData = [
+                                "mac" => $mac,
+                                "type" => $configReconciliation["switch"],
+                                "description" => "Inventoried SNMP device",
+                                "user" => $_SESSION["glpiname"] ?? null
+                            ];
+            
+                            self::updateOCSLink($equipmentData, $ocsServerId);
+                        }
                     }
                 }
             }

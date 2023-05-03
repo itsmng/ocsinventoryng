@@ -534,10 +534,10 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 		$itemId = 0;
 		
 		$item = new self::$correspondances[$object][$objectColumn]["class"]();
-		$ifExists = $item->find(["name" => $value]);
+		$ifExists = $item->find(["name" => addslashes($value)]);
 
 		if(count($ifExists) == 0) {
-			$itemId = $item->add(["name" => $value]);
+			$itemId = $item->add(["name" => addslashes($value)]);
 		} else {
 			foreach($ifExists as $id) {
 				$itemId = $id["id"];

@@ -223,7 +223,7 @@ function plugin_version_ocsinventoryng() {
            'version'      => PLUGIN_OCS_VERSION,
            'author'       => 'Gilles Dubois, Remi Collet, Nelly Mahu-Lasson, David Durieux, Xavier Caillaud, Walid Nouh, Arthur Jaouen',
            'license'      => 'GPLv2+',
-           'homepage'     => 'https://github.com/pluginsGLPI/ocsinventoryng',
+           'homepage'     => 'https://github.com/itsmng/ocsinventoryng',
            'requirements' => [
               'glpi' => [
                  'min' => '9.5',

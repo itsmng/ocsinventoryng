@@ -788,7 +788,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
                 'itemtype'                 => "NetworkEquipment",
                 'instantiation_type'       => "NetworkPortEthernet",
                 "entities_id"              => 0,
-                "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? str_replace(" ", "", $ipdDatas['subnet']) : $ipdDatas['ip'],
+                "NetworkName_name"         => ($ipdDatas['subnet'] != "" && !is_null($ipdDatas['subnet'])) ? preg_replace('/[^a-zA-Z\']/', '', trim($ipdDatas['subnet'])) : "unknown",
                 "NetworkName__ipaddresses" => ["-100" => $ipdDatas['ip']],
                 '_create_children'         => 1,
                 'is_deleted'               => 0,

@@ -187,7 +187,7 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
                                 'is_dynamic'  => 1,
                                 'is_deleted'  => 0,
                                 '_no_history' => !$install_network_history,
-                                'name'        => ($subnet_name != null && $subnet_name != '') ? $subnet_name : $comp->getName()];
+                                'name'        => ($subnet_name != null && $subnet_name != '') ? preg_replace('/[^a-zA-Z\']/', '', trim($subnet_name)) : $comp->getName()];
             $networknames_id = $network_name->add($name_input);
          } else {
             $line            = $names->next();

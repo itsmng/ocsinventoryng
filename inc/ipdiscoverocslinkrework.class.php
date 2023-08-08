@@ -103,17 +103,20 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     */
     static function getOCSTypes() {
         $ocsClient = new PluginOcsinventoryngOcsServer();
-        $DBOCS     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"])->getDB();
-        $query     = "SELECT `devicetype`.`id` , `devicetype`.`name` FROM `devicetype`";
-        $result    = $DBOCS->query($query);
         $types = [
             0 => '-----'
         ];
-
-        while ($ent = $DBOCS->fetchAssoc($result)) {
-            $types[$ent['name']] = $ent['name'];
+        if(isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"]))
+        {
+            $DBOCS     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"])->getDB();
+            $query     = "SELECT `devicetype`.`id` , `devicetype`.`name` FROM `devicetype`";
+            $result    = $DBOCS->query($query);
+            
+            while ($ent = $DBOCS->fetchAssoc($result)) {
+                $types[$ent['name']] = $ent['name'];
+            }
         }
-
+            
         return $types;
     }
     

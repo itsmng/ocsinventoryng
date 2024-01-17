@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Ocsinventoryng Development Team
 # This file is distributed under the same license as the GLPI - Ocsinventoryng plugin package.
-# 
+#
 # Translators:
 # Amandine Manceau, 2018
 # David Stepan <stepand@tiscali.cz>, 2017,2020
@@ -15,12 +15,14 @@ msgstr ""
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
 "PO-Revision-Date: 2020-11-11 14:28+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: Czech (Czech Republic) (http://www.transifex.com/yllen/GLPI_ocsinventoryng/language/cs_CZ/)\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/yllen/"
+"GLPI_ocsinventoryng/language/cs_CZ/)\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs_CZ\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
 #: inc/notificationtargetnotimportedcomputer.class.php:43
@@ -214,10 +216,11 @@ msgstr "Nepoužíváte zámky – pro jejich aktivaci přejděte do nastavení"
 msgid ""
 "The startup date field is locked by ocsinventoryng please unlock it before "
 "update."
-msgstr "Datum začátku je uzamčeno ocsinventoryng – před aktualizací ho odemkněte"
+msgstr ""
+"Datum začátku je uzamčeno ocsinventoryng – před aktualizací ho odemkněte"
 
-#: front/config.form.php:51 inc/config.class.php:64
-#: inc/ocsserver.class.php:312 inc/ocsserver.class.php:313
+#: front/config.form.php:51 inc/config.class.php:64 inc/ocsserver.class.php:312
+#: inc/ocsserver.class.php:313
 msgid "Automatic synchronization's configuration"
 msgstr "Nastavení automatické synchronizace"
 
@@ -235,9 +238,9 @@ msgstr "Smazané počítače do OCS Inventory NG"
 msgid "No new computers to delete"
 msgstr "Žádný nový počítač ke smazání"
 
-#: front/deleted_equiv.php:51 front/deleted_equiv.php:88
-#: inc/menu.class.php:104 inc/ocsserver.class.php:524
-#: inc/ocsserver.class.php:525 inc/ocsserver.class.php:542
+#: front/deleted_equiv.php:51 front/deleted_equiv.php:88 inc/menu.class.php:104
+#: inc/ocsserver.class.php:524 inc/ocsserver.class.php:525
+#: inc/ocsserver.class.php:542
 msgid "Clean OCSNG deleted computers"
 msgstr "Vyčistit počítač smazané v OCSNG"
 
@@ -255,13 +258,13 @@ msgstr[1] "Neznámé typy importovaných síťových portů"
 msgstr[2] "Neznámých typů importovaných síťových portů"
 msgstr[3] "Neznámé typy importovaných síťových portů"
 
-#: front/ocsng.clean.php:50 front/ocsng.import.php:134
-#: front/ocsng.link.php:112 front/ocsng.sync.php:91
+#: front/ocsng.clean.php:50 front/ocsng.import.php:134 front/ocsng.link.php:112
+#: front/ocsng.sync.php:91
 msgid "You have"
 msgstr "Máte"
 
-#: front/ocsng.clean.php:52 front/ocsng.import.php:136
-#: front/ocsng.link.php:114 front/ocsng.sync.php:93
+#: front/ocsng.clean.php:52 front/ocsng.import.php:136 front/ocsng.link.php:114
+#: front/ocsng.sync.php:93
 msgid "Please clean them before import or synchronize computers"
 msgstr "Prosím vyčistěte před importem nebo synchronizací počítačů"
 
@@ -366,7 +369,9 @@ msgstr "Zobrazit procesy, ve kterých se nic nezměnilo"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "Autorizujte aktualizace OCSNG (vyčistěte agenty při čištění počítačů v ITSM-NG nebo z automatických akcí)"
+msgstr ""
+"Autorizujte aktualizace OCSNG (vyčistěte agenty při čištění počítačů v ITSM-"
+"NG nebo z automatických akcí)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -503,7 +508,9 @@ msgstr "Vybrat server OCSNG"
 msgid ""
 "If you not find your OCSNG server in this dropdown, please check if your "
 "profile can access it !"
-msgstr "Pokud v tomto seznamu nenaleznete svůj OCSNG server, zkontrolujte zda je server přístupný vašemu profilu!"
+msgstr ""
+"Pokud v tomto seznamu nenaleznete svůj OCSNG server, zkontrolujte zda je "
+"server přístupný vašemu profilu!"
 
 #: inc/ipdiscoverocslink.class.php:392
 msgid "Import IPDiscover"
@@ -780,7 +787,9 @@ msgstr "Chyba při připojování k ocs serveru"
 
 #: inc/notimportedcomputer.class.php:708
 msgid "Send OCSNG not imported computers alert failed"
-msgstr "Poslat upozornění v případě, že se nepodařilo naimportovat nějaké počítače z OCSNG"
+msgstr ""
+"Poslat upozornění v případě, že se nepodařilo naimportovat nějaké počítače z "
+"OCSNG"
 
 #: inc/notimportedcomputer.class.php:738
 msgid "Not imported computers alert"
@@ -877,12 +886,16 @@ msgstr "Odemknout kolonku a importovat OCSNG data"
 #: inc/ocsprocess.class.php:712
 #, php-format
 msgid "Unable to link this computer, Serial number is blacklisted (%d)"
-msgstr "Není možné propojit tento počítač, sériové číslo se nachází na seznamu vyloučených (%d)"
+msgstr ""
+"Není možné propojit tento počítač, sériové číslo se nachází na seznamu "
+"vyloučených (%d)"
 
 #: inc/ocsprocess.class.php:719
 #, php-format
 msgid "Unable to link this computer, UUID is blacklisted (%d)"
-msgstr "Není možné propojit tento počítač, neopakující se identifikátor je zařazen na seznamu vyloučených (%d)"
+msgstr ""
+"Není možné propojit tento počítač, neopakující se identifikátor je zařazen "
+"na seznamu vyloučených (%d)"
 
 #. TRANS: %s is the OCS id
 #: inc/ocsprocess.class.php:787
@@ -890,7 +903,8 @@ msgstr "Není možné propojit tento počítač, neopakující se identifikátor
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "Nelze importovat, počítač v ITSM-NG je už spojen s položkou v OCSNG (%d)"
+msgstr ""
+"Nelze importovat, počítač v ITSM-NG je už spojen s položkou v OCSNG (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -1082,7 +1096,9 @@ msgstr "Import jednotky pouze sériového čísla"
 msgid ""
 "Global import: everything is imported but the material is globally managed "
 "(without duplicate)"
-msgstr "Globální import: vše je naimportováno, ale materiál je globálně spravován (bez duplicit)"
+msgstr ""
+"Globální import: vše je naimportováno, ale materiál je globálně spravován "
+"(bez duplicit)"
 
 #: inc/ocsserver.class.php:852
 msgid "Unit import: everything is imported as it is"
@@ -1098,9 +1114,11 @@ msgstr "Licence Microsoft Office"
 
 #: inc/ocsserver.class.php:870
 msgid ""
-"Depends on software import and OfficePack Plugin for (https://github.com"
-"/PluginsOCSInventory-NG/officepack) OCSNG must be installed"
-msgstr "Závisí na importu software a zásuvném modulu OfficePack (https://github.com/PluginsOCSInventory-NG/officepack), nainstalovaném v OCSNG"
+"Depends on software import and OfficePack Plugin for (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG must be installed"
+msgstr ""
+"Závisí na importu software a zásuvném modulu OfficePack (https://github.com/"
+"PluginsOCSInventory-NG/officepack), nainstalovaném v OCSNG"
 
 #: inc/ocsserver.class.php:871
 msgid "Antivirus"
@@ -1108,15 +1126,19 @@ msgstr "Antivirus"
 
 #: inc/ocsserver.class.php:874
 msgid ""
-"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/security) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Zabezpečení (https://github.com/PluginsOCSInventory-NG/security)"
+"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Zabezpečení (https://"
+"github.com/PluginsOCSInventory-NG/security)"
 
 #: inc/ocsserver.class.php:881
 msgid ""
 "Uptime Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) "
 "must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Uptime (https://github.com/PluginsOCSInventory-NG/uptime)"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Uptime (https://github."
+"com/PluginsOCSInventory-NG/uptime)"
 
 #: inc/ocsserver.class.php:882
 msgid "Windows Update State"
@@ -1124,9 +1146,11 @@ msgstr "Stav Windows Update"
 
 #: inc/ocsserver.class.php:885
 msgid ""
-"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winupdate) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Winupdate (https://github.com/PluginsOCSInventory-NG/winupdate)"
+"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Winupdate (https://"
+"github.com/PluginsOCSInventory-NG/winupdate)"
 
 #: inc/ocsserver.class.php:888
 msgid "Teamviewer"
@@ -1134,9 +1158,11 @@ msgstr "Teamviewer"
 
 #: inc/ocsserver.class.php:891
 msgid ""
-"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/teamviewer) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul pro Teamviewer (https://github.com/PluginsOCSInventory-NG/security)"
+"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul pro Teamviewer "
+"(https://github.com/PluginsOCSInventory-NG/security)"
 
 #: inc/ocsserver.class.php:892 inc/proxysetting.class.php:51
 msgid "Proxy Settings"
@@ -1144,9 +1170,11 @@ msgstr "Nastavení proxy"
 
 #: inc/ocsserver.class.php:895
 msgid ""
-"Navigator Proxy Setting Plugin for OCSNG (https://github.com"
-"/PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Nastavení Navigator Proxy (https://github.com/PluginsOCSInventory-NG/navigatorproxysetting)"
+"Navigator Proxy Setting Plugin for OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Nastavení Navigator "
+"Proxy (https://github.com/PluginsOCSInventory-NG/navigatorproxysetting)"
 
 #: inc/ocsserver.class.php:898 inc/winuser.class.php:51
 msgid "Windows Users"
@@ -1154,9 +1182,11 @@ msgstr "Uživatelé Windows"
 
 #: inc/ocsserver.class.php:901
 msgid ""
-"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winusers) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Winusers (https://github.com/PluginsOCSInventory-NG/winusers)"
+"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Winusers (https://"
+"github.com/PluginsOCSInventory-NG/winusers)"
 
 #: inc/ocsserver.class.php:903 inc/osinstall.class.php:51
 msgid "OS Informations"
@@ -1164,15 +1194,19 @@ msgstr "Informace o operačním systému"
 
 #: inc/ocsserver.class.php:906
 msgid ""
-"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/osinstall) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul OSInstall (https://github.com/PluginsOCSInventory-NG/osinstall)"
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul OSInstall (https://"
+"github.com/PluginsOCSInventory-NG/osinstall)"
 
 #: inc/ocsserver.class.php:912
 msgid ""
-"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/networkshare) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Networkshare (https://github.com/PluginsOCSInventory-NG/networkshare)"
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Networkshare (https://"
+"github.com/PluginsOCSInventory-NG/networkshare)"
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
@@ -1180,9 +1214,11 @@ msgstr "Služba"
 
 #: inc/ocsserver.class.php:917
 msgid ""
-"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/services) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Service (https://github.com/PluginsOCSInventory-NG/services)"
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Service (https://"
+"github.com/PluginsOCSInventory-NG/services)"
 
 #: inc/ocsserver.class.php:920 inc/runningprocess.class.php:51
 msgid "Running Process"
@@ -1190,20 +1226,24 @@ msgstr "Spuštěný proces"
 
 #: inc/ocsserver.class.php:923
 msgid ""
-"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/runningProcess) must be installed"
-msgstr "Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Running Process (https://github.com/PluginsOCSInventory-NG/runningProcess)"
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) must be installed"
+msgstr ""
+"Je třeba, aby byl v OCSNG nainstalovaný zásuvný modul Running Process "
+"(https://github.com/PluginsOCSInventory-NG/runningProcess)"
 
 #: inc/ocsserver.class.php:928
 msgid ""
-"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/customapp) must be installed"
-msgstr "Musí být nainstalován plugin Customapp (https://github.com/PluginsOCSInventory-NG/customapp)"
+"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) must be installed"
+msgstr ""
+"Musí být nainstalován plugin Customapp (https://github.com/"
+"PluginsOCSInventory-NG/customapp)"
 
 #: inc/ocsserver.class.php:933
 msgid ""
-"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/bitlocker) must be installed"
+"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:941 inc/ocsserver.class.php:945
@@ -1310,7 +1350,9 @@ msgstr "Smazat propojení natrvalo"
 msgid ""
 "Define the action to do on link with other objects when computer is "
 "disconnecting from them"
-msgstr "Určit akci kterou udělat na propojení s ostatními objekty při odpojování počítače od nich"
+msgstr ""
+"Určit akci kterou udělat na propojení s ostatními objekty při odpojování "
+"počítače od nich"
 
 #: inc/ocsserver.class.php:1240 inc/ocsserver.class.php:3316
 msgid "Use the OCSNG software dictionary"
@@ -1320,7 +1362,9 @@ msgstr "Použít slovník software OCSNG"
 msgid ""
 "If Use the OCSNG software dictionary parameter is checked, no software will "
 "be imported before you setup them into OCS"
-msgstr "Pokud je zaškrtnutý parametr „Použít číselník software z OCSNG“, nebude naimportován žádný software dokud ho nenastavíte v OCS"
+msgstr ""
+"Pokud je zaškrtnutý parametr „Použít číselník software z OCSNG“, nebude "
+"naimportován žádný software dokud ho nenastavíte v OCS"
 
 #: inc/ocsserver.class.php:1248
 msgid "Number of items to synchronize via the automatic OCSNG action"
@@ -1329,19 +1373,25 @@ msgstr "Počet položek pro synchronizaci pomocí automatizované akce OCSNG"
 #: inc/ocsserver.class.php:1256
 msgid ""
 "The automatic task ocsng is launched only if server is not in expert mode"
-msgstr "Automatická úloha ocsng je spuštěna pouze pokud server není v expertním režimu"
+msgstr ""
+"Automatická úloha ocsng je spuštěna pouze pokud server není v expertním "
+"režimu"
 
 #: inc/ocsserver.class.php:1257
 msgid ""
 "The automatic task ocsng only synchronize existant computers, it doesn't "
 "import new computers"
-msgstr "Automatická úloha ocsng synchronizuje pouze existující počítače, neimportuje nové"
+msgstr ""
+"Automatická úloha ocsng synchronizuje pouze existující počítače, neimportuje "
+"nové"
 
 #: inc/ocsserver.class.php:1258
 msgid ""
 "If you want to import new computers, disable this parameter, change to "
 "expert mode and use script from system"
-msgstr "Pokud chcete importovat nové počítače, vypněte tento parametr, přepněte na expertní režim a použijte skript ze systému"
+msgstr ""
+"Pokud chcete importovat nové počítače, vypněte tento parametr, přepněte na "
+"expertní režim a použijte skript ze systému"
 
 #: inc/ocsserver.class.php:1262
 msgid "Behavior to the deletion of a computer in OCSNG"
@@ -1387,7 +1437,8 @@ msgstr "Metoda synchronizace"
 
 #: inc/ocsserver.class.php:1405
 msgid "Use automatic action for clean old agents & drop from OCSNG software"
-msgstr "Použít automatickou akci pro vyčištění starých agentů a zahození z OCSNG"
+msgstr ""
+"Použít automatickou akci pro vyčištění starých agentů a zahození z OCSNG"
 
 #: inc/ocsserver.class.php:1431
 msgid "Number of days without inventory for cleaning"
@@ -1411,7 +1462,9 @@ msgstr "Použít automatické akce pro kontrolu pravidel přiřazení entity"
 msgid ""
 "Use automatic action to check and send a notification for machines that no "
 "longer respond the entity and location assignment rules"
-msgstr "Použít automatickou akci pro kontrolu a poslání oznámení ohledně strojů které už neodpovídají pravidlům pro přiřazení entity a umístění"
+msgstr ""
+"Použít automatickou akci pro kontrolu a poslání oznámení ohledně strojů "
+"které už neodpovídají pravidlům pro přiřazení entity a umístění"
 
 #: inc/ocsserver.class.php:1475
 msgid "Use automatic locks"
@@ -1512,7 +1565,9 @@ msgstr "Sériové číslo nacházející se na seznamu vyloučených"
 
 #: inc/ocsserver.class.php:2718
 msgid "Blacklisted UUID"
-msgstr "Nikde se neopakující identifikátor (UUID) nacházející se na seznamu vyloučených"
+msgstr ""
+"Nikde se neopakující identifikátor (UUID) nacházející se na seznamu "
+"vyloučených"
 
 #: inc/ocsserver.class.php:2737
 msgid "Blacklisted MAC"
@@ -1656,7 +1711,9 @@ msgstr "Žádný klíč nebyl v registru nalezen"
 msgid ""
 "Alerts on computers that no longer respond the rules for assigning an item "
 "to an entity"
-msgstr "Upozorňovat na počítače které už neodpovídají pravidlům pro přiřazení položky k entitě"
+msgstr ""
+"Upozorňovat na počítače které už neodpovídají pravidlům pro přiřazení "
+"položky k entitě"
 
 #: inc/ruleimportentity.class.php:106
 #, php-format
@@ -2111,6 +2168,5 @@ msgstr "Vypnuto"
 msgid "SID"
 msgstr "Identifikátor zabezpečení (SID)"
 
-#: inc/snmplinkrework.class.php:2795
-msgid "GLPI field"
-msgstr "ITSM-NG field"
+#~ msgid "GLPI field"
+#~ msgstr "ITSM-NG field"

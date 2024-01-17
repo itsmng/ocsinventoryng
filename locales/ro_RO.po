@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Ocsinventoryng Development Team
 # This file is distributed under the same license as the GLPI - Ocsinventoryng plugin package.
-# 
+#
 # Translators:
 # Doru  DEACONU <dumitrudeaconu@yahoo.com>, 2013-2015
 # Doru  DEACONU <dumitrudeaconu@yahoo.com>, 2012
@@ -12,12 +12,14 @@ msgstr ""
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
 "PO-Revision-Date: 2020-11-11 14:28+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: Romanian (Romania) (http://www.transifex.com/yllen/GLPI_ocsinventoryng/language/ro_RO/)\n"
+"Language-Team: Romanian (Romania) (http://www.transifex.com/yllen/"
+"GLPI_ocsinventoryng/language/ro_RO/)\n"
+"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro_RO\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
 #: inc/notificationtargetnotimportedcomputer.class.php:43
@@ -210,8 +212,8 @@ msgid ""
 "update."
 msgstr ""
 
-#: front/config.form.php:51 inc/config.class.php:64
-#: inc/ocsserver.class.php:312 inc/ocsserver.class.php:313
+#: front/config.form.php:51 inc/config.class.php:64 inc/ocsserver.class.php:312
+#: inc/ocsserver.class.php:313
 msgid "Automatic synchronization's configuration"
 msgstr "Configurare sincronizare automată"
 
@@ -229,9 +231,9 @@ msgstr ""
 msgid "No new computers to delete"
 msgstr "Niciun nou calculator de şters"
 
-#: front/deleted_equiv.php:51 front/deleted_equiv.php:88
-#: inc/menu.class.php:104 inc/ocsserver.class.php:524
-#: inc/ocsserver.class.php:525 inc/ocsserver.class.php:542
+#: front/deleted_equiv.php:51 front/deleted_equiv.php:88 inc/menu.class.php:104
+#: inc/ocsserver.class.php:524 inc/ocsserver.class.php:525
+#: inc/ocsserver.class.php:542
 msgid "Clean OCSNG deleted computers"
 msgstr "Curăţă  calculatoarele şterse OCSNG "
 
@@ -248,13 +250,13 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: front/ocsng.clean.php:50 front/ocsng.import.php:134
-#: front/ocsng.link.php:112 front/ocsng.sync.php:91
+#: front/ocsng.clean.php:50 front/ocsng.import.php:134 front/ocsng.link.php:112
+#: front/ocsng.sync.php:91
 msgid "You have"
 msgstr ""
 
-#: front/ocsng.clean.php:52 front/ocsng.import.php:136
-#: front/ocsng.link.php:114 front/ocsng.sync.php:93
+#: front/ocsng.clean.php:52 front/ocsng.import.php:136 front/ocsng.link.php:114
+#: front/ocsng.sync.php:93
 msgid "Please clean them before import or synchronize computers"
 msgstr ""
 
@@ -359,7 +361,9 @@ msgstr "Arată procesările când nimic nu s+a schimbat"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "Authorize the OCSNG update (purge agents when purge ITSM-NG computers or from Automatic actions)"
+msgstr ""
+"Authorize the OCSNG update (purge agents when purge ITSM-NG computers or "
+"from Automatic actions)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -770,7 +774,8 @@ msgstr ""
 
 #: inc/notimportedcomputer.class.php:708
 msgid "Send OCSNG not imported computers alert failed"
-msgstr "Eşec la trimiterea alertelor privind calculatoarel neimportate din OCSNG"
+msgstr ""
+"Eşec la trimiterea alertelor privind calculatoarel neimportate din OCSNG"
 
 #: inc/notimportedcomputer.class.php:738
 msgid "Not imported computers alert"
@@ -880,7 +885,9 @@ msgstr ""
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "Import imposibil, calculatorul ITSM-NG este deja legat la un element din OCSNG (%d)"
+msgstr ""
+"Import imposibil, calculatorul ITSM-NG este deja legat la un element din "
+"OCSNG (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -991,7 +998,9 @@ msgstr ""
 msgid ""
 "The selected server is not active. Import and synchronisation is not "
 "available"
-msgstr "Serverul selectat nu este activ. Importul şi sincronizarea nu este disponibilă"
+msgstr ""
+"Serverul selectat nu este activ. Importul şi sincronizarea nu este "
+"disponibilă"
 
 #: inc/ocsserver.class.php:530
 msgid "Pc deleted"
@@ -1072,7 +1081,9 @@ msgstr "Import unic număr de serie unic"
 msgid ""
 "Global import: everything is imported but the material is globally managed "
 "(without duplicate)"
-msgstr "Import global : totul este importat dar materialul este gestionat global (fără duplicate )"
+msgstr ""
+"Import global : totul este importat dar materialul este gestionat global "
+"(fără duplicate )"
 
 #: inc/ocsserver.class.php:852
 msgid "Unit import: everything is imported as it is"
@@ -1088,8 +1099,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:870
 msgid ""
-"Depends on software import and OfficePack Plugin for (https://github.com"
-"/PluginsOCSInventory-NG/officepack) OCSNG must be installed"
+"Depends on software import and OfficePack Plugin for (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:871
@@ -1098,8 +1109,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:874
 msgid ""
-"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/security) must be installed"
+"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:881
@@ -1114,8 +1125,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:885
 msgid ""
-"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winupdate) must be installed"
+"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:888
@@ -1124,8 +1135,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:891
 msgid ""
-"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/teamviewer) must be installed"
+"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:892 inc/proxysetting.class.php:51
@@ -1134,8 +1145,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:895
 msgid ""
-"Navigator Proxy Setting Plugin for OCSNG (https://github.com"
-"/PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
+"Navigator Proxy Setting Plugin for OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:898 inc/winuser.class.php:51
@@ -1144,8 +1155,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:901
 msgid ""
-"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winusers) must be installed"
+"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:903 inc/osinstall.class.php:51
@@ -1154,14 +1165,14 @@ msgstr ""
 
 #: inc/ocsserver.class.php:906
 msgid ""
-"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/osinstall) must be installed"
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:912
 msgid ""
-"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/networkshare) must be installed"
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:914
@@ -1170,8 +1181,8 @@ msgstr ""
 
 #: inc/ocsserver.class.php:917
 msgid ""
-"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/services) must be installed"
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:920 inc/runningprocess.class.php:51
@@ -1180,20 +1191,20 @@ msgstr ""
 
 #: inc/ocsserver.class.php:923
 msgid ""
-"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/runningProcess) must be installed"
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:928
 msgid ""
-"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/customapp) must be installed"
+"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:933
 msgid ""
-"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/bitlocker) must be installed"
+"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:941 inc/ocsserver.class.php:945
@@ -1274,7 +1285,8 @@ msgstr "URL-ul consolei OCSNG"
 
 #: inc/ocsserver.class.php:1215
 msgid "Limit the import to the following tags (separator $, nothing for all)"
-msgstr "Limita de import pentru urmatoarele tag-uri ($ separator, nimic pentru toate)"
+msgstr ""
+"Limita de import pentru urmatoarele tag-uri ($ separator, nimic pentru toate)"
 
 #: inc/ocsserver.class.php:1223
 msgid "Exclude the following tags (separator $, nothing for all)"
@@ -1464,7 +1476,9 @@ msgstr "actualizeaza computerele"
 msgid ""
 "Caution! The imported data (see your configuration) will overwrite the "
 "existing one"
-msgstr "Atenţie! Datele importate ( vezi configurarea ta) vor suprascrie datele existente"
+msgstr ""
+"Atenţie! Datele importate ( vezi configurarea ta) vor suprascrie datele "
+"existente"
 
 #: inc/ocsserver.class.php:2612
 msgid "Manual import mode"
@@ -1480,7 +1494,8 @@ msgstr "Activeaza previzualizarea"
 
 #: inc/ocsserver.class.php:2621 inc/ocsserver.class.php:2834
 msgid "Check first that duplicates have been correctly managed in OCSNG"
-msgstr "Asiguraţi-vă în prealabil să aveţi corect gestionate dublurile în OCSNG"
+msgstr ""
+"Asiguraţi-vă în prealabil să aveţi corect gestionate dublurile în OCSNG"
 
 #: inc/ocsserver.class.php:2647 inc/ocsserver.class.php:2847
 #: inc/snmpocslink.class.php:2399 inc/snmpocslink.class.php:2569
@@ -2099,6 +2114,5 @@ msgstr ""
 msgid "SID"
 msgstr ""
 
-#: inc/snmplinkrework.class.php:2795
-msgid "GLPI field"
-msgstr "ITSM-NG field"
+#~ msgid "GLPI field"
+#~ msgstr "ITSM-NG field"

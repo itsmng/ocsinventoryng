@@ -1389,68 +1389,79 @@ function plugin_ocsinventoryng_ruleCollectionPrepareInputDataForProcess($params)
 
          $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($ocsservers_id);
 
-         $tables = array_keys(plugin_ocsinventoryng_getTablesForQuery($params['rule_itemtype']));
-         $fields = plugin_ocsinventoryng_getFieldsForQuery($params['rule_itemtype']);
+         if(!isset($params['values']['input']['type'])) {
+            $tables = array_keys(plugin_ocsinventoryng_getTablesForQuery($params['rule_itemtype']));
+            $fields = plugin_ocsinventoryng_getFieldsForQuery($params['rule_itemtype']);
 
-         $ocsComputer = $ocsClient->getOcsComputer($ocsid, $tables);
+            $ocsComputer = $ocsClient->getOcsComputer($ocsid, $tables);
 
-         if (!is_null($ocsComputer) && count($ocsComputer) > 0) {
-            if (isset($ocsComputer['NETWORKS'])) {
-               $networks = $ocsComputer['NETWORKS'];
+            if (!is_null($ocsComputer) && count($ocsComputer) > 0) {
+               if (isset($ocsComputer['NETWORKS'])) {
+                  $networks = $ocsComputer['NETWORKS'];
 
-               $ipblacklist  = Blacklist::getIPs();
-               $macblacklist = Blacklist::getMACs();
+                  $ipblacklist  = Blacklist::getIPs();
+                  $macblacklist = Blacklist::getMACs();
 
-               foreach ($networks as $data) {
-                  if (isset($data['IPSUBNET'])) {
-                     $rule_parameters['IPSUBNET'][] = $data['IPSUBNET'];
+                  foreach ($networks as $data) {
+                     if (isset($data['IPSUBNET'])) {
+                        $rule_parameters['IPSUBNET'][] = $data['IPSUBNET'];
+                     }
+                     if (isset($data['MACADDR']) && !in_array($data['MACADDR'], $macblacklist)) {
+                        $rule_parameters['MACADDRESS'][] = $data['MACADDR'];
+                     }
+                     if (isset($data['IPADDRESS']) && !in_array($data['IPADDRESS'], $ipblacklist)) {
+                        $rule_parameters['IPADDRESS'][] = $data['IPADDRESS'];
+                     }
                   }
-                  if (isset($data['MACADDR']) && !in_array($data['MACADDR'], $macblacklist)) {
-                     $rule_parameters['MACADDRESS'][] = $data['MACADDR'];
+               }
+               $ocs_data = [];
+
+               foreach ($fields as $field) {
+                  // TODO cleaner way of getting fields
+                  $field = explode('.', $field);
+                  if (count($field) < 2) {
+                     continue;
                   }
-                  if (isset($data['IPADDRESS']) && !in_array($data['IPADDRESS'], $ipblacklist)) {
-                     $rule_parameters['IPADDRESS'][] = $data['IPADDRESS'];
+
+                  $table = strtoupper($field[0]);
+
+                  $fieldSql  = explode(' ', $field[1]);
+                  $ocsField  = $fieldSql[0];
+                  $glpiField = $fieldSql[count($fieldSql) - 1];
+
+                  $section = [];
+                  if (isset($ocsComputer[$table])) {
+                     $section = $ocsComputer[$table];
                   }
+                  if (array_key_exists($ocsField, $section)) {
+                     // Not multi
+                     $ocs_data[$glpiField][] = $section[$ocsField];
+                  } else {
+                     foreach ($section as $sectionLine) {
+                        $ocs_data[$glpiField][] = $sectionLine[$ocsField];
+                     }
+                  }
+               }
+
+               //This case should never happend but...
+               //Sometimes OCS can't find network ports but fill the right ip in hardware table...
+               //So let's use the ip to proceed rules (if IP is a criteria of course)
+               if (in_array("IPADDRESS", $fields) && !isset($ocs_data['IPADDRESS'])) {
+                  $ocs_data['IPADDRESS']
+                     = PluginOcsinventoryngOcsProcess::getGeneralIpAddress($ocsservers_id, $ocsid);
+               }
+               return array_merge($rule_parameters, $ocs_data);
+            }
+         } else {
+            // Set empty TAG (maybe use the snmp TAG accountinfo in the futur ?)
+            $rule_parameters['TAG'][] = "";
+            if(isset($params['values']['params']['snmpdata']['NetworkName__ipaddresses'])) {
+               foreach($params['values']['params']['snmpdata']['NetworkName__ipaddresses'] as $key => $ipaddress) {
+                  $rule_parameters['IPADDRESS'][] = $ipaddress;
                }
             }
-            $ocs_data = [];
 
-            foreach ($fields as $field) {
-               // TODO cleaner way of getting fields
-               $field = explode('.', $field);
-               if (count($field) < 2) {
-                  continue;
-               }
-
-               $table = strtoupper($field[0]);
-
-               $fieldSql  = explode(' ', $field[1]);
-               $ocsField  = $fieldSql[0];
-               $glpiField = $fieldSql[count($fieldSql) - 1];
-
-               $section = [];
-               if (isset($ocsComputer[$table])) {
-                  $section = $ocsComputer[$table];
-               }
-               if (array_key_exists($ocsField, $section)) {
-                  // Not multi
-                  $ocs_data[$glpiField][] = $section[$ocsField];
-               } else {
-                  foreach ($section as $sectionLine) {
-                     $ocs_data[$glpiField][] = $sectionLine[$ocsField];
-                  }
-               }
-            }
-
-            //This case should never happend but...
-            //Sometimes OCS can't find network ports but fill the right ip in hardware table...
-            //So let's use the ip to proceed rules (if IP is a criteria of course)
-            if (in_array("IPADDRESS", $fields) && !isset($ocs_data['IPADDRESS'])) {
-               $ocs_data['IPADDRESS']
-                  = PluginOcsinventoryngOcsProcess::getGeneralIpAddress($ocsservers_id, $ocsid);
-            }
-            return array_merge($rule_parameters, $ocs_data);
-
+            return $rule_parameters;
          }
    }
    return [];

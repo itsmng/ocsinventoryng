@@ -502,6 +502,28 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 						$inputNetwork = array_merge($defaultInputNetwork, $inputNetwork);
 						$NetworkPort = new NetworkPort();
 						$NetworkPort->add($inputNetwork);
+						$input = array_merge($input, $inputNetwork);
+					}
+
+					//Process entity rules
+					$ruleCollection = new RuleImportEntityCollection();
+					$fields = $ruleCollection->processAllRules(
+						[
+							'ocsservers_id' => $OCSServerId,
+							'_source'       => 'ocsinventoryng',
+							'type'			=> 'snmp'
+						], 
+						[], 
+						[
+							'ocsid' 	=> $OCSSnmpRowId,
+							'snmpdata'	=> $input
+						]
+					);
+
+					if(isset($fields['entities_id']) && $fields['entities_id'] >= 0) {
+						unset($fields["_ruleid"]);
+						$fields['id'] = $objId;
+						$Equipment->update($fields);
 					}
 						
 					$date = date("Y-m-d H:i:s");
@@ -637,6 +659,28 @@ class PluginOcsinventoryngSnmplinkrework extends CommonDBTM {
 								$update = $NetworkPort->update($inputNetwork);
 							}
 						}
+						$input = array_merge($input, $inputNetwork);
+					}
+
+					//Process entity rules
+					$ruleCollection = new RuleImportEntityCollection();
+					$fields = $ruleCollection->processAllRules(
+						[
+							'ocsservers_id' => $OCSServerId,
+							'_source'       => 'ocsinventoryng',
+							'type'			=> 'snmp'
+						], 
+						[], 
+						[
+							'ocsid' 	=> $ITSMSnmpRowData["items_id"],
+							'snmpdata'	=> $input
+						]
+					);
+
+					if(isset($fields['entities_id']) && $fields['entities_id'] >= 0) {
+						unset($fields["_ruleid"]);
+						$fields['id'] = $ITSMSnmpRowData["items_id"];
+						$Equipment->update($fields);
 					}
 
 					$date = date("Y-m-d H:i:s");

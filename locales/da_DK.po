@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Ocsinventoryng Development Team
 # This file is distributed under the same license as the GLPI - Ocsinventoryng plugin package.
-# 
+#
 # Translators:
 # Jens Hyllegaard <jens.hyllegaard@gmail.com>, 2012-2018,2020
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2012
@@ -12,11 +12,12 @@ msgstr ""
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
 "PO-Revision-Date: 2020-11-11 14:28+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: Danish (Denmark) (http://www.transifex.com/yllen/GLPI_ocsinventoryng/language/da_DK/)\n"
+"Language-Team: Danish (Denmark) (http://www.transifex.com/yllen/"
+"GLPI_ocsinventoryng/language/da_DK/)\n"
+"Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
@@ -205,10 +206,12 @@ msgstr "Du bruger ikke låse - Se opsætningen for at aktivere dem"
 msgid ""
 "The startup date field is locked by ocsinventoryng please unlock it before "
 "update."
-msgstr "Startdato feltet er låst af ocsinventoryng, lås det venligst op før opdatering."
+msgstr ""
+"Startdato feltet er låst af ocsinventoryng, lås det venligst op før "
+"opdatering."
 
-#: front/config.form.php:51 inc/config.class.php:64
-#: inc/ocsserver.class.php:312 inc/ocsserver.class.php:313
+#: front/config.form.php:51 inc/config.class.php:64 inc/ocsserver.class.php:312
+#: inc/ocsserver.class.php:313
 msgid "Automatic synchronization's configuration"
 msgstr "Konfiguration af automatisk synkronisering"
 
@@ -226,9 +229,9 @@ msgstr ""
 msgid "No new computers to delete"
 msgstr "Ingen nye computere at slette"
 
-#: front/deleted_equiv.php:51 front/deleted_equiv.php:88
-#: inc/menu.class.php:104 inc/ocsserver.class.php:524
-#: inc/ocsserver.class.php:525 inc/ocsserver.class.php:542
+#: front/deleted_equiv.php:51 front/deleted_equiv.php:88 inc/menu.class.php:104
+#: inc/ocsserver.class.php:524 inc/ocsserver.class.php:525
+#: inc/ocsserver.class.php:542
 msgid "Clean OCSNG deleted computers"
 msgstr "Ryd OCSNG slettede computere"
 
@@ -244,13 +247,13 @@ msgid_plural "Unknown imported network ports types"
 msgstr[0] "Ukendt importeret netværksporttype"
 msgstr[1] "Ukendte importerede netværksporttyper"
 
-#: front/ocsng.clean.php:50 front/ocsng.import.php:134
-#: front/ocsng.link.php:112 front/ocsng.sync.php:91
+#: front/ocsng.clean.php:50 front/ocsng.import.php:134 front/ocsng.link.php:112
+#: front/ocsng.sync.php:91
 msgid "You have"
 msgstr ""
 
-#: front/ocsng.clean.php:52 front/ocsng.import.php:136
-#: front/ocsng.link.php:114 front/ocsng.sync.php:93
+#: front/ocsng.clean.php:52 front/ocsng.import.php:136 front/ocsng.link.php:114
+#: front/ocsng.sync.php:93
 msgid "Please clean them before import or synchronize computers"
 msgstr ""
 
@@ -355,7 +358,9 @@ msgstr "Vis processer hvor intet blev ændret"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "Authorize the OCSNG update (purge agents when purge ITSM-NG computers or from Automatic actions)"
+msgstr ""
+"Authorize the OCSNG update (purge agents when purge ITSM-NG computers or "
+"from Automatic actions)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -488,7 +493,9 @@ msgstr "Valg af OCSNG server"
 msgid ""
 "If you not find your OCSNG server in this dropdown, please check if your "
 "profile can access it !"
-msgstr "Hvis du ikke ser din OCSNG server i denne boks, så tjek om din profil kan tilgå den!"
+msgstr ""
+"Hvis du ikke ser din OCSNG server i denne boks, så tjek om din profil kan "
+"tilgå den!"
 
 #: inc/ipdiscoverocslink.class.php:392
 msgid "Import IPDiscover"
@@ -873,7 +880,9 @@ msgstr "Kunne ikke linke til denne computer, UUID er sortlistet (%d)"
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "Kan ikke importere, ITSM-NG computeren er allerede relateret til et element i OCSNG (%d)"
+msgstr ""
+"Kan ikke importere, ITSM-NG computeren er allerede relateret til et element "
+"i OCSNG (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -984,7 +993,8 @@ msgstr "Se opsætning : Data der skal importeres først"
 msgid ""
 "The selected server is not active. Import and synchronisation is not "
 "available"
-msgstr "Den valgte server er ikke aktiv. Import og synkronisering er ikke tilgængelig"
+msgstr ""
+"Den valgte server er ikke aktiv. Import og synkronisering er ikke tilgængelig"
 
 #: inc/ocsserver.class.php:530
 msgid "Pc deleted"
@@ -1065,7 +1075,9 @@ msgstr "Importer kun enheds serienummer"
 msgid ""
 "Global import: everything is imported but the material is globally managed "
 "(without duplicate)"
-msgstr "Global import: alt bliver importeret, men emnet er globalt håndteret (uden dubletter)"
+msgstr ""
+"Global import: alt bliver importeret, men emnet er globalt håndteret (uden "
+"dubletter)"
 
 #: inc/ocsserver.class.php:852
 msgid "Unit import: everything is imported as it is"
@@ -1081,9 +1093,11 @@ msgstr "Microsoft Office licenser"
 
 #: inc/ocsserver.class.php:870
 msgid ""
-"Depends on software import and OfficePack Plugin for (https://github.com"
-"/PluginsOCSInventory-NG/officepack) OCSNG must be installed"
-msgstr "Afhænger af software import og OfficePack udvidelse til (https://github.com/PluginsOCSInventory-NG/officepack) OCSNG skal være installeret"
+"Depends on software import and OfficePack Plugin for (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG must be installed"
+msgstr ""
+"Afhænger af software import og OfficePack udvidelse til (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG skal være installeret"
 
 #: inc/ocsserver.class.php:871
 msgid "Antivirus"
@@ -1091,15 +1105,19 @@ msgstr "Antivirus"
 
 #: inc/ocsserver.class.php:874
 msgid ""
-"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/security) must be installed"
-msgstr "Sikkerhedsudvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/security) skal være installeret"
+"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) must be installed"
+msgstr ""
+"Sikkerhedsudvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) skal være installeret"
 
 #: inc/ocsserver.class.php:881
 msgid ""
 "Uptime Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) "
 "must be installed"
-msgstr "Uptime udvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) skal være installeret"
+msgstr ""
+"Uptime udvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"uptime) skal være installeret"
 
 #: inc/ocsserver.class.php:882
 msgid "Windows Update State"
@@ -1107,9 +1125,11 @@ msgstr "Windows Update tilstand"
 
 #: inc/ocsserver.class.php:885
 msgid ""
-"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winupdate) must be installed"
-msgstr "Winupdate udvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/winupdate) skal være installeret"
+"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) must be installed"
+msgstr ""
+"Winupdate udvidelse til OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) skal være installeret"
 
 #: inc/ocsserver.class.php:888
 msgid "Teamviewer"
@@ -1117,9 +1137,11 @@ msgstr "Teamviewer"
 
 #: inc/ocsserver.class.php:891
 msgid ""
-"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/teamviewer) must be installed"
-msgstr "Teamviewer udvidelsen til OCSNG (https://github.com/PluginsOCSInventory-NG/teamviewer) skal være installeret"
+"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) must be installed"
+msgstr ""
+"Teamviewer udvidelsen til OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) skal være installeret"
 
 #: inc/ocsserver.class.php:892 inc/proxysetting.class.php:51
 msgid "Proxy Settings"
@@ -1127,9 +1149,11 @@ msgstr "Proxyindstillinger"
 
 #: inc/ocsserver.class.php:895
 msgid ""
-"Navigator Proxy Setting Plugin for OCSNG (https://github.com"
-"/PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
-msgstr "Navigator Proxy Setting udvidelsen til OCSNG (https://github.com/PluginsOCSInventory-NG/navigatorproxysetting) skal være installeret"
+"Navigator Proxy Setting Plugin for OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
+msgstr ""
+"Navigator Proxy Setting udvidelsen til OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) skal være installeret"
 
 #: inc/ocsserver.class.php:898 inc/winuser.class.php:51
 msgid "Windows Users"
@@ -1137,9 +1161,11 @@ msgstr "Windows brugere"
 
 #: inc/ocsserver.class.php:901
 msgid ""
-"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winusers) must be installed"
-msgstr "Winusers udvidelsen til OCSNG (https://github.com/PluginsOCSInventory-NG/winusers) skal være installeret"
+"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) must be installed"
+msgstr ""
+"Winusers udvidelsen til OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) skal være installeret"
 
 #: inc/ocsserver.class.php:903 inc/osinstall.class.php:51
 msgid "OS Informations"
@@ -1147,15 +1173,19 @@ msgstr "OS oplysninger"
 
 #: inc/ocsserver.class.php:906
 msgid ""
-"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/osinstall) must be installed"
-msgstr "OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/osinstall) skal være installeret"
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) must be installed"
+msgstr ""
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) skal være installeret"
 
 #: inc/ocsserver.class.php:912
 msgid ""
-"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/networkshare) must be installed"
-msgstr "Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/networkshare) skal være installeret"
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) must be installed"
+msgstr ""
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) skal være installeret"
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
@@ -1163,9 +1193,11 @@ msgstr "Service"
 
 #: inc/ocsserver.class.php:917
 msgid ""
-"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/services) must be installed"
-msgstr "Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/services) skal være installeret"
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) must be installed"
+msgstr ""
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) skal være installeret"
 
 #: inc/ocsserver.class.php:920 inc/runningprocess.class.php:51
 msgid "Running Process"
@@ -1173,20 +1205,22 @@ msgstr "Kørende process"
 
 #: inc/ocsserver.class.php:923
 msgid ""
-"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/runningProcess) must be installed"
-msgstr "Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/runningProcess) skal være installeret"
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) must be installed"
+msgstr ""
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) skal være installeret"
 
 #: inc/ocsserver.class.php:928
 msgid ""
-"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/customapp) must be installed"
+"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:933
 msgid ""
-"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/bitlocker) must be installed"
+"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:941 inc/ocsserver.class.php:945
@@ -1293,7 +1327,9 @@ msgstr "Slet linket permanent"
 msgid ""
 "Define the action to do on link with other objects when computer is "
 "disconnecting from them"
-msgstr "Angiv den handling der skal foretages på links til andre objekter når computer afbrydes fra dem"
+msgstr ""
+"Angiv den handling der skal foretages på links til andre objekter når "
+"computer afbrydes fra dem"
 
 #: inc/ocsserver.class.php:1240 inc/ocsserver.class.php:3316
 msgid "Use the OCSNG software dictionary"
@@ -1303,28 +1339,37 @@ msgstr "Brug OCSNG software bibliotek"
 msgid ""
 "If Use the OCSNG software dictionary parameter is checked, no software will "
 "be imported before you setup them into OCS"
-msgstr "Hvis \"Brug OCSNG software ordbog\" parameteren er markeret vil ingen software blive importeret før du sætter det på o OCS"
+msgstr ""
+"Hvis \"Brug OCSNG software ordbog\" parameteren er markeret vil ingen "
+"software blive importeret før du sætter det på o OCS"
 
 #: inc/ocsserver.class.php:1248
 msgid "Number of items to synchronize via the automatic OCSNG action"
-msgstr "Antal emner der skal synkroniseres ved brug af den automatisk OCSNG handling"
+msgstr ""
+"Antal emner der skal synkroniseres ved brug af den automatisk OCSNG handling"
 
 #: inc/ocsserver.class.php:1256
 msgid ""
 "The automatic task ocsng is launched only if server is not in expert mode"
-msgstr "Den automatiske opgave ocsng startes kun hvis serveren ikke er i eksperttilstand"
+msgstr ""
+"Den automatiske opgave ocsng startes kun hvis serveren ikke er i "
+"eksperttilstand"
 
 #: inc/ocsserver.class.php:1257
 msgid ""
 "The automatic task ocsng only synchronize existant computers, it doesn't "
 "import new computers"
-msgstr "Den automatiske hændelse ocsng synkroniserer eksisterende computere, den importerer ikke nye computere "
+msgstr ""
+"Den automatiske hændelse ocsng synkroniserer eksisterende computere, den "
+"importerer ikke nye computere "
 
 #: inc/ocsserver.class.php:1258
 msgid ""
 "If you want to import new computers, disable this parameter, change to "
 "expert mode and use script from system"
-msgstr "Hvis du vil importere nye computere, skal du deaktivere denne parameter, skifte til eksperttilstand og bruge script fra system"
+msgstr ""
+"Hvis du vil importere nye computere, skal du deaktivere denne parameter, "
+"skifte til eksperttilstand og bruge script fra system"
 
 #: inc/ocsserver.class.php:1262
 msgid "Behavior to the deletion of a computer in OCSNG"
@@ -1370,7 +1415,9 @@ msgstr "Synkroniserings metode"
 
 #: inc/ocsserver.class.php:1405
 msgid "Use automatic action for clean old agents & drop from OCSNG software"
-msgstr "Brug automatisk handling for at fjerne gamle agenter & drop fra OCSNG software"
+msgstr ""
+"Brug automatisk handling for at fjerne gamle agenter & drop fra OCSNG "
+"software"
 
 #: inc/ocsserver.class.php:1431
 msgid "Number of days without inventory for cleaning"
@@ -1388,13 +1435,16 @@ msgstr "Antal dage for gendannelse af computere fra sidste inventeringsdato"
 
 #: inc/ocsserver.class.php:1465
 msgid "Use automatic action to check entity assignment rules"
-msgstr "Brug automatisk handling til at kontrollere entitets-tilknytningsregler"
+msgstr ""
+"Brug automatisk handling til at kontrollere entitets-tilknytningsregler"
 
 #: inc/ocsserver.class.php:1467
 msgid ""
 "Use automatic action to check and send a notification for machines that no "
 "longer respond the entity and location assignment rules"
-msgstr "Brug automatisk handling til at tjekke og sende en besked om maskiner der ikke længere svarer til entitet- og lokations tilknytnings regler"
+msgstr ""
+"Brug automatisk handling til at tjekke og sende en besked om maskiner der "
+"ikke længere svarer til entitet- og lokations tilknytnings regler"
 
 #: inc/ocsserver.class.php:1475
 msgid "Use automatic locks"
@@ -1457,7 +1507,9 @@ msgstr "Opdater computere"
 msgid ""
 "Caution! The imported data (see your configuration) will overwrite the "
 "existing one"
-msgstr "Forsigtig! De importerede data (se din konfiguration) vil overskrive de eksisterende"
+msgstr ""
+"Forsigtig! De importerede data (se din konfiguration) vil overskrive de "
+"eksisterende"
 
 #: inc/ocsserver.class.php:2612
 msgid "Manual import mode"
@@ -1507,7 +1559,8 @@ msgstr "Sortlistet IP"
 
 #: inc/ocsserver.class.php:2832
 msgid "Warning ! This computer is already linked with another OCS computer."
-msgstr "Advarsel! Denne computer er allerede forbundet med en anden OCS computer."
+msgstr ""
+"Advarsel! Denne computer er allerede forbundet med en anden OCS computer."
 
 #: inc/ocsserver.class.php:2869 inc/ocsserver.class.php:2884
 #: inc/ocsserver.class.php:2898
@@ -1635,7 +1688,9 @@ msgstr "Ingen nøgle fundet i registreringsdatabasen"
 msgid ""
 "Alerts on computers that no longer respond the rules for assigning an item "
 "to an entity"
-msgstr "Beskeder ved computere der ikke længere svarer til reglerne for tilknytning af et emne til en entitet"
+msgstr ""
+"Beskeder ved computere der ikke længere svarer til reglerne for tilknytning "
+"af et emne til en entitet"
 
 #: inc/ruleimportentity.class.php:106
 #, php-format
@@ -2090,6 +2145,5 @@ msgstr "Deaktiveret"
 msgid "SID"
 msgstr "SID"
 
-#: inc/snmplinkrework.class.php:2795
-msgid "GLPI field"
-msgstr "ITSM-NG field"
+#~ msgid "GLPI field"
+#~ msgstr "ITSM-NG field"

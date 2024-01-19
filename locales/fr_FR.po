@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Ocsinventoryng Development Team
 # This file is distributed under the same license as the GLPI - Ocsinventoryng plugin package.
-# 
+#
 # Translators:
 # Amandine Manceau, 2017-2018
 # Damien Touraine <glpi@damien-touraine.net>, 2012
@@ -22,11 +22,12 @@ msgstr ""
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
 "PO-Revision-Date: 2020-11-11 14:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: French (France) (http://www.transifex.com/yllen/GLPI_ocsinventoryng/language/fr_FR/)\n"
+"Language-Team: French (France) (http://www.transifex.com/yllen/"
+"GLPI_ocsinventoryng/language/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
@@ -209,16 +210,19 @@ msgstr[1] "Champs verrouillés"
 
 #: hook.php:1784
 msgid "You don't use locks - See setup for activate them"
-msgstr "Vous n'utilisez pas les verrous - Voir la configuration pour les activer"
+msgstr ""
+"Vous n'utilisez pas les verrous - Voir la configuration pour les activer"
 
 #: hook.php:2014
 msgid ""
 "The startup date field is locked by ocsinventoryng please unlock it before "
 "update."
-msgstr "La date de mise en service est verrouillée par ocsinventoryng. Merci de déverrouiller le champ avant de le modifier."
+msgstr ""
+"La date de mise en service est verrouillée par ocsinventoryng. Merci de "
+"déverrouiller le champ avant de le modifier."
 
-#: front/config.form.php:51 inc/config.class.php:64
-#: inc/ocsserver.class.php:312 inc/ocsserver.class.php:313
+#: front/config.form.php:51 inc/config.class.php:64 inc/ocsserver.class.php:312
+#: inc/ocsserver.class.php:313
 msgid "Automatic synchronization's configuration"
 msgstr "Configuration de la synchronisation automatique"
 
@@ -236,9 +240,9 @@ msgstr "ordinateurs supprimés dans OCS Inventory NG"
 msgid "No new computers to delete"
 msgstr "Pas de nouveaux ordinateurs à supprimer"
 
-#: front/deleted_equiv.php:51 front/deleted_equiv.php:88
-#: inc/menu.class.php:104 inc/ocsserver.class.php:524
-#: inc/ocsserver.class.php:525 inc/ocsserver.class.php:542
+#: front/deleted_equiv.php:51 front/deleted_equiv.php:88 inc/menu.class.php:104
+#: inc/ocsserver.class.php:524 inc/ocsserver.class.php:525
+#: inc/ocsserver.class.php:542
 msgid "Clean OCSNG deleted computers"
 msgstr "Nettoyage des ordinateurs OCSNG supprimés"
 
@@ -254,13 +258,13 @@ msgid_plural "Unknown imported network ports types"
 msgstr[0] "Type de ports réseaux inconnu importé"
 msgstr[1] "Types de ports réseaux inconnus importés"
 
-#: front/ocsng.clean.php:50 front/ocsng.import.php:134
-#: front/ocsng.link.php:112 front/ocsng.sync.php:91
+#: front/ocsng.clean.php:50 front/ocsng.import.php:134 front/ocsng.link.php:112
+#: front/ocsng.sync.php:91
 msgid "You have"
 msgstr "Vous avez"
 
-#: front/ocsng.clean.php:52 front/ocsng.import.php:136
-#: front/ocsng.link.php:114 front/ocsng.sync.php:93
+#: front/ocsng.clean.php:52 front/ocsng.import.php:136 front/ocsng.link.php:114
+#: front/ocsng.sync.php:93
 msgid "Please clean them before import or synchronize computers"
 msgstr "Merci de les nettoyer avant d'importer ou synchroniser les ordinateurs"
 
@@ -355,7 +359,8 @@ msgstr "Aucune nouvelles machines importées depuis OCS-NG"
 
 #: inc/config.class.php:303
 msgid "No computer not synchronized since more"
-msgstr "Aucun ordinateur n'ayant pas remontés d'infos depuis OCS-NG depuis plus de"
+msgstr ""
+"Aucun ordinateur n'ayant pas remontés d'infos depuis OCS-NG depuis plus de"
 
 #: inc/config.class.php:326
 msgid "Show processes where nothing was changed"
@@ -365,7 +370,9 @@ msgstr "Montrer les traitements quand rien n'a changé"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "Autoriser la mise à jour OCSNG (purger les agents lors de la purge des ordinateurs ITSM-NG ou lors des actions automatiques)"
+msgstr ""
+"Autoriser la mise à jour OCSNG (purger les agents lors de la purge des "
+"ordinateurs ITSM-NG ou lors des actions automatiques)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -498,7 +505,9 @@ msgstr "Choix d'un serveur OCSNG"
 msgid ""
 "If you not find your OCSNG server in this dropdown, please check if your "
 "profile can access it !"
-msgstr "Si vous ne trouvez pas votre serveur OCSNG dans la liste, merci de vérifier si votre profil y a accès"
+msgstr ""
+"Si vous ne trouvez pas votre serveur OCSNG dans la liste, merci de vérifier "
+"si votre profil y a accès"
 
 #: inc/ipdiscoverocslink.class.php:392
 msgid "Import IPDiscover"
@@ -773,7 +782,8 @@ msgstr "Erreur de contact avec le serveur OCSNG"
 
 #: inc/notimportedcomputer.class.php:708
 msgid "Send OCSNG not imported computers alert failed"
-msgstr "Echec de l'envoi de l'alerte concernant les ordinateurs non importés d'OCSNG"
+msgstr ""
+"Echec de l'envoi de l'alerte concernant les ordinateurs non importés d'OCSNG"
 
 #: inc/notimportedcomputer.class.php:738
 msgid "Not imported computers alert"
@@ -870,7 +880,8 @@ msgstr "Déverrouiller le champ et importer la donnée depuis OCSNG"
 #: inc/ocsprocess.class.php:712
 #, php-format
 msgid "Unable to link this computer, Serial number is blacklisted (%d)"
-msgstr "Impossible de lier cet ordinateur, le numéro de série est blacklisté (%d)"
+msgstr ""
+"Impossible de lier cet ordinateur, le numéro de série est blacklisté (%d)"
 
 #: inc/ocsprocess.class.php:719
 #, php-format
@@ -883,7 +894,9 @@ msgstr "Impossible de lier cet ordinateur, l'UUID est blacklisté (%d)"
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "Importation impossible, ordinateur de destination de ITSM-NG déjà lié à un élément d'OCSNG (%d)"
+msgstr ""
+"Importation impossible, ordinateur de destination de ITSM-NG déjà lié à un "
+"élément d'OCSNG (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -994,7 +1007,9 @@ msgstr "Voir la configuration : Données à importer avant"
 msgid ""
 "The selected server is not active. Import and synchronisation is not "
 "available"
-msgstr "Le serveur sélectionné n'est pas actif. L'import et la synchronisation sont imposssibles"
+msgstr ""
+"Le serveur sélectionné n'est pas actif. L'import et la synchronisation sont "
+"imposssibles"
 
 #: inc/ocsserver.class.php:530
 msgid "Pc deleted"
@@ -1014,7 +1029,9 @@ msgstr "Informations générales"
 
 #: inc/ocsserver.class.php:637
 msgid "Warning : the import entity rules depends on selected fields"
-msgstr "Attention : les règles d'affectation d'un élément à une entité dépendent des champs sélectionnés"
+msgstr ""
+"Attention : les règles d'affectation d'un élément à une entité dépendent des "
+"champs sélectionnés"
 
 #: inc/ocsserver.class.php:654 inc/ocsserver.class.php:660
 #: inc/ocsserver.class.php:665 inc/ocsserver.class.php:671
@@ -1048,7 +1065,9 @@ msgstr "Disponible après la version 7006 d'OCS Inventory NG"
 
 #: inc/ocsserver.class.php:773
 msgid "After 7009 version of OCS Inventory NG && Depends on Bios import"
-msgstr "Disponible après la version 7009 d'OCS Inventory NG && dépendant de l'import du Bios"
+msgstr ""
+"Disponible après la version 7009 d'OCS Inventory NG && dépendant de l'import "
+"du Bios"
 
 #: inc/ocsserver.class.php:788 inc/ocsserver.class.php:793
 msgid "Linked objects"
@@ -1075,7 +1094,9 @@ msgstr "Import unique numéro de série uniquement"
 msgid ""
 "Global import: everything is imported but the material is globally managed "
 "(without duplicate)"
-msgstr "Import global : tout est importé mais le matériel est géré de manière globale (sans doublons)"
+msgstr ""
+"Import global : tout est importé mais le matériel est géré de manière "
+"globale (sans doublons)"
 
 #: inc/ocsserver.class.php:852
 msgid "Unit import: everything is imported as it is"
@@ -1091,9 +1112,11 @@ msgstr "Licences Microsoft Office"
 
 #: inc/ocsserver.class.php:870
 msgid ""
-"Depends on software import and OfficePack Plugin for (https://github.com"
-"/PluginsOCSInventory-NG/officepack) OCSNG must be installed"
-msgstr "Dépend de l'importation des logiciels et du plugin OfficePack pour (https://github.com/PluginsOCSInventory-NG/officepack) OCSNG doit être installé"
+"Depends on software import and OfficePack Plugin for (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG must be installed"
+msgstr ""
+"Dépend de l'importation des logiciels et du plugin OfficePack pour (https://"
+"github.com/PluginsOCSInventory-NG/officepack) OCSNG doit être installé"
 
 #: inc/ocsserver.class.php:871
 msgid "Antivirus"
@@ -1101,15 +1124,19 @@ msgstr "Antivirus"
 
 #: inc/ocsserver.class.php:874
 msgid ""
-"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/security) must be installed"
-msgstr "Le plugin Security pour OCSNG doit être installé (https://github.com/PluginsOCSInventory-NG/security) "
+"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) must be installed"
+msgstr ""
+"Le plugin Security pour OCSNG doit être installé (https://github.com/"
+"PluginsOCSInventory-NG/security) "
 
 #: inc/ocsserver.class.php:881
 msgid ""
 "Uptime Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) "
 "must be installed"
-msgstr "Le plugin Uptime pour OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) doit être installé"
+msgstr ""
+"Le plugin Uptime pour OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"uptime) doit être installé"
 
 #: inc/ocsserver.class.php:882
 msgid "Windows Update State"
@@ -1117,9 +1144,11 @@ msgstr "Statut Windows Update"
 
 #: inc/ocsserver.class.php:885
 msgid ""
-"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winupdate) must be installed"
-msgstr "Le plugin Winupdate pour OCSNG (https://github.com/PluginsOCSInventory-NG/winupdate) doit être installé"
+"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) must be installed"
+msgstr ""
+"Le plugin Winupdate pour OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) doit être installé"
 
 #: inc/ocsserver.class.php:888
 msgid "Teamviewer"
@@ -1127,9 +1156,11 @@ msgstr "Teamviewer"
 
 #: inc/ocsserver.class.php:891
 msgid ""
-"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/teamviewer) must be installed"
-msgstr "Le plugin Teamviewer pour OCSNG (https://github.com/PluginsOCSInventory-NG/teamviewer) doit être installé"
+"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) must be installed"
+msgstr ""
+"Le plugin Teamviewer pour OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) doit être installé"
 
 #: inc/ocsserver.class.php:892 inc/proxysetting.class.php:51
 msgid "Proxy Settings"
@@ -1137,9 +1168,11 @@ msgstr "Paramètres du proxy"
 
 #: inc/ocsserver.class.php:895
 msgid ""
-"Navigator Proxy Setting Plugin for OCSNG (https://github.com"
-"/PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
-msgstr "Le plugin Navigator Proxy Setting pour OCSNG (https://github.com/PluginsOCSInventory-NG/navigatorproxysetting) doit être installé"
+"Navigator Proxy Setting Plugin for OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
+msgstr ""
+"Le plugin Navigator Proxy Setting pour OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) doit être installé"
 
 #: inc/ocsserver.class.php:898 inc/winuser.class.php:51
 msgid "Windows Users"
@@ -1147,9 +1180,11 @@ msgstr "Utilisateurs de Windows"
 
 #: inc/ocsserver.class.php:901
 msgid ""
-"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winusers) must be installed"
-msgstr "Le plugin Winusers pour OCSNG (https://github.com/PluginsOCSInventory-NG/winusers) doit être installé"
+"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) must be installed"
+msgstr ""
+"Le plugin Winusers pour OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) doit être installé"
 
 #: inc/ocsserver.class.php:903 inc/osinstall.class.php:51
 msgid "OS Informations"
@@ -1157,15 +1192,19 @@ msgstr "Informations sur l'OS"
 
 #: inc/ocsserver.class.php:906
 msgid ""
-"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/osinstall) must be installed"
-msgstr "Le plugin OSInstall pour OCSNG doit être installé (https://github.com/PluginsOCSInventory-NG/osinstall) "
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) must be installed"
+msgstr ""
+"Le plugin OSInstall pour OCSNG doit être installé (https://github.com/"
+"PluginsOCSInventory-NG/osinstall) "
 
 #: inc/ocsserver.class.php:912
 msgid ""
-"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/networkshare) must be installed"
-msgstr "Le plugin Networkshare pour OCSNG doit être installé (https://github.com/PluginsOCSInventory-NG/networkshare) "
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) must be installed"
+msgstr ""
+"Le plugin Networkshare pour OCSNG doit être installé (https://github.com/"
+"PluginsOCSInventory-NG/networkshare) "
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
@@ -1173,9 +1212,11 @@ msgstr "Service"
 
 #: inc/ocsserver.class.php:917
 msgid ""
-"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/services) must be installed"
-msgstr "Le plugin Service pour OCSNG doit être installé (https://github.com/PluginsOCSInventory-NG/services)"
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) must be installed"
+msgstr ""
+"Le plugin Service pour OCSNG doit être installé (https://github.com/"
+"PluginsOCSInventory-NG/services)"
 
 #: inc/ocsserver.class.php:920 inc/runningprocess.class.php:51
 msgid "Running Process"
@@ -1183,21 +1224,27 @@ msgstr "Processus en cours"
 
 #: inc/ocsserver.class.php:923
 msgid ""
-"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/runningProcess) must be installed"
-msgstr "Le plugin Running Process pour OCSNG doit être installé (https://github.com/PluginsOCSInventory-NG/runningProcess)"
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) must be installed"
+msgstr ""
+"Le plugin Running Process pour OCSNG doit être installé (https://github.com/"
+"PluginsOCSInventory-NG/runningProcess)"
 
 #: inc/ocsserver.class.php:928
 msgid ""
-"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/customapp) must be installed"
-msgstr "Le plug-in Customapp pour OCSNG (https://github.com/PluginsOCSInventory-NG/customapp) doit être installé"
+"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) must be installed"
+msgstr ""
+"Le plug-in Customapp pour OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) doit être installé"
 
 #: inc/ocsserver.class.php:933
 msgid ""
-"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/bitlocker) must be installed"
-msgstr "Le plugin Bitlocker OCSNG (https://github.com/PluginsOCSInventory-NG/bitlocker) doit être installé"
+"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) must be installed"
+msgstr ""
+"Le plugin Bitlocker OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) doit être installé"
 
 #: inc/ocsserver.class.php:941 inc/ocsserver.class.php:945
 msgid "OCSNG administrative information"
@@ -1277,7 +1324,8 @@ msgstr "Chemin d'accès web de la console OCSNG"
 
 #: inc/ocsserver.class.php:1215
 msgid "Limit the import to the following tags (separator $, nothing for all)"
-msgstr "Limiter l'importation aux balises suivantes (séparateur $, rien pour tous)"
+msgstr ""
+"Limiter l'importation aux balises suivantes (séparateur $, rien pour tous)"
 
 #: inc/ocsserver.class.php:1223
 msgid "Exclude the following tags (separator $, nothing for all)"
@@ -1303,7 +1351,9 @@ msgstr "Supprimer définitivement le lien"
 msgid ""
 "Define the action to do on link with other objects when computer is "
 "disconnecting from them"
-msgstr "Définissez l'action à effectuer sur le lien avec d'autres objets lorsque l'ordinateur est déconnecté"
+msgstr ""
+"Définissez l'action à effectuer sur le lien avec d'autres objets lorsque "
+"l'ordinateur est déconnecté"
 
 #: inc/ocsserver.class.php:1240 inc/ocsserver.class.php:3316
 msgid "Use the OCSNG software dictionary"
@@ -1313,7 +1363,9 @@ msgstr "Utiliser le dictionnaire logiciel d'OCSNG"
 msgid ""
 "If Use the OCSNG software dictionary parameter is checked, no software will "
 "be imported before you setup them into OCS"
-msgstr "Si le paramètre -Utiliser le dictionnaire logiciel d'OCSNG- est activé, aucun logiciel ne sera importé avant de l'avoir configuré dans OCS"
+msgstr ""
+"Si le paramètre -Utiliser le dictionnaire logiciel d'OCSNG- est activé, "
+"aucun logiciel ne sera importé avant de l'avoir configuré dans OCS"
 
 #: inc/ocsserver.class.php:1248
 msgid "Number of items to synchronize via the automatic OCSNG action"
@@ -1322,19 +1374,25 @@ msgstr "Nombre d'éléments à synchroniser via l'action automatique OCSNG"
 #: inc/ocsserver.class.php:1256
 msgid ""
 "The automatic task ocsng is launched only if server is not in expert mode"
-msgstr "La tâche automatique est lancée uniquement si le serveur n'est pas en mode Expert"
+msgstr ""
+"La tâche automatique est lancée uniquement si le serveur n'est pas en mode "
+"Expert"
 
 #: inc/ocsserver.class.php:1257
 msgid ""
 "The automatic task ocsng only synchronize existant computers, it doesn't "
 "import new computers"
-msgstr "La tâche automatique synchronise uniquement les ordinateurs existants, il n'importe pas les nouveaux ordinateurs"
+msgstr ""
+"La tâche automatique synchronise uniquement les ordinateurs existants, il "
+"n'importe pas les nouveaux ordinateurs"
 
 #: inc/ocsserver.class.php:1258
 msgid ""
 "If you want to import new computers, disable this parameter, change to "
 "expert mode and use script from system"
-msgstr "Si vous voulez importer les nouveaux ordinateurs, désactivez ce paramètre, activez le mode expert et utilisez le script système"
+msgstr ""
+"Si vous voulez importer les nouveaux ordinateurs, désactivez ce paramètre, "
+"activez le mode expert et utilisez le script système"
 
 #: inc/ocsserver.class.php:1262
 msgid "Behavior to the deletion of a computer in OCSNG"
@@ -1380,7 +1438,9 @@ msgstr "Méthode de synchronisation"
 
 #: inc/ocsserver.class.php:1405
 msgid "Use automatic action for clean old agents & drop from OCSNG software"
-msgstr "Utiliser l'action automatique de nettoyage des agents & suppression depuis OCSNG"
+msgstr ""
+"Utiliser l'action automatique de nettoyage des agents & suppression depuis "
+"OCSNG"
 
 #: inc/ocsserver.class.php:1431
 msgid "Number of days without inventory for cleaning"
@@ -1388,23 +1448,30 @@ msgstr "Nombre de jours sans inventaire pour le nettoyage"
 
 #: inc/ocsserver.class.php:1440
 msgid "Use automatic action restore deleted computer"
-msgstr "Utiliser l'action automatique de restauration des ordinateurs supprimés"
+msgstr ""
+"Utiliser l'action automatique de restauration des ordinateurs supprimés"
 
 #: inc/ocsserver.class.php:1456
 msgid ""
 "Number of days for the restoration of computers from the date of last "
 "inventory"
-msgstr "Nombre de jours pour la restauration des ordinateurs suivant la date de dernier inventaire"
+msgstr ""
+"Nombre de jours pour la restauration des ordinateurs suivant la date de "
+"dernier inventaire"
 
 #: inc/ocsserver.class.php:1465
 msgid "Use automatic action to check entity assignment rules"
-msgstr "Utiliser l'action automatique pour vérifier les règles d'affectation d'entité"
+msgstr ""
+"Utiliser l'action automatique pour vérifier les règles d'affectation d'entité"
 
 #: inc/ocsserver.class.php:1467
 msgid ""
 "Use automatic action to check and send a notification for machines that no "
 "longer respond the entity and location assignment rules"
-msgstr "Utiliser une action automatique pour vérifier et envoyer une notification pour les machines qui ne répondent plus aux règles d'affectation de l'entité et de lieux"
+msgstr ""
+"Utiliser une action automatique pour vérifier et envoyer une notification "
+"pour les machines qui ne répondent plus aux règles d'affectation de l'entité "
+"et de lieux"
 
 #: inc/ocsserver.class.php:1475
 msgid "Use automatic locks"
@@ -1467,7 +1534,9 @@ msgstr "Mise à jour des ordinateurs"
 msgid ""
 "Caution! The imported data (see your configuration) will overwrite the "
 "existing one"
-msgstr "Attention ! Les données importées (voir votre configuration) écraseront les données existantes"
+msgstr ""
+"Attention ! Les données importées (voir votre configuration) écraseront les "
+"données existantes"
 
 #: inc/ocsserver.class.php:2612
 msgid "Manual import mode"
@@ -1483,7 +1552,8 @@ msgstr "Activer la prévisualisation"
 
 #: inc/ocsserver.class.php:2621 inc/ocsserver.class.php:2834
 msgid "Check first that duplicates have been correctly managed in OCSNG"
-msgstr "Assurez-vous au préalable d'avoir géré correctement les doublons dans OCSNG"
+msgstr ""
+"Assurez-vous au préalable d'avoir géré correctement les doublons dans OCSNG"
 
 #: inc/ocsserver.class.php:2647 inc/ocsserver.class.php:2847
 #: inc/snmpocslink.class.php:2399 inc/snmpocslink.class.php:2569
@@ -1645,12 +1715,15 @@ msgstr "Aucune clé de la base de registre trouvée"
 msgid ""
 "Alerts on computers that no longer respond the rules for assigning an item "
 "to an entity"
-msgstr "Ordinateurs qui ne répondent plus aux règles d'affectation d'un élément à une entité"
+msgstr ""
+"Ordinateurs qui ne répondent plus aux règles d'affectation d'un élément à "
+"une entité"
 
 #: inc/ruleimportentity.class.php:106
 #, php-format
 msgid "Items that do not meet the allocation rules for the entity %s: %s"
-msgstr "Éléments qui ne répondent pas aux règles d'affectation de l'entité %s: %s"
+msgstr ""
+"Éléments qui ne répondent pas aux règles d'affectation de l'entité %s: %s"
 
 #: inc/runningprocess.class.php:191
 msgid "Process ID"
@@ -1971,47 +2044,6 @@ msgstr "Objet SNMP OCSNG"
 msgid "Update SNMP device"
 msgstr "Mise à jour de l'objet SNMP"
 
-#: inc/snmplinkrework.class.php:2567
-msgid "Snmp device imported from OCSNG"
-msgstr "Objet SNMP importé depuis OCS"
-
-#: inc/snmplinkrework.class.php:2781
-msgid "Snmp device updated from OCSNG"
-msgstr "Objet SNMP mis à jour depuis OCS"
-
-#: inc/snmplinkrework.class.php:2605
-msgid "Object"
-msgstr "Objet"
-
-#: inc/snmplinkrework.class.php:2605
-msgid "Choose a label"
-msgstr "Selectionnez un label"
-
-#: inc/snmplinkrework.class.php:2795
-#: inc/snmplinkrework.class.php:2852
-msgid "Delete"
-msgstr "Supprimer"
-
-#: inc/snmplinkrework.class.php:2795
-msgid "OCS snmp Type"
-msgstr "OCS Type SNMP"
-
-#: inc/snmplinkrework.class.php:2795
-msgid "GLPI field"
-msgstr "Champs ITSM-NG"
-
-#: inc/snmplinkrework.class.php:2795
-msgid "OCS field"
-msgstr "Champs OCS"
-
-#: inc/snmplinkrework.class.php:2795
-msgid "No SNMP object to link"
-msgstr "Pas de nouveau type snmp à lier"
-
-#: inc/snmplinkrework.class.php:2631
-msgid "Transfer of OCS object %s to GLPI object %s"
-msgstr "Transfert de l'objet OCS %s vers l'objet ITSM-NG %s"
-
 #: inc/software.class.php:303
 msgid "Software deleted by OCSNG synchronization"
 msgstr "Logiciel supprimé par la synchronisation OCSNG"
@@ -2115,7 +2147,8 @@ msgstr "Dernier téléchargement en succès"
 
 #: inc/winupdate.class.php:261
 msgid "Automatic Updates is required and users can configure it"
-msgstr "Mises à jours automatiques requises et l'utilisateur peut les configurer"
+msgstr ""
+"Mises à jours automatiques requises et l'utilisateur peut les configurer"
 
 #: inc/winupdate.class.php:264
 msgid "Automatically download and schedule installation"
@@ -2141,78 +2174,91 @@ msgstr "Désactivée"
 msgid "SID"
 msgstr "SID"
 
-#: inc/ipdiscoverocslink.class.php:393
-msgid "See Setup : IPDiscover Import before"
-msgstr "Voir la configuration : Import IpDiscover avant"
+#~ msgid "Snmp device imported from OCSNG"
+#~ msgstr "Objet SNMP importé depuis OCS"
 
-#: inc/ipdiscoverocslink.class.php:445
-msgid "IpDiscover manual import"
-msgstr "IpDiscover import manuel"
+#~ msgid "Snmp device updated from OCSNG"
+#~ msgstr "Objet SNMP mis à jour depuis OCS"
 
-#: inc/ipdiscoverocslink.class.php:390
-msgid "IpDiscover automatic import"
-msgstr "IpDiscover import automatique"
+#~ msgid "Object"
+#~ msgstr "Objet"
 
-#: inc/ipdiscoverocslink.class.php:403
-msgid "Import IpDiscover non-inventoried equipments"
-msgstr "Import des équipements IpDiscover non-inventoriés"
+#~ msgid "Choose a label"
+#~ msgstr "Selectionnez un label"
 
-#: inc/ipdiscoverocslink.class.php:408
-msgid "Import IpDiscover identified equipments"
-msgstr "Import des équipements IpDiscover identifiés"
+#~ msgid "Delete"
+#~ msgstr "Supprimer"
 
-#: inc/ipdiscoverocslink.class.php:413
-msgid "Import all IpDiscover equipments"
-msgstr "Import de tous les équipements IpDiscover"
+#~ msgid "OCS snmp Type"
+#~ msgstr "OCS Type SNMP"
 
-#: inc/ipdiscoverocslink.class.php:421
-msgid "Synchronize IpDiscover equipments already imported"
-msgstr "Synchronisation des équipements IpDiscover déjà importés"
+#~ msgid "GLPI field"
+#~ msgstr "Champs ITSM-NG"
 
-#: inc/ipdiscoverocslink.class.php:426
-msgid "Synchronize IpDiscover equipments already imported (force)"
-msgstr "Synchronisation des équipements IpDiscover déjà importés (force)"
+#~ msgid "OCS field"
+#~ msgstr "Champs OCS"
 
-#: inc/ipdiscoverocslinkrework.class.php:168
-msgid "IpDiscover Non-Inventoried Equipment configurations"
-msgstr "Configurations des équipements IpDiscover Non-Inventoriés"
+#~ msgid "No SNMP object to link"
+#~ msgstr "Pas de nouveau type snmp à lier"
 
-#: inc/ipdiscoverocslinkrework.class.php:207
-msgid "IpDiscover Identified Equipment configurations"
-msgstr "Configurations des équipements IpDiscover Identifiés"
+#~ msgid "Transfer of OCS object %s to GLPI object %s"
+#~ msgstr "Transfert de l'objet OCS %s vers l'objet ITSM-NG %s"
 
-#: inc/ocsprocess.class.php:1581
-msgid "IPDISCOVER object removed"
-msgstr "Objects IpDiscover supprimés"
+#~ msgid "See Setup : IPDiscover Import before"
+#~ msgstr "Voir la configuration : Import IpDiscover avant"
 
-#: inc/ocsprocess.class.php:1582
-msgid "IPDISCOVER object not removed"
-msgstr "Objects IpDiscover non supprimés"
+#~ msgid "IpDiscover manual import"
+#~ msgstr "IpDiscover import manuel"
 
-#: inc/ipdiscoverocslinkrework.class.php:976
-msgid "Non Imported"
-msgstr "Non importé"
+#~ msgid "IpDiscover automatic import"
+#~ msgstr "IpDiscover import automatique"
 
-#: inc/ipdiscoverocslinkrework.form.php:65
-msgid "OCS Type and GLPI type cannot be empty"
-msgstr "Le type OCS et le type ITSM-NG ne peuvent pas être vide"
+#~ msgid "Import IpDiscover non-inventoried equipments"
+#~ msgstr "Import des équipements IpDiscover non-inventoriés"
 
-#: inc/ipdiscoverocslinkrework.form.php:52
-msgid "Fields cannot be identical"
-msgstr "Les champs ne peuvent pas être identiques"
+#~ msgid "Import IpDiscover identified equipments"
+#~ msgstr "Import des équipements IpDiscover identifiés"
 
-#: inc/ipdiscoverocslinkrework.class.php:177
-msgid "Configuring the binding of IpDiscover and SNMP equipments"
-msgstr "Configuration de la liaison des équipements IpDiscover et SNMP"
+#~ msgid "Import all IpDiscover equipments"
+#~ msgstr "Import de tous les équipements IpDiscover"
 
-#: inc/ipdiscoverocslinkrework.class.php:181
-msgid "Merge IpDiscover equipment with SNMP equipment if IP address matches"
-msgstr "Fusionner l'équipement IpDiscover avec l'équipement SNMP si l'adresse IP correspond"
+#~ msgid "Synchronize IpDiscover equipments already imported"
+#~ msgstr "Synchronisation des équipements IpDiscover déjà importés"
 
-#: inc/ocsprocess.class.php:1584
-msgid "IPDISCOVER objects merged with SNMP object"
-msgstr "Objets IPDISCOVER fusionnés avec un objet SNMP"
+#~ msgid "Synchronize IpDiscover equipments already imported (force)"
+#~ msgstr "Synchronisation des équipements IpDiscover déjà importés (force)"
 
-#: inc/ipdiscoverocslinkrework.class.php:187
-msgid "Switch the equipment to identified on OCS with type"
-msgstr "Passer l'équipement à identifié dans OCS avec le type"
+#~ msgid "IpDiscover Non-Inventoried Equipment configurations"
+#~ msgstr "Configurations des équipements IpDiscover Non-Inventoriés"
+
+#~ msgid "IpDiscover Identified Equipment configurations"
+#~ msgstr "Configurations des équipements IpDiscover Identifiés"
+
+#~ msgid "IPDISCOVER object removed"
+#~ msgstr "Objects IpDiscover supprimés"
+
+#~ msgid "IPDISCOVER object not removed"
+#~ msgstr "Objects IpDiscover non supprimés"
+
+#~ msgid "Non Imported"
+#~ msgstr "Non importé"
+
+#~ msgid "OCS Type and GLPI type cannot be empty"
+#~ msgstr "Le type OCS et le type ITSM-NG ne peuvent pas être vide"
+
+#~ msgid "Fields cannot be identical"
+#~ msgstr "Les champs ne peuvent pas être identiques"
+
+#~ msgid "Configuring the binding of IpDiscover and SNMP equipments"
+#~ msgstr "Configuration de la liaison des équipements IpDiscover et SNMP"
+
+#~ msgid "Merge IpDiscover equipment with SNMP equipment if IP address matches"
+#~ msgstr ""
+#~ "Fusionner l'équipement IpDiscover avec l'équipement SNMP si l'adresse IP "
+#~ "correspond"
+
+#~ msgid "IPDISCOVER objects merged with SNMP object"
+#~ msgstr "Objets IPDISCOVER fusionnés avec un objet SNMP"
+
+#~ msgid "Switch the equipment to identified on OCS with type"
+#~ msgstr "Passer l'équipement à identifié dans OCS avec le type"

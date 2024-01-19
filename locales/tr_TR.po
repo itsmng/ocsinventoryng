@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Ocsinventoryng Development Team
 # This file is distributed under the same license as the GLPI - Ocsinventoryng plugin package.
-# 
+#
 # Translators:
 # Amandine Manceau, 2018
 # Kaya Zeren <kayazeren@gmail.com>, 2013-2020
@@ -12,11 +12,12 @@ msgstr ""
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
 "PO-Revision-Date: 2020-11-11 14:28+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: Turkish (Turkey) (http://www.transifex.com/yllen/GLPI_ocsinventoryng/language/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/yllen/"
+"GLPI_ocsinventoryng/language/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
@@ -205,10 +206,12 @@ msgstr "kilit kullanılamaz - Etkinleştirmek için ayarlar bölümüne bakın"
 msgid ""
 "The startup date field is locked by ocsinventoryng please unlock it before "
 "update."
-msgstr "Başlangıç tarihi alanı ocsinventoryng tarafından kilitlenmiş. Lütfen güncellemeden önce kilidini açın."
+msgstr ""
+"Başlangıç tarihi alanı ocsinventoryng tarafından kilitlenmiş. Lütfen "
+"güncellemeden önce kilidini açın."
 
-#: front/config.form.php:51 inc/config.class.php:64
-#: inc/ocsserver.class.php:312 inc/ocsserver.class.php:313
+#: front/config.form.php:51 inc/config.class.php:64 inc/ocsserver.class.php:312
+#: inc/ocsserver.class.php:313
 msgid "Automatic synchronization's configuration"
 msgstr "Otomatik eşitleme ayarları"
 
@@ -226,9 +229,9 @@ msgstr "OCS Inventory NG üzerinden silinmiş bilgisayarlar"
 msgid "No new computers to delete"
 msgstr "Silinecek yeni bir bilgisayar yok"
 
-#: front/deleted_equiv.php:51 front/deleted_equiv.php:88
-#: inc/menu.class.php:104 inc/ocsserver.class.php:524
-#: inc/ocsserver.class.php:525 inc/ocsserver.class.php:542
+#: front/deleted_equiv.php:51 front/deleted_equiv.php:88 inc/menu.class.php:104
+#: inc/ocsserver.class.php:524 inc/ocsserver.class.php:525
+#: inc/ocsserver.class.php:542
 msgid "Clean OCSNG deleted computers"
 msgstr "OCSNG üzerinden silinmiş bilgisayarları temizle"
 
@@ -244,15 +247,17 @@ msgid_plural "Unknown imported network ports types"
 msgstr[0] "İçe aktarılmış bilinmeyen ağ kapısı türü"
 msgstr[1] "İçe aktarılmış bilinmeyen ağ kapısı türü"
 
-#: front/ocsng.clean.php:50 front/ocsng.import.php:134
-#: front/ocsng.link.php:112 front/ocsng.sync.php:91
+#: front/ocsng.clean.php:50 front/ocsng.import.php:134 front/ocsng.link.php:112
+#: front/ocsng.sync.php:91
 msgid "You have"
 msgstr "Elinizde"
 
-#: front/ocsng.clean.php:52 front/ocsng.import.php:136
-#: front/ocsng.link.php:114 front/ocsng.sync.php:93
+#: front/ocsng.clean.php:52 front/ocsng.import.php:136 front/ocsng.link.php:114
+#: front/ocsng.sync.php:93
 msgid "Please clean them before import or synchronize computers"
-msgstr "Lütfen bilgisayarları içe aktarmadan ya da eşitlemeden önce bunları temizleyin"
+msgstr ""
+"Lütfen bilgisayarları içe aktarmadan ya da eşitlemeden önce bunları "
+"temizleyin"
 
 #: front/ocsng.clean.php:65 inc/menu.class.php:108 inc/ocsserver.class.php:543
 #: inc/ocsserver.class.php:2078 inc/profile.class.php:269
@@ -355,7 +360,9 @@ msgstr "Hiç bir şeyin değişmediği işlemleri görüntüle"
 msgid ""
 "Authorize the OCSNG update (purge agents when purge GLPI computers or from "
 "Automatic actions)"
-msgstr "OCSNG güncellemesi yapılabilsin (Otomatik işlemlerle ya da ITSM-NG bilgisayarları boşaltıldığında ajanlar boşaltılsın)"
+msgstr ""
+"OCSNG güncellemesi yapılabilsin (Otomatik işlemlerle ya da ITSM-NG "
+"bilgisayarları boşaltıldığında ajanlar boşaltılsın)"
 
 #: inc/config.class.php:341
 msgid "Log imported computers"
@@ -488,7 +495,9 @@ msgstr "OCSNG sunucusu seçimi"
 msgid ""
 "If you not find your OCSNG server in this dropdown, please check if your "
 "profile can access it !"
-msgstr "Açılan kutuda OCSNG sunucunuz görüntülenmiyorsa lütfen proilinizin erişim ayarlarını denetleyin ! "
+msgstr ""
+"Açılan kutuda OCSNG sunucunuz görüntülenmiyorsa lütfen proilinizin erişim "
+"ayarlarını denetleyin ! "
 
 #: inc/ipdiscoverocslink.class.php:392
 msgid "Import IPDiscover"
@@ -860,12 +869,16 @@ msgstr "Alanın kilidini aç ve OCSNG verilerini içe aktar"
 #: inc/ocsprocess.class.php:712
 #, php-format
 msgid "Unable to link this computer, Serial number is blacklisted (%d)"
-msgstr "Seri numarası (%d) kara listeye alınmış olduğundan, bu bilgisayar ile bağlantı kurulamadı"
+msgstr ""
+"Seri numarası (%d) kara listeye alınmış olduğundan, bu bilgisayar ile "
+"bağlantı kurulamadı"
 
 #: inc/ocsprocess.class.php:719
 #, php-format
 msgid "Unable to link this computer, UUID is blacklisted (%d)"
-msgstr "UUID (%d) kara listeye alınmış olduğundan, bu bilgisayar ile bağlantı kurulamadı"
+msgstr ""
+"UUID (%d) kara listeye alınmış olduğundan, bu bilgisayar ile bağlantı "
+"kurulamadı"
 
 #. TRANS: %s is the OCS id
 #: inc/ocsprocess.class.php:787
@@ -873,7 +886,9 @@ msgstr "UUID (%d) kara listeye alınmış olduğundan, bu bilgisayar ile bağlan
 msgid ""
 "Unable to import, GLPI computer is already related to an element of OCSNG "
 "(%d)"
-msgstr "İçe aktarılamadı, ITSM-NG bilgisayarı zaten bir OCSNG bileşeni ile ilişkilendirilmiş (%d)"
+msgstr ""
+"İçe aktarılamadı, ITSM-NG bilgisayarı zaten bir OCSNG bileşeni ile "
+"ilişkilendirilmiş (%d)"
 
 #: inc/ocsprocess.class.php:1533
 msgid "Computers don't check any rule"
@@ -1065,7 +1080,9 @@ msgstr "Yalnız seri numarasına göre birim içe aktarma"
 msgid ""
 "Global import: everything is imported but the material is globally managed "
 "(without duplicate)"
-msgstr "Genel içe aktarma: Her şey içe aktarılır ancak malzemeler tek noktadan yönetilir (kopyalanmaz)"
+msgstr ""
+"Genel içe aktarma: Her şey içe aktarılır ancak malzemeler tek noktadan "
+"yönetilir (kopyalanmaz)"
 
 #: inc/ocsserver.class.php:852
 msgid "Unit import: everything is imported as it is"
@@ -1081,9 +1098,11 @@ msgstr "Microsoft Office lisansları"
 
 #: inc/ocsserver.class.php:870
 msgid ""
-"Depends on software import and OfficePack Plugin for (https://github.com"
-"/PluginsOCSInventory-NG/officepack) OCSNG must be installed"
-msgstr "OCSNG için yazılım içe aktarma ve OfficePack Uygulama eki (https://github.com/PluginsOCSInventory-NG/officepack) kurulmuş olmalıdır"
+"Depends on software import and OfficePack Plugin for (https://github.com/"
+"PluginsOCSInventory-NG/officepack) OCSNG must be installed"
+msgstr ""
+"OCSNG için yazılım içe aktarma ve OfficePack Uygulama eki (https://github."
+"com/PluginsOCSInventory-NG/officepack) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:871
 msgid "Antivirus"
@@ -1091,15 +1110,19 @@ msgstr "Antivirus"
 
 #: inc/ocsserver.class.php:874
 msgid ""
-"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/security) must be installed"
-msgstr "OCSNG için Güvenlik Uygulama Eki (https://github.com/PluginsOCSInventory-NG/security) kurulmuş olmalıdır"
+"Security Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"security) must be installed"
+msgstr ""
+"OCSNG için Güvenlik Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"security) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:881
 msgid ""
 "Uptime Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/uptime) "
 "must be installed"
-msgstr "OCSNG için Uptime Uygulama Eki (https://github.com/PluginsOCSInventory-NG/uptime) kurulmuş olmalıdır"
+msgstr ""
+"OCSNG için Uptime Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"uptime) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:882
 msgid "Windows Update State"
@@ -1107,9 +1130,11 @@ msgstr "Windows Güncelleme Durumu"
 
 #: inc/ocsserver.class.php:885
 msgid ""
-"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winupdate) must be installed"
-msgstr "OCSNG için Winupdate Uygulama Eki (https://github.com/PluginsOCSInventory-NG/winupdate) kurulmuş olmalıdır"
+"Winupdate Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) must be installed"
+msgstr ""
+"OCSNG için Winupdate Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"winupdate) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:888
 msgid "Teamviewer"
@@ -1117,9 +1142,11 @@ msgstr "Teamviewer"
 
 #: inc/ocsserver.class.php:891
 msgid ""
-"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/teamviewer) must be installed"
-msgstr "OCSNG için Teamviewer Uygulama Eki (https://github.com/PluginsOCSInventory-NG/teamviewer) kurulmuş olmalıdır"
+"Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"teamviewer) must be installed"
+msgstr ""
+"OCSNG için Teamviewer Uygulama Eki (https://github.com/PluginsOCSInventory-"
+"NG/teamviewer) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:892 inc/proxysetting.class.php:51
 msgid "Proxy Settings"
@@ -1127,9 +1154,11 @@ msgstr "Vekil Sunucu Ayarları"
 
 #: inc/ocsserver.class.php:895
 msgid ""
-"Navigator Proxy Setting Plugin for OCSNG (https://github.com"
-"/PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
-msgstr "OCSNG için Navigator Vekil Sunucu Ayarları Uygulama Eki (https://github.com/PluginsOCSInventory-NG/navigatorproxysetting) kurulmuş olmalıdır"
+"Navigator Proxy Setting Plugin for OCSNG (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) must be installed"
+msgstr ""
+"OCSNG için Navigator Vekil Sunucu Ayarları Uygulama Eki (https://github.com/"
+"PluginsOCSInventory-NG/navigatorproxysetting) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:898 inc/winuser.class.php:51
 msgid "Windows Users"
@@ -1137,9 +1166,11 @@ msgstr "Windows Kullanıcıları"
 
 #: inc/ocsserver.class.php:901
 msgid ""
-"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/winusers) must be installed"
-msgstr "OCSNG için Winusers Uygulama Eki (https://github.com/PluginsOCSInventory-NG/winusers) kurulmuş olmalıdır"
+"Winusers Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"winusers) must be installed"
+msgstr ""
+"OCSNG için Winusers Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"winusers) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:903 inc/osinstall.class.php:51
 msgid "OS Informations"
@@ -1147,15 +1178,19 @@ msgstr "OS bilgileri"
 
 #: inc/ocsserver.class.php:906
 msgid ""
-"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/osinstall) must be installed"
-msgstr "OCSNG için OSInstall Uygulama Eki (https://github.com/PluginsOCSInventory-NG/osinstall) kurulmuş olmalıdır"
+"OSInstall Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) must be installed"
+msgstr ""
+"OCSNG için OSInstall Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"osinstall) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:912
 msgid ""
-"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/networkshare) must be installed"
-msgstr "OCSNG için Networkshare uygulama eki (https://github.com/PluginsOCSInventory-NG/networkshare) kurulmuş olmalıdır"
+"Networkshare Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"networkshare) must be installed"
+msgstr ""
+"OCSNG için Networkshare uygulama eki (https://github.com/PluginsOCSInventory-"
+"NG/networkshare) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
@@ -1163,9 +1198,11 @@ msgstr "Hizmet"
 
 #: inc/ocsserver.class.php:917
 msgid ""
-"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/services) must be installed"
-msgstr "OCSNG için Hizmet Uygulama Eki (https://github.com/PluginsOCSInventory-NG/services) kurulmuş olmalıdır"
+"Service Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"services) must be installed"
+msgstr ""
+"OCSNG için Hizmet Uygulama Eki (https://github.com/PluginsOCSInventory-NG/"
+"services) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:920 inc/runningprocess.class.php:51
 msgid "Running Process"
@@ -1173,20 +1210,24 @@ msgstr "Çalışan İşlemler"
 
 #: inc/ocsserver.class.php:923
 msgid ""
-"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/runningProcess) must be installed"
-msgstr "OCSNG için Çalışan İşlemler Uygulama Eki (https://github.com/PluginsOCSInventory-NG/runningProcess) kurulmuş olmalıdır"
+"Running Process Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"runningProcess) must be installed"
+msgstr ""
+"OCSNG için Çalışan İşlemler Uygulama Eki (https://github.com/"
+"PluginsOCSInventory-NG/runningProcess) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:928
 msgid ""
-"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/customapp) must be installed"
-msgstr "OCSNG için Özel Uygulamalar Uygulama Eki (https://github.com/PluginsOCSInventory-NG/customapp) kurulmuş olmalıdır"
+"Customapp Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"customapp) must be installed"
+msgstr ""
+"OCSNG için Özel Uygulamalar Uygulama Eki (https://github.com/"
+"PluginsOCSInventory-NG/customapp) kurulmuş olmalıdır"
 
 #: inc/ocsserver.class.php:933
 msgid ""
-"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-"
-"NG/bitlocker) must be installed"
+"Bitlocker Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/"
+"bitlocker) must be installed"
 msgstr ""
 
 #: inc/ocsserver.class.php:941 inc/ocsserver.class.php:945
@@ -1293,7 +1334,9 @@ msgstr "Bağlantı kalıcı olarak silinsin"
 msgid ""
 "Define the action to do on link with other objects when computer is "
 "disconnecting from them"
-msgstr "Bilgisayar bağlantısı kesildiğinde bağlantı üzerindeki diğer nesnelere uygulanacak işlemi seçin"
+msgstr ""
+"Bilgisayar bağlantısı kesildiğinde bağlantı üzerindeki diğer nesnelere "
+"uygulanacak işlemi seçin"
 
 #: inc/ocsserver.class.php:1240 inc/ocsserver.class.php:3316
 msgid "Use the OCSNG software dictionary"
@@ -1303,7 +1346,9 @@ msgstr "OCSNG yazılım sözlüğü kullanılsın"
 msgid ""
 "If Use the OCSNG software dictionary parameter is checked, no software will "
 "be imported before you setup them into OCS"
-msgstr "OCSNG yazılım sözlüğü kullanılsın seçeneği etkinleştirilmiş ise OCS içine kurulmayan yazılımlar alınmaz"
+msgstr ""
+"OCSNG yazılım sözlüğü kullanılsın seçeneği etkinleştirilmiş ise OCS içine "
+"kurulmayan yazılımlar alınmaz"
 
 #: inc/ocsserver.class.php:1248
 msgid "Number of items to synchronize via the automatic OCSNG action"
@@ -1312,19 +1357,24 @@ msgstr "Otomatik OCSNG işlemiyle eşitlenecek öge sayısı"
 #: inc/ocsserver.class.php:1256
 msgid ""
 "The automatic task ocsng is launched only if server is not in expert mode"
-msgstr "OCSNG otomatik görevi yalnız sunucu uzman kipinde olmadığında yürütülür"
+msgstr ""
+"OCSNG otomatik görevi yalnız sunucu uzman kipinde olmadığında yürütülür"
 
 #: inc/ocsserver.class.php:1257
 msgid ""
 "The automatic task ocsng only synchronize existant computers, it doesn't "
 "import new computers"
-msgstr "OCSNG otomatik görevi yalnız yeni bilgisayarlar içe aktarmıyorsa var olan bilgisayarları eşitleyebilir"
+msgstr ""
+"OCSNG otomatik görevi yalnız yeni bilgisayarlar içe aktarmıyorsa var olan "
+"bilgisayarları eşitleyebilir"
 
 #: inc/ocsserver.class.php:1258
 msgid ""
 "If you want to import new computers, disable this parameter, change to "
 "expert mode and use script from system"
-msgstr "Yeni bilgisayarlar içe aktarmak istiyorsanız bu seçeneği devre dışı bırakın, uzman kipine geçin ve sistem betiğini kullanın"
+msgstr ""
+"Yeni bilgisayarlar içe aktarmak istiyorsanız bu seçeneği devre dışı bırakın, "
+"uzman kipine geçin ve sistem betiğini kullanın"
 
 #: inc/ocsserver.class.php:1262
 msgid "Behavior to the deletion of a computer in OCSNG"
@@ -1370,7 +1420,9 @@ msgstr "Eşitleme yöntemi"
 
 #: inc/ocsserver.class.php:1405
 msgid "Use automatic action for clean old agents & drop from OCSNG software"
-msgstr "Eski ajanları temizleyerek OCSNG üzerinden silmek için otomatik işlem kullanılsın"
+msgstr ""
+"Eski ajanları temizleyerek OCSNG üzerinden silmek için otomatik işlem "
+"kullanılsın"
 
 #: inc/ocsserver.class.php:1431
 msgid "Number of days without inventory for cleaning"
@@ -1384,7 +1436,8 @@ msgstr "Silinmiş bilgisayar için otomatik geri yükleme işlemi kullanılsın"
 msgid ""
 "Number of days for the restoration of computers from the date of last "
 "inventory"
-msgstr "Son envanter tarihinden sonra bilgisayarların geri yükleneceği gün sayısı"
+msgstr ""
+"Son envanter tarihinden sonra bilgisayarların geri yükleneceği gün sayısı"
 
 #: inc/ocsserver.class.php:1465
 msgid "Use automatic action to check entity assignment rules"
@@ -1394,7 +1447,9 @@ msgstr "Varlık atama kurallarını denetlemek için otomatik işlem kullanıls�
 msgid ""
 "Use automatic action to check and send a notification for machines that no "
 "longer respond the entity and location assignment rules"
-msgstr "Varlık ve konum atama kurallarına artık yanıt vermeyen aygıtlar için otomatik işlem kullanılsın ve bir bildirim gönderilsin"
+msgstr ""
+"Varlık ve konum atama kurallarına artık yanıt vermeyen aygıtlar için "
+"otomatik işlem kullanılsın ve bir bildirim gönderilsin"
 
 #: inc/ocsserver.class.php:1475
 msgid "Use automatic locks"
@@ -1457,7 +1512,9 @@ msgstr "Bilgisayarları güncelle"
 msgid ""
 "Caution! The imported data (see your configuration) will overwrite the "
 "existing one"
-msgstr "Dikkat! İçe aktarılmış veri (ayarlarınıza bakın) var olan verinin üzerine yazılacak"
+msgstr ""
+"Dikkat! İçe aktarılmış veri (ayarlarınıza bakın) var olan verinin üzerine "
+"yazılacak"
 
 #: inc/ocsserver.class.php:2612
 msgid "Manual import mode"
@@ -1635,7 +1692,9 @@ msgstr "Kayıt defteri anahtarı bulunamadı"
 msgid ""
 "Alerts on computers that no longer respond the rules for assigning an item "
 "to an entity"
-msgstr "Bir ögeyi bir varlığa atayan kurallara artık yanıt vermeyen bilgisayarlar ile ilgili uyarı verilsin"
+msgstr ""
+"Bir ögeyi bir varlığa atayan kurallara artık yanıt vermeyen bilgisayarlar "
+"ile ilgili uyarı verilsin"
 
 #: inc/ruleimportentity.class.php:106
 #, php-format
@@ -2064,7 +2123,8 @@ msgstr "Son İndirme Zamanı"
 
 #: inc/winupdate.class.php:261
 msgid "Automatic Updates is required and users can configure it"
-msgstr "Otomatik Güncellemeler zorunludur ve kullanıcılar tarafından ayarlanabilir"
+msgstr ""
+"Otomatik Güncellemeler zorunludur ve kullanıcılar tarafından ayarlanabilir"
 
 #: inc/winupdate.class.php:264
 msgid "Automatically download and schedule installation"
@@ -2090,6 +2150,5 @@ msgstr "Devre Dışı"
 msgid "SID"
 msgstr "SID"
 
-#: inc/snmplinkrework.class.php:2795
-msgid "GLPI field"
-msgstr "ITSM-NG field"
+#~ msgid "GLPI field"
+#~ msgstr "ITSM-NG field"

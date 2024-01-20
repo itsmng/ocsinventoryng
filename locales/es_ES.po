@@ -16,15 +16,16 @@ msgstr ""
 "Project-Id-Version: GLPI Project - ocsinventoryng plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
-"PO-Revision-Date: 2020-11-11 14:28+0000\n"
-"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>\n"
-"Language-Team: Spanish (Spain) (http://www.transifex.com/yllen/"
-"GLPI_ocsinventoryng/language/es_ES/)\n"
+"PO-Revision-Date: 2024-01-20 16:01+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/itsm-ng/"
+"ocsinventoryng/es/>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: hook.php:764 front/notimportedcomputer.php:34 inc/menu.class.php:93
 #: inc/notificationtargetnotimportedcomputer.class.php:43
@@ -567,7 +568,7 @@ msgstr ""
 #: inc/ipdiscoverocslink.class.php:1522 inc/ipdiscoverocslink.class.php:1622
 #: inc/notificationtargetruleimportentity.class.php:125
 msgid "Link"
-msgstr ""
+msgstr "Enlace"
 
 #: inc/ipdiscoverocslink.class.php:1392 inc/ipdiscoverocslink.class.php:1505
 #: inc/ipdiscoverocslink.class.php:1525 inc/ipdiscoverocslink.class.php:1625
@@ -1174,7 +1175,7 @@ msgstr ""
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
-msgstr ""
+msgstr "Servicio"
 
 #: inc/ocsserver.class.php:917
 msgid ""
@@ -2104,7 +2105,7 @@ msgstr ""
 
 #: inc/winuser.class.php:199
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: inc/winuser.class.php:200
 msgid "SID"

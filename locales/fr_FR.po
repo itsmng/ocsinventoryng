@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - ocsinventoryng plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 15:27+0100\n"
-"PO-Revision-Date: 2024-01-20 16:01+0000\n"
+"PO-Revision-Date: 2024-02-02 21:01+0000\n"
 "Last-Translator: Florian Blanchet <florian.blanchet@itsm-ng.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/itsm-ng/"
 "ocsinventoryng/fr/>\n"
@@ -508,7 +508,7 @@ msgid ""
 "profile can access it !"
 msgstr ""
 "Si vous ne trouvez pas votre serveur OCSNG dans la liste, merci de vérifier "
-"si votre profil y a accès"
+"si votre profil y a accès !"
 
 #: inc/ipdiscoverocslink.class.php:392
 msgid "Import IPDiscover"
@@ -679,7 +679,7 @@ msgstr "vide"
 
 #: inc/networkport.class.php:636
 msgid "No unknown network port type from OCS !"
-msgstr "Pas de type de port réseau inconnu provenant d'OCSNG"
+msgstr "Pas de type de port réseau inconnu provenant d'OCSNG !"
 
 #: inc/networkporttype.class.php:47
 msgid "Network port type"
@@ -1129,7 +1129,7 @@ msgid ""
 "security) must be installed"
 msgstr ""
 "Le plugin Security pour OCSNG doit être installé (https://github.com/"
-"PluginsOCSInventory-NG/security) "
+"PluginsOCSInventory-NG/security)"
 
 #: inc/ocsserver.class.php:881
 msgid ""
@@ -1197,7 +1197,7 @@ msgid ""
 "osinstall) must be installed"
 msgstr ""
 "Le plugin OSInstall pour OCSNG doit être installé (https://github.com/"
-"PluginsOCSInventory-NG/osinstall) "
+"PluginsOCSInventory-NG/osinstall)"
 
 #: inc/ocsserver.class.php:912
 msgid ""
@@ -1205,7 +1205,7 @@ msgid ""
 "networkshare) must be installed"
 msgstr ""
 "Le plugin Networkshare pour OCSNG doit être installé (https://github.com/"
-"PluginsOCSInventory-NG/networkshare) "
+"PluginsOCSInventory-NG/networkshare)"
 
 #: inc/ocsserver.class.php:914
 msgid "Service"
@@ -1402,7 +1402,7 @@ msgstr "Comportement à la suppression d'un ordinateur dans OCSNG"
 #: inc/ocsserver.class.php:1268
 #, php-format
 msgid "Change to state %s"
-msgstr "Passage à l'état  %s"
+msgstr "Passage à l'état %s"
 
 #: inc/ocsserver.class.php:1310
 msgid "Database"
@@ -1516,7 +1516,7 @@ msgstr "Présent dans OCSNG"
 
 #: inc/ocsserver.class.php:2140
 msgid "No item to clean"
-msgstr "Aucun objet à nettoyer."
+msgstr "Aucun objet à nettoyer"
 
 #: inc/ocsserver.class.php:2181 inc/ocsserver.class.php:2344
 #: inc/ocsserver.class.php:2351
@@ -1588,7 +1588,7 @@ msgstr "IP blacklisté"
 
 #: inc/ocsserver.class.php:2832
 msgid "Warning ! This computer is already linked with another OCS computer."
-msgstr "Attention! L'ordinateur est déjà lié avec un autre ordinateur OCS."
+msgstr "Attention ! L'ordinateur est déjà lié avec un autre ordinateur OCS."
 
 #: inc/ocsserver.class.php:2869 inc/ocsserver.class.php:2884
 #: inc/ocsserver.class.php:2898
@@ -1665,7 +1665,7 @@ msgstr "Fuseau horaire actuel"
 
 #: inc/osinstall.class.php:183
 msgid "Locale"
-msgstr ""
+msgstr "Locale"
 
 #: inc/profile.class.php:167
 msgid "Allowed OCSNG server"
@@ -1724,7 +1724,7 @@ msgstr ""
 #, php-format
 msgid "Items that do not meet the allocation rules for the entity %s: %s"
 msgstr ""
-"Éléments qui ne répondent pas aux règles d'affectation de l'entité %s: %s"
+"Éléments qui ne répondent pas aux règles d'affectation de l'entité %s : %s"
 
 #: inc/runningprocess.class.php:191
 msgid "Process ID"

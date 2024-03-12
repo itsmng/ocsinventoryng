@@ -131,18 +131,17 @@ class PluginOcsinventoryngConfig extends CommonDBTM {
    static function showMenu() {
       global $CFG_GLPI;
 
-      echo "<table class='tab_cadre_fixe'>";
-      echo "<tr><th>" . __('Configuration') . "</th></tr>";
-      echo "<tr class='tab_bg_1'><td class='center b'>";
-      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ocsserver.php'>" .
-           _n('OCSNG server', 'OCSNG servers', 2, 'ocsinventoryng') . "</a>";
-      echo "</td></tr>";
+      $configLabel = __('Configuration');
+      $serverLabel = _n('OCSNG server', 'OCSNG servers', 2, 'ocsinventoryng');
+      $pluginLabel = self::getTypeName();
 
-      echo "<tr class='tab_bg_1'><td class='center b'>";
-      echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/config.form.php'>" .
-           self::getTypeName() . "</a>";
-      echo "</td></tr>";
-      echo "</table>";
+      echo <<<HTML
+      <div class="container text-center d-flex flex-column">
+         <h2>$configLabel</h2>
+         <a class="btn btn-outline-secondary mt-3 mx-auto w-50" href='{$CFG_GLPI["root_doc"]}/plugins/ocsinventoryng/front/ocsserver.php'>$serverLabel</a>
+         <a class="btn btn-outline-secondary mt-3 mx-auto w-50" href='{$CFG_GLPI["root_doc"]}/plugins/ocsinventoryng/front/config.form.php'>$pluginLabel</a>
+      </div>
+      HTML;
    }
 
    /**
@@ -154,29 +153,46 @@ class PluginOcsinventoryngConfig extends CommonDBTM {
 
       $this->getFromDB(1);
 
-      $this->showFormHeader($options);
-
-      echo "<tr class='tab_bg_2'>";
-      echo "<th colspan='3'>" . __('OCS-NG Synchronization alerts', 'ocsinventoryng');
-      echo "</th></tr>";
-
-      echo "<tr class='tab_bg_2'>";
-      echo "<td colspan='2'>" . __('New imported computers from OCS-NG', 'ocsinventoryng') . "</td><td>";
-      Alert::dropdownIntegerNever('use_newocs_alert',
-                                  $this->fields["use_newocs_alert"],
-                                  ['max' => 99]);
-      echo "&nbsp;" . _n('Day', 'Days', 2);
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td colspan='2'>" . __('Computers not synchronized with OCS-NG since more', 'ocsinventoryng') . "</td><td>";
-      Alert::dropdownIntegerNever('delay_ocs',
-                                  $this->fields["delay_ocs"],
-                                  ['max' => 99]);
-      echo "&nbsp;" . _n('Day', 'Days', 2);
-      echo Html::hidden('id', ['value' => 1]);
-      echo "</td></tr>";
-
-      $this->showFormButtons($options);
+      $form = [
+         'action' => $this->getFormURL(),
+         'buttons' => [
+            [
+               'name' => 'update',
+               'type' => 'submit',
+               'value' => __('Save'),
+               'class' => 'btn btn-secondary'
+            ]
+         ],
+         'content' => [
+            __('OCS-NG Synchronization alerts', 'ocsinventoryng') => [
+               'visible' => true,
+               'inputs' => [
+                  [
+                     'type' => 'hidden',
+                     'name' => 'id',
+                     'value' => 1,
+                  ],
+                  __('New imported computers from OCS-NG', 'ocsinventoryng') => [
+                     'type' => 'number',
+                     'name' => 'use_newocs_alert',
+                     'min' => 0,
+                     'max' => 99,
+                     'value' => $this->fields["use_newocs_alert"],
+                     'col_lg' => 6,
+                  ],
+                  __('Computers not synchronized with OCS-NG since more', 'ocsinventoryng') => [
+                     'type' => 'number',
+                     'name' => 'delay_ocs',
+                     'min' => 0,
+                     'max' => 99,
+                     'value' => $this->fields["delay_ocs"],
+                     'col_lg' => 6,
+                  ]
+               ]
+            ]
+         ]
+      ];
+      renderTwigForm($form);
 
       return true;
    }
@@ -320,38 +336,63 @@ class PluginOcsinventoryngConfig extends CommonDBTM {
       }
       $canedit = Session::haveRight("plugin_ocsinventoryng_sync", UPDATE);
       $this->getFromDB(1);
-      $this->showFormHeader();
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td> " . __('Show processes where nothing was changed', 'ocsinventoryng') . " </td><td>";
-      Dropdown::showYesNo("is_displayempty", $this->fields["is_displayempty"]);
-      echo "</td>";
-      echo "<td rowspan='4' class='middle right'> " . __('Comments') . "</td>";
-      echo "<td class='center middle' rowspan='4'>";
-      echo "<textarea cols='40' rows='5' name='comment' >" . $this->fields["comment"] . "</textarea>";
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td> " . __('Authorize the OCSNG update (purge agents when purge GLPI computers or from Automatic actions)', 'ocsinventoryng') . " </td><td>";
-      Dropdown::showYesNo('allow_ocs_update', $this->fields['allow_ocs_update']);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td> " . __('Log imported computers', 'ocsinventoryng') . " </td><td>";
-      Dropdown::showYesNo('log_imported_computers', $this->fields['log_imported_computers']);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td> " . __('Refresh information of a process every', 'ocsinventoryng') . " </td><td>";
-      Html::autocompletionTextField($this, "delay_refresh", ['size' => 5]);
-      echo "&nbsp;" . _n('second', 'seconds', 2, 'ocsinventoryng') . "</td>";
-      echo "</tr>";
-
-      $this->showFormButtons(['canedit' => $canedit,
-                              'candel'  => false]);
-
+      $form = [
+         'action' => $this->getFormURL(),
+         'buttons' => [
+            $canedit ? [
+               'name' => 'update',
+               'type' => 'submit',
+               'value' => __('Save'),
+               'class' => 'btn btn-secondary'
+            ] : []
+         ],
+         'content' => [
+            $this->getTypeName() => [
+               'visible' => true,
+               'inputs' => [
+                  [
+                     'type' => 'hidden',
+                     'name' => 'id',
+                     'value' => 1,
+                  ],
+                  __('Show processes where nothing was changed', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'is_displayempty',
+                     'value' => $this->fields["is_displayempty"],
+                  ],
+                  __('Authorize the OCSNG update (purge agents when purge GLPI computers or from Automatic actions)', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'allow_ocs_update',
+                     'value' => $this->fields["allow_ocs_update"],
+                     'col_lg' => 8,
+                  ],
+                  __('Log imported computers', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'log_imported_computers',
+                     'value' => $this->fields["log_imported_computers"],
+                  ],
+                  __('Refresh information of a process every', 'ocsinventoryng') => [
+                     'type' => 'number',
+                     'name' => 'delay_refresh',
+                     'min' => 0,
+                     'max' => 99,
+                     'after' => _n('second', 'seconds', 2, 'ocsinventoryng'),
+                     'value' => $this->fields["delay_refresh"],
+                     'col_lg' => 8,
+                  ],
+                  __('Comments') => [
+                     'type' => 'textarea',
+                     'name' => 'comment',
+                     'value' => $this->fields["comment"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ]
+               ]
+            ]
+         ]
+      ];
+      renderTwigForm($form);
       return true;
    }
 
@@ -361,32 +402,21 @@ class PluginOcsinventoryngConfig extends CommonDBTM {
     */
    function showScriptLock() {
 
-      echo "<div class='center'>";
-      echo "<form name='lock' action=\"" . $_SERVER['HTTP_REFERER'] . "\" method='post'>";
-      echo Html::hidden('id', ['value' => 1]);
-      echo "<table class='tab_cadre'>";
-      echo "<tr class='tab_bg_2'>";
-      echo "<th>&nbsp;" . __('Check OCSNG import script', 'ocsinventoryng') . "&nbsp;</th></tr>";
+      $statusLabel = $this->isScriptLocked() ? __('Lock activated', 'ocsinventoryng') : __('Lock not activated', 'ocsinventoryng');
+      $statusIcon = $this->isScriptLocked() ? "<i style='color:firebrick' class='fas fa-lock'></i>" : "<i style='color:darkgreen' class='fas fa-unlock'></i>";
 
-      echo "<tr class='tab_bg_2'>";
-      echo "<td class='center'>";
-      $status = $this->isScriptLocked();
-      if (!$status) {
-         echo __('Lock not activated', 'ocsinventoryng');
-         echo "&nbsp;<i style='color:darkgreen' class='fas fa-unlock'></i>";
-      } else {
-         echo __('Lock activated', 'ocsinventoryng');
-         echo "&nbsp;<i style='color:firebrick' class='fas fa-lock'></i>";
-      }
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td colspan='2' class='center'>";
-      echo Html::submit((!$status ? _sx('button', 'Lock', 'ocsinventoryng') : _sx('button', 'Unlock')),
-         ['name' => !$status ? "soft_lock" : "soft_unlock"]);
-      echo "</td/></tr/></table><br>";
-      Html::closeForm();
-      echo "</div>";
-
+      echo "<p> $statusLabel $statusIcon </p>";
+      $form = [
+         'action' => $_SERVER['HTTP_REFERER'],
+         'buttons' => [ [
+            'name' =>  $this->isScriptLocked() ? 'soft_unlock' : 'soft_lock',
+            'type' => 'submit',
+            'value' => $this->isScriptLocked() ? __('Unlock', 'ocsinventoryng') : __('Lock', 'ocsinventoryng'),
+            'class' => 'btn btn-secondary'
+         ] ],
+         'content' => [ '' => [ 'visible' => false, 'inputs' => [] ] ] ];
+      renderTwigForm($form);
+      
    }
 
 

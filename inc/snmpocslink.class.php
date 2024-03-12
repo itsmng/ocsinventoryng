@@ -62,18 +62,21 @@ class PluginOcsinventoryngSnmpOcslink extends CommonDBTM {
          }
       } else if ($item->getType() == "PluginOcsinventoryngOcsServer") {
 
-         if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
-             && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
-             && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
-            $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
-            $version = $client->getTextConfig('GUI_VERSION');
-            $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
-
-            if ($version < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
-               return __('SNMP Import', 'ocsinventoryng');
+         try {
+            if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
+                && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
+                && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
+               $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
+               $version = $client->getTextConfig('GUI_VERSION');
+               $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
+   
+               if ($version < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
+                  return __('SNMP Import', 'ocsinventoryng');
+               }
             }
+         } catch (Exception $e) {
+            // Do nothing
          }
-
       }
       return '';
    }

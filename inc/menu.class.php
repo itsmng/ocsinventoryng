@@ -243,7 +243,7 @@ class PluginOcsinventoryngMenu extends CommonGLPI {
       if ($item->getType() == __CLASS__) {
          $ocs    = new PluginOcsinventoryngOcsServer();
          $ipdisc = new PluginOcsinventoryngIpdiscoverOcslink();
-         if ($_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+         if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) && $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
             $snmp   = new PluginOcsinventoryngSnmplinkRework();
          } else {
             $snmp   = new PluginOcsinventoryngSnmpOcslink();

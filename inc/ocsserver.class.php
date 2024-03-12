@@ -78,16 +78,21 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
                //If connection to the OCS DB  is ok, and all rights are ok too
                $ong[1] = __('Test');
 
-               if (self::checkOCSconnection($item->getID())
-                   && self::checkVersion($item->getID())
-                   && self::checkTraceDeleted($item->getID())
-               ) {
-                  $ong[2] = __('Datas to import', 'ocsinventoryng');
-                  $ong[3] = __('Import options', 'ocsinventoryng');
-                  $ong[4] = __('General history', 'ocsinventoryng');
-               }
-               if ($item->getField('ocs_url')) {
-                  $ong[5] = __('OCSNG console', 'ocsinventoryng');
+               try {
+
+                  if (self::checkOCSconnection($item->getID())
+                        && self::checkVersion($item->getID())
+                        && self::checkTraceDeleted($item->getID())
+                  ) {
+                     $ong[2] = __('Datas to import', 'ocsinventoryng');
+                     $ong[3] = __('Import options', 'ocsinventoryng');
+                     $ong[4] = __('General history', 'ocsinventoryng');
+                  }
+                  if ($item->getField('ocs_url')) {
+                     $ong[5] = __('OCSNG console', 'ocsinventoryng');
+                  }
+               } catch (Exception $e) {
+                  // Nothing to do
                }
 
                return $ong;
@@ -246,35 +251,44 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
       $dbu                 = new DbUtils();
       $numberActiveServers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers', ["is_active" => 1]);
       if ($numberActiveServers > 0) {
-         echo "<form action=\"" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ocsng.php\"
-                method='post'>";
-         echo "<div class='center'><table class='tab_cadre_fixe' width='40%'>";
-         echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Choice of an OCSNG server', 'ocsinventoryng') .
-              "</th></tr>\n";
-
-         echo "<tr class='tab_bg_2'><td class='center'>" . __('Name') . "</td>";
-         echo "<td class='center'>";
          $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`
-                   FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
-                   LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
-                      ON `glpi_plugin_ocsinventoryng_ocsservers_profiles`.`plugin_ocsinventoryng_ocsservers_id` 
-                        = `glpi_plugin_ocsinventoryng_ocsservers`.`id`
-                   WHERE `profiles_id`= " . $_SESSION["glpiactiveprofile"]['id'] . " 
-                   AND `glpi_plugin_ocsinventoryng_ocsservers`.`is_active`= 1
-                   ORDER BY `name` ASC";
+            FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
+            LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
+               ON `glpi_plugin_ocsinventoryng_ocsservers_profiles`.`plugin_ocsinventoryng_ocsservers_id` 
+               = `glpi_plugin_ocsinventoryng_ocsservers`.`id`
+            WHERE `profiles_id`= " . $_SESSION["glpiactiveprofile"]['id'] . " 
+            AND `glpi_plugin_ocsinventoryng_ocsservers`.`is_active`= 1
+            ORDER BY `name` ASC";
          foreach ($DB->request($query) as $data) {
             $ocsservers[] = $data['id'];
          }
-         Dropdown::show('PluginOcsinventoryngOcsServer', ["condition"           => ["id" => $ocsservers],
-                                                          "value"               => $_SESSION["plugin_ocsinventoryng_ocsservers_id"],
-                                                          "on_change"           => "this.form.submit()",
-                                                          "display_emptychoice" => false]);
-         echo "</td></tr>";
-         echo "<tr class='tab_bg_2'><td colspan='2' class ='center'>";
-         echo __('If you not find your OCSNG server in this dropdown, please check if your profile can access it !', 'ocsinventoryng');
-         echo "</td></tr>";
-         echo "</table></div>";
-         Html::closeForm();
+
+         $form = [
+            'actions' => $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ocsng.php",
+            'buttons' => [[]],
+            'content' => [
+               __('Choice of an OCSNG server', 'ocsinventoryng') => [
+                  'visible' => true,
+                  'inputs' => [
+                     __('Name') => [
+                        'type' => 'select',
+                        'name' => 'PluginOcsinventoryngOcsServer',
+                        'values' => [Dropdown::EMPTY_VALUE] + $ocsservers,
+                        'value' => $_SESSION["plugin_ocsinventoryng_ocsservers_id"],
+                        'actions' => getItemActionButtons(['info'], self::class),
+                        'col_lg' => 12,
+                        'col_md' => 12,
+                     ],
+                     '' => [
+                        'content' => __('If you do not find your OCSNG server in this dropdown, please check if your profile can access it !', 'ocsinventoryng'),
+                        'col_lg' => 12,
+                        'col_md' => 12,
+                     ]
+                  ]
+               ]
+            ]
+         ];
+         renderTwigForm($form);
       }
       $sql      = "SELECT `name`, `is_active`
               FROM `glpi_plugin_ocsinventoryng_ocsservers`
@@ -1305,182 +1319,163 @@ JAVASCRIPT;
     */
    function showForm($ID, $options = []) {
 
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      $conn_type_values = [
-         0 => __('Database', 'ocsinventoryng'),
-         //1 => __('Webservice (SOAP)', 'ocsinventoryng'),
+      $form = [
+         'action' => $this->getFormURL(),
+         'buttons' => [
+            ($this->canUpdateItem() ? [
+               'type' => 'submit',
+               'name' => $this->isNewID($ID) ? 'add' : 'update',
+               'value' => $this->isNewID($ID) ? __('Add') : __('Update'),
+               'class' => 'btn btn-secondary'
+            ] : []),
+            (!$this->isNewID($ID) && self::canPurge() ? [
+               'type' => 'submit',
+               'name' => 'purge',
+               'value' => __('Delete permanently'),
+               'class' => 'btn btn-danger'
+            ] : []),
+         ],
+         'content' => [
+            $this->getTypeName() => [
+               'visible' => true,
+               'inputs' => [
+                  __('Connection type', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'conn_type',
+                     'values' => [
+                        0 => __('Database', 'ocsinventoryng'),
+                        //1 => __('Webservice (SOAP)', 'ocsinventoryng'),               
+                     ],
+                     'value' => $this->fields['conn_type'],
+                  ],
+                  __("Active") => [
+                     'type' => 'checkbox',
+                     'name' => 'is_active',
+                     'value' => $this->isActive()
+                  ],
+                  __("Name") => [
+                     'type' => 'text',
+                     'name' => 'name',
+                     'value' => $this->fields['name']
+                  ],
+                  _n("Version", "Versions", 1) => $ID ? [
+                     'content' => $this->fields["ocs_version"]
+                  ] : [],
+                  __("Checksum") => $ID ? [
+                     'content' => $this->fields["checksum"] . " " .
+                                  Html::submit(_sx('button', 'Reload Checksum', 'ocsinventoryng'),
+                                               ['name' => 'force_checksum', 'class' => 'btn btn-secondary'])
+                  ] : [],
+                  __("Host", "ocsinventoryng") => [
+                     'type' => 'text',
+                     'name' => 'ocs_db_host',
+                     'value' => $this->fields["ocs_db_host"],
+                     'title' => nl2br(__('Like http://127.0.0.1 for SOAP method', 'ocsinventoryng'))
+                  ],
+                  __("Synchronisation method", "ocsinventoryng") => [
+                     'type' => 'select',
+                     'name' => 'use_massimport',
+                     'values' => [
+                        0 => __("Standard (allow manual actions)", "ocsinventoryng"),
+                        1 => __("Expert (Fully automatic, for large configuration)", "ocsinventoryng")
+                     ],
+                     'value' => $this->fields['use_massimport']
+                  ],
+                  __("Database") => ($this->fields["conn_type"] == self::CONN_TYPE_SOAP) ? [] : [
+                     'type' => 'text',
+                     'name' => 'ocs_db_name',
+                     'value' => $this->fields["ocs_db_name"]
+                  ],
+                  __("Database in UTF8", "ocsinventoryng") => ($this->fields["conn_type"] == self::CONN_TYPE_SOAP) ? [] : [
+                     'type' => 'checkbox',
+                     'name' => 'ocs_db_utf8',
+                     'value' => $this->fields["ocs_db_utf8"]
+                  ],
+                  _n("User", "Users", 1) => ($this->fields["conn_type"] == self::CONN_TYPE_SOAP) ? [] : [
+                     'type' => 'text',
+                     'name' => 'ocs_db_user',
+                     'value' => $this->fields["ocs_db_user"]
+                  ],
+                  __("Password") => ($this->fields["conn_type"] == self::CONN_TYPE_SOAP) ? [] : [
+                     'type' => 'password',
+                     'name' => 'ocs_db_passwd',
+                  ],
+                  __('Use automatic action for clean old agents & drop from OCSNG software', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'use_cleancron',
+                     'value' => $this->fields["use_cleancron"],
+                     'hooks' => [
+                        'change' => <<<JS
+                           const checked = $(this).is(':checked');
+                           $('#action_cleancron').prop('disabled', !checked);
+                           $('#cleancron_nb_days').prop('disabled', !checked);
+                        JS,
+                     ],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+                  __("Action") => [
+                     'type' => 'select',
+                     'name' => 'action_cleancron',
+                     'id' => 'action_cleancron',
+                     'values' => self::getValuesActionCron(),
+                     'value' => $this->fields["action_cleancron"],
+                     $this->fields["use_cleancron"] ? '' : 'disabled' => 'disabled',
+                  ],
+                  __('Number of days without inventory for cleaning', 'ocsinventoryng') => [
+                     'type' => 'number',
+                     'id' => 'cleancron_nb_days',
+                     'name' => 'cleancron_nb_days',
+                     'value' => $this->fields["cleancron_nb_days"],
+                     'min' => 1,
+                     'max' => 365,
+                     $this->fields["use_cleancron"] ? '' : 'disabled' => 'disabled'
+                  ],
+                  __('Use automatic action restore deleted computer', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'use_restorationcron',
+                     'value' => $this->fields["use_restorationcron"],
+                     'hooks' => [
+                        'change' => <<<JS
+                           const checked = $(this).is(':checked');
+                           $('#delay_restorationcron').prop('disabled', !checked);
+                        JS,
+                     ],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+                  __("Number of days for the restoration of computers from the date of last inventory", "ocsinventoryng") => [
+                     'type' => 'number',
+                     'id' => 'delay_restorationcron',
+                     'name' => 'delay_restorationcron',
+                     'value' => $this->fields["delay_restorationcron"],
+                     'min' => 1,
+                     'max' => 365,
+                     $this->fields["use_restorationcron"] ? '' : 'disabled' => 'disabled'
+                  ],
+                  __('Use automatic action to check entity assignment rules', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'use_checkruleimportentity',
+                     'value' => $this->fields["use_checkruleimportentity"],
+                     'title' => __('Use automatic action to check and send a notification for machines that no longer respond the entity and location assignment rules', 'ocsinventoryng'),
+                  ],
+                  __('Use automatic locks', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'use_locks',
+                     'value' => $this->fields["use_locks"],
+                  ],
+                  __("Comments") => [
+                     'type' => 'textarea',
+                     'name' => 'comment',
+                     'value' => $this->fields["comment"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+               ]
+            ],
+         ]
       ];
-
-      $sync_method_values = [
-         0 => __("Standard (allow manual actions)", "ocsinventoryng"),
-         1 => __("Expert (Fully automatic, for large configuration)", "ocsinventoryng")
-      ];
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __('Connection type', 'ocsinventoryng') . "</td>";
-      echo "<td id='conn_type_container'>";
-      Dropdown::showFromArray('conn_type', $conn_type_values,
-                              ['value' => $this->fields['conn_type']]);
-      echo "</td>";
-      echo "<td class='center'>" . __("Active") . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("is_active", $this->isActive());
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __("Name") . "</td>";
-      echo "<td>";
-      echo Html::input('name', ['type'  => 'text',
-                                'value' => $this->fields["name"]]);
-      echo "</td>";
-      echo "<td class='center'>";
-      if ($ID) {
-         printf(__('%1$s : %2$s'), _n("Version", "Versions", 1), $this->fields["ocs_version"]);
-      }
-      echo "</td>";
-      echo "<td>";
-      if ($ID) {
-         printf(__('%1$s : %2$s'), "Checksum", $this->fields["checksum"]);
-         echo "&nbsp;";
-         Html::showSimpleForm(Toolbox::getItemTypeFormURL("PluginOcsinventoryngOcsServer"), 'force_checksum',
-                              _sx('button', 'Reload Checksum', 'ocsinventoryng'),
-                              ['id' => $ID]);
-      }
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __("Host", "ocsinventoryng") . "</td>";
-      echo "<td>";
-      echo Html::input('ocs_db_host', ['type'  => 'text',
-                                       'value' => $this->fields["ocs_db_host"]]);
-      echo "&nbsp;";
-      Html::showToolTip(nl2br(__('Like http://127.0.0.1 for SOAP method', 'ocsinventoryng')));
-      echo "</td>";
-      echo "<td class='center'>" . __("Synchronisation method", "ocsinventoryng") . "</td>";
-      echo "<td>";
-      Dropdown::showFromArray('use_massimport', $sync_method_values, ['value' => $this->fields['use_massimport']]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1 hide_if_soap' ";
-      if ($this->fields["conn_type"] == self::CONN_TYPE_SOAP) {
-         echo "style='display:none'";
-      }
-      echo "><td class='center'>" . __("Database") . "</td>";
-      echo "<td>";
-      echo Html::input('ocs_db_name', ['type'  => 'text',
-                                       'value' => $this->fields["ocs_db_name"]]);
-      echo "</td>";
-      echo "<td class='center'>" . __("Database in UTF8", "ocsinventoryng") . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("ocs_db_utf8", $this->fields["ocs_db_utf8"]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . _n("User", "Users", 1) . "</td>";
-      echo "<td>";
-      echo Html::input('ocs_db_user', ['type'  => 'text',
-                                       'value' => $this->fields["ocs_db_user"]]);
-      echo "</td>";
-      echo "<td class='center' rowspan='2'>" . __("Comments") . "</td>";
-      echo "<td rowspan='2'><textarea cols='45' rows='6' name='comment'>" . $this->fields["comment"] . "</textarea></td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __("Password") . "</td>";
-      echo "<td>";
-      echo Html::input('ocs_db_passwd', ['type'         => 'password',
-                                         'autocomplete' => 'off']);
-      if ($ID) {
-         echo Html::input('_blank_passwd', ['type' => 'checkbox']);
-         echo "&nbsp;" . __("Clear");
-      }
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __('Use automatic action for clean old agents & drop from OCSNG software', 'ocsinventoryng') . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("use_cleancron", $this->fields["use_cleancron"], -1, ['on_change' => 'hide_show_cleancron(this.value);']);
-      echo "</td>";
-      echo Html::scriptBlock("
-         function hide_show_cleancron(val) {
-            var display = (val == 0) ? 'none' : '';
-            var notdisplay = (val == 0) ? '' : 'none';
-            document.getElementById('show_cleancron_td1').style.display = display;
-            document.getElementById('show_cleancron_td2').style.display = display;
-            document.getElementById('show_cleancron_td3').style.display = notdisplay;
-            document.getElementById('show_cleancron_tr1').style.display = display;
-         }");
-      $style    = ($this->fields["use_cleancron"]) ? "" : "style='display: none '";
-      $notstyle = ($this->fields["use_cleancron"]) ? "style='display: none '" : "";
-      echo "<td colspan='2'></td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1' id='show_cleancron_td2' $style>";
-
-      echo "<td class='center' id='show_cleancron_td1' $style>" . __("Action") . "</td>";
-      $actions = self::getValuesActionCron();
-      echo "<td>";
-      Dropdown::showFromArray("action_cleancron", $actions, ['value' => $this->fields["action_cleancron"]]);
-      echo "</td>";
-
-      echo "<td>" . __('Number of days without inventory for cleaning', 'ocsinventoryng') . "</td>";
-      echo "<td>";
-      Dropdown::showNumber('cleancron_nb_days', ['value' => $this->fields["cleancron_nb_days"],
-                                                 'min'   => 1,
-                                                 'max'   => 365]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1' id='show_cleancron_tr1' $style>";
-      echo "<td class='center'>" . __('Use automatic action restore deleted computer', 'ocsinventoryng') . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("use_restorationcron", $this->fields["use_restorationcron"], -1, ['on_change' => 'hide_show_restorecron(this.value);']);
-      echo "</td>";
-
-      echo Html::scriptBlock("
-         function hide_show_restorecron(val) {
-            var display = (val == 0) ? 'none' : '';
-            var notdisplay = (val == 0) ? '' : 'none';
-            document.getElementById('show_restorecron_td1').style.display = display;
-            document.getElementById('show_restorecron_td2').style.display = display;
-            document.getElementById('show_restorecron_td3').style.display = notdisplay;
-         }");
-      $style    = ($this->fields["use_restorationcron"]) ? "" : "style='display: none '";
-      $notstyle = ($this->fields["use_restorationcron"]) ? "style='display: none '" : "";
-
-      echo "<td class='center' id='show_restorecron_td1' $style>" . __("Number of days for the restoration of computers from the date of last inventory", "ocsinventoryng") . "</td>";
-      echo "<td id='show_restorecron_td2' $style>";
-      Dropdown::showNumber("delay_restorationcron", ['value' => $this->fields["delay_restorationcron"]]);
-      echo "</td>";
-
-      echo "<td colspan ='2' id='show_restorecron_td3' $notstyle></td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __('Use automatic action to check entity assignment rules', 'ocsinventoryng');
-      echo "&nbsp;";
-      Html::showToolTip(nl2br(__('Use automatic action to check and send a notification for machines that no longer respond the entity and location assignment rules', 'ocsinventoryng')));
-      echo "</td>";
-      echo "<td colspan='3'>";
-      Dropdown::showYesNo("use_checkruleimportentity", $this->fields["use_checkruleimportentity"]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>" . __('Use automatic locks', 'ocsinventoryng') . "</td>";
-      echo "<td colspan='3'>";
-      Dropdown::showYesNo("use_locks", $this->fields["use_locks"]);
-      echo "</td>";
-      echo "</tr>";
-
-      $this->showFormButtons($options);
+      renderTwigForm($form);
    }
 
    /**
@@ -1503,23 +1498,20 @@ JAVASCRIPT;
       $out .= "<tr><th>" . __('Connecting to the database', 'ocsinventoryng') . "</th></tr>\n";
       $out .= "<tr class='tab_bg_2'>";
       if ($ID != -1) {
-         if (!self::checkOCSconnection($ID)) {
+         try {
+            if (!self::checkOCSconnection($ID)) {
+               $out .= "<td class='center red'>" . __('Connection to the database failed', 'ocsinventoryng');
+            } else if (!self::checkVersion($ID)) {
+               $out .= "<td class='center red'>" . __('Invalid OCSNG Version: RC3 is required', 'ocsinventoryng');
+            } else if (!self::checkTraceDeleted($ID)) {
+               $out .= "<td class='center red'>" . __('Invalid OCSNG configuration (TRACE_DELETED must be active)', 'ocsinventoryng');
+            } else {
+               $out .= "<td class='center'>" . __('Connection to database successful', 'ocsinventoryng');
+               $out .= "</td></tr>\n<tr class='tab_bg_2'>" .
+                       "<td class='center'>" . __('Valid OCSNG configuration and version', 'ocsinventoryng');
+            }
+         } catch (Exception $e) {
             $out .= "<td class='center red'>" . __('Connection to the database failed', 'ocsinventoryng');
-         } else if (!self::checkVersion($ID)) {
-            $out .= "<td class='center red'>" . __('Invalid OCSNG Version: RC3 is required', 'ocsinventoryng');
-         } else if (!self::checkTraceDeleted($ID)) {
-            $out .= "<td class='center red'>" . __('Invalid OCSNG configuration (TRACE_DELETED must be active)', 'ocsinventoryng');
-            // TODO
-            /* } else if (!self::checkConfig(4)) {
-              $out .= __('Access denied on database (Need write rights on hardware.CHECKSUM necessary)',
-              'ocsinventoryng');
-              } else if (!self::checkConfig(8)) {
-              $out .= __('Access denied on database (Delete rights in deleted_equiv table necessary)',
-              'ocsinventoryng'); */
-         } else {
-            $out .= "<td class='center'>" . __('Connection to database successful', 'ocsinventoryng');
-            $out .= "</td></tr>\n<tr class='tab_bg_2'>" .
-                    "<td class='center'>" . __('Valid OCSNG configuration and version', 'ocsinventoryng');
          }
       }
       $out .= "</td></tr>\n";

@@ -1318,7 +1318,6 @@ JAVASCRIPT;
     * @return void (display)
     */
    function showForm($ID, $options = []) {
-
       $form = [
          'action' => $this->getFormURL(),
          'buttons' => [
@@ -1339,6 +1338,11 @@ JAVASCRIPT;
             $this->getTypeName() => [
                'visible' => true,
                'inputs' => [
+                  [
+                     'name' => 'id',
+                     'type' => 'hidden',
+                     'value' => $ID
+                  ],
                   __('Connection type', 'ocsinventoryng') => [
                      'type' => 'select',
                      'name' => 'conn_type',
@@ -1362,9 +1366,12 @@ JAVASCRIPT;
                      'content' => $this->fields["ocs_version"]
                   ] : [],
                   __("Checksum") => $ID ? [
-                     'content' => $this->fields["checksum"] . " " .
-                                  Html::submit(_sx('button', 'Reload Checksum', 'ocsinventoryng'),
-                                               ['name' => 'force_checksum', 'class' => 'btn btn-secondary'])
+                     'content' => $this->fields["checksum"] . <<<HTML
+                     <a class="btn btn-secondary" onclick="submitGetLink('{$this->getFormURL()}',
+                        {'force_checksum': 'force_checksum', 'id': '{$ID}', '_glpi_csrf_token': '{$_SESSION['_glpi_csrf_token']}', '_glpi_simple_form': '1'})">
+                        <i class="fas fa-redo-alt"></i>
+                     </a>
+                     HTML,
                   ] : [],
                   __("Host", "ocsinventoryng") => [
                      'type' => 'text',

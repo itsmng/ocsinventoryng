@@ -66,15 +66,19 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
         if ($item->getType() == "PluginOcsinventoryngOcsServer") {
-            if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
-                && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
-                && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
-                $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
-                $ipd    = ($client->getIntConfig('IPDISCOVER') > 0)?true:false;
-
-                if ($ipd) {
-                    return __('IPDiscover Import', 'ocsinventoryng');
+            try {
+                if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
+                    && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
+                    && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
+                    $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
+                    $ipd    = ($client->getIntConfig('IPDISCOVER') > 0)?true:false;
+    
+                    if ($ipd) {
+                        return __('IPDiscover Import', 'ocsinventoryng');
+                    }
                 }
+            } catch (Exception $e) {
+                // do nothing
             }
         }
         return '';
@@ -103,7 +107,7 @@ class PluginOcsinventoryngIpdiscoverOcslinkrework extends CommonDBTM {
     */
     static function getOCSTypes() {
         $ocsClient = new PluginOcsinventoryngOcsServer();
-        $DBOCS     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"])->getDB();
+        $DBOCS     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"] ?? null)->getDB();
         $query     = "SELECT `devicetype`.`id` , `devicetype`.`name` FROM `devicetype`";
         $result    = $DBOCS->query($query);
         $types = [

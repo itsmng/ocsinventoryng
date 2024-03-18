@@ -424,7 +424,7 @@ class PluginOcsinventoryngThread extends CommonDBTM {
          echo "<a onclick= \"if ( unMarkCheckboxes('processes') ) "
               . "return false;\" href='#'>" . __("Uncheck all") . "</a>";
          echo "</td><td align='left' width='80%'>";
-         echo Html::submit(_x('button', 'Delete permanently'), ['name' => 'delete_processes']);
+         echo Html::submit(_x('button', 'Delete permanently'), ['name' => 'delete_processes', 'class' => 'btn btn-sm btn-secondary']);
          echo "</td>";
          echo "</table>";
       }

@@ -62,18 +62,21 @@ class PluginOcsinventoryngSnmpOcslink extends CommonDBTM {
          }
       } else if ($item->getType() == "PluginOcsinventoryngOcsServer") {
 
-         if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
-             && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
-             && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
-            $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
-            $version = $client->getTextConfig('GUI_VERSION');
-            $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
-
-            if ($version < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
-               return __('SNMP Import', 'ocsinventoryng');
+         try {
+            if (PluginOcsinventoryngOcsServer::checkOCSconnection($item->getID())
+                && PluginOcsinventoryngOcsServer::checkVersion($item->getID())
+                && PluginOcsinventoryngOcsServer::checkTraceDeleted($item->getID())) {
+               $client  = PluginOcsinventoryngOcsServer::getDBocs($item->getID());
+               $version = $client->getTextConfig('GUI_VERSION');
+               $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
+   
+               if ($version < PluginOcsinventoryngOcsServer::OCS2_1_VERSION_LIMIT && $snmp) {
+                  return __('SNMP Import', 'ocsinventoryng');
+               }
             }
+         } catch (Exception $e) {
+            // Do nothing
          }
-
       }
       return '';
    }
@@ -366,14 +369,6 @@ JAVASCRIPT;
       $dbu = new DbUtils();
       $numberActiveServers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers', ["is_active" => 1]);
       if ($numberActiveServers > 0) {
-         echo "<form action=\"" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ocsng.php\"
-                method='post'>";
-         echo "<div class='center'><table class='tab_cadre_fixe' width='40%'>";
-         echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Choice of an OCSNG server', 'ocsinventoryng') .
-              "</th></tr>\n";
-
-         echo "<tr class='tab_bg_2'><td class='center'>" . __('Name') . "</td>";
-         echo "<td class='center'>";
          $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`
                    FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
                    LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
@@ -385,16 +380,37 @@ JAVASCRIPT;
          foreach ($DB->request($query) as $data) {
             $ocsservers[] = $data['id'];
          }
-         Dropdown::show('PluginOcsinventoryngOcsServer', ["condition"           => ["id" => $ocsservers],
-                                                          "value"               => $_SESSION["plugin_ocsinventoryng_ocsservers_id"],
-                                                          "on_change"           => "this.form.submit()",
-                                                          "display_emptychoice" => false]);
-         echo "</td></tr>";
-         echo "<tr class='tab_bg_2'><td colspan='2' class ='center red'>";
-         echo __('If you not find your OCSNG server in this dropdown, please check if your profile can access it !', 'ocsinventoryng');
-         echo "</td></tr>";
-         echo "</table></div>";
-         Html::closeForm();
+			$form = [
+				'action' => $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ocsng.php",
+				'buttons' => [[]],
+				'content' => [
+				   __('Choice of an OCSNG server', 'ocsinventoryng') => [
+					  'visible' => true,
+					  'inputs' => [
+						 __('Name') => [
+							'type' => 'select',
+							'name' => 'PluginOcsinventoryngOcsServer',
+							'values' => [Dropdown::EMPTY_VALUE] + $ocsservers,
+							'value' => $_SESSION["plugin_ocsinventoryng_ocsservers_id"],
+							'actions' => getItemActionButtons(['info'], self::class),
+							'col_lg' => 12,
+							'col_md' => 12,
+							'hooks' => [
+							   'change' => "this.form.submit()"
+							]
+						 ],
+                   '' => [
+                     'content' => "<div class='text-center text-danger'>" . 
+                        __('If you not find your OCSNG server in this dropdown, please check if your profile can access it !', 'ocsinventoryng') .
+                        "</div>",
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ]
+					  ]
+				   ]
+				]
+			 ];
+			 renderTwigForm($form);	
       }
       $sql      = "SELECT `name`, `is_active`
               FROM `glpi_plugin_ocsinventoryng_ocsservers`

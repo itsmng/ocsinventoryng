@@ -173,61 +173,59 @@ class PluginOcsinventoryngMenu extends CommonGLPI {
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       global $CFG_GLPI;
 
-      switch ($item->getType()) {
-         case __CLASS__ :
-            $dbu        = new DbUtils();
-            $ocsServers = $dbu->getAllDataFromTable('glpi_plugin_ocsinventoryng_ocsservers',
-                                                    ["is_active" => 1]);
-            if (!empty($ocsServers)) {
-
-               $ong[0] = __('Server Setup', 'ocsinventoryng');
-
-               $ong[1] = __('Inventory Import', 'ocsinventoryng');
-
-               if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])
-                   && $_SESSION["plugin_ocsinventoryng_ocsservers_id"] > 0) {
-                  if (PluginOcsinventoryngOcsServer::checkOCSconnection($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
-                     $ocsClient  = new PluginOcsinventoryngOcsServer();
-                     $client     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
-                     $ipdiscover = $client->getIntConfig('IPDISCOVER');
-                     if ($ipdiscover) {
-                        $ong[2] = __('IPDiscover Import', 'ocsinventoryng');
-                     }
+      if ($item->getType() == __CLASS__) {
+         $dbu        = new DbUtils();
+         $ocsServers = $dbu->getAllDataFromTable('glpi_plugin_ocsinventoryng_ocsservers',
+                                                 ["is_active" => 1]);
+         if (!empty($ocsServers)) {
+   
+            $ong[0] = __('Server Setup', 'ocsinventoryng');
+   
+            $ong[1] = __('Inventory Import', 'ocsinventoryng');
+   
+            if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])
+                && $_SESSION["plugin_ocsinventoryng_ocsservers_id"] > 0) {
+               if (PluginOcsinventoryngOcsServer::checkOCSconnection($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
+                  $ocsClient  = new PluginOcsinventoryngOcsServer();
+                  $client     = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                  $ipdiscover = $client->getIntConfig('IPDISCOVER');
+                  if ($ipdiscover) {
+                     $ong[2] = __('IPDiscover Import', 'ocsinventoryng');
                   }
                }
-
-
-               if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])
-                   && $_SESSION["plugin_ocsinventoryng_ocsservers_id"] > 0) {
-                  if (PluginOcsinventoryngOcsServer::checkOCSconnection($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
-
-                     $ocsClient = new PluginOcsinventoryngOcsServer();
-                     $client    = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
-                     $version   = $client->getTextConfig('GUI_VERSION');
-                     $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
-                     if ($version > $ocsClient::OCS2_1_VERSION_LIMIT && $snmp) {
-                        $ong[3] = __('SNMP Import', 'ocsinventoryng');
-                     }
-                  }
-               }
-            } else {
-               $ong = [];
-               echo "<div align='center'>";
-               echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i>";
-               echo "<br>";
-               echo "<div class='red b'>";
-               echo __('No OCSNG server defined', 'ocsinventoryng');
-               echo "<br>";
-               echo __('You must to configure a OCSNG server', 'ocsinventoryng');
-               echo " : <a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsserver.form.php'>";
-               echo __('Add a OCSNG server', 'ocsinventoryng');
-               echo "</a>";
-               echo "</div></div>";
             }
-            return $ong;
-
-         default :
-            return '';
+   
+   
+            if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_id"])
+                && $_SESSION["plugin_ocsinventoryng_ocsservers_id"] > 0) {
+               if (PluginOcsinventoryngOcsServer::checkOCSconnection($_SESSION["plugin_ocsinventoryng_ocsservers_id"])) {
+   
+                  $ocsClient = new PluginOcsinventoryngOcsServer();
+                  $client    = $ocsClient->getDBocs($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
+                  $version   = $client->getTextConfig('GUI_VERSION');
+                  $snmp    = ($client->getIntConfig('SNMP') > 0)?true:false;
+                  if ($version > $ocsClient::OCS2_1_VERSION_LIMIT && $snmp) {
+                     $ong[3] = __('SNMP Import', 'ocsinventoryng');
+                  }
+               }
+            }
+         } else {
+            $ong = [];
+            echo "<div align='center'>";
+            echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i>";
+            echo "<br>";
+            echo "<div class='red b'>";
+            echo __('No OCSNG server defined', 'ocsinventoryng');
+            echo "<br>";
+            echo __('You must to configure a OCSNG server', 'ocsinventoryng');
+            echo " : <a href='" . $CFG_GLPI["root_doc"] . "/plugins/ocsinventoryng/front/ocsserver.form.php'>";
+            echo __('Add a OCSNG server', 'ocsinventoryng');
+            echo "</a>";
+            echo "</div></div>";
+         }
+         return $ong;
+      } else {
+         return '';
       }
    }
 
@@ -243,7 +241,7 @@ class PluginOcsinventoryngMenu extends CommonGLPI {
       if ($item->getType() == __CLASS__) {
          $ocs    = new PluginOcsinventoryngOcsServer();
          $ipdisc = new PluginOcsinventoryngIpdiscoverOcslink();
-         if ($_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
+         if (isset($_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) && $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"]) {
             $snmp   = new PluginOcsinventoryngSnmplinkRework();
          } else {
             $snmp   = new PluginOcsinventoryngSnmpOcslink();

@@ -915,10 +915,10 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
                      'value' => 0,
                   ],
                   '' => [
-                     'content' => '<pre class="text-info">' .
+                     'content' => '<p class="text-info">' .
                         __('No import: the plugin will not import these elements', 'ocsinventoryng') . '<br>'
                         . __('Global import: everything is imported but the material is globally managed (without duplicate)', 'ocsinventoryng') . '<br>'
-                        . __("Unit import: everything is imported as it is", 'ocsinventoryng') . '</pre>',
+                        . __("Unit import: everything is imported as it is", 'ocsinventoryng') . '</p>',
                      'col_lg' => 12,
                      'col_md' => 12,
                   ]
@@ -1221,86 +1221,105 @@ JAVASCRIPT;
    function ocsFormImportOptions($ID) {
 
       $this->getFromDB($ID);
-      echo "<div class='center'>";
-      echo "<form name='formconfig' action='" . Toolbox::getItemTypeFormURL("PluginOcsinventoryngOcsServer") . "' method='post'>";
-      echo "<table class='tab_cadre_fixe'>\n";
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Web address of the OCSNG console', 'ocsinventoryng');
-      echo Html::hidden('id', ['value' => $ID]);
-      echo "<td>";
-      echo Html::input('ocs_url', ['type'  => 'text',
-                                   'value' => $this->fields["ocs_url"],
-                                   'size'  => 30]);
-      echo "</td></tr>\n";
 
-      echo "<tr><th colspan='2'>" . __('Import options', 'ocsinventoryng') . "</th></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" .
-           __('Limit the import to the following tags (separator $, nothing for all)', 'ocsinventoryng') . "</td>\n";
-      echo "<td>";
-      echo Html::input('tag_limit', ['type'  => 'text',
-                                     'value' => $this->fields["tag_limit"],
-                                     'size'  => 30]);
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" .
-           __('Exclude the following tags (separator $, nothing for all)', 'ocsinventoryng') .
-           "</td>\n";
-      echo "<td>";
-      echo Html::input('tag_exclude', ['type'  => 'text',
-                                       'value' => $this->fields["tag_exclude"],
-                                       'size'  => 30]);
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Behavior when disconnecting', 'ocsinventoryng') . "</td>\n<td>";
-      Dropdown::showFromArray("deconnection_behavior", [''       => __('Preserve link', 'ocsinventoryng'),
-                                                        "trash"  => __('Put the link in dustbin and add a lock', 'ocsinventoryng'),
-                                                        "delete" => __('Delete  the link permanently', 'ocsinventoryng')], ['value' => $this->fields["deconnection_behavior"]]);
-      echo "</td></tr>\n";
-      echo "<tr class='tab_bg_2'><td class='center b red' colspan='4'>";
-      echo __("Define the action to do on link with other objects when computer is disconnecting from them", 'ocsinventoryng');
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Use the OCSNG software dictionary', 'ocsinventoryng') . "</td>\n<td>";
-      Dropdown::showYesNo("use_soft_dict", $this->fields["use_soft_dict"]);
-      echo "</td></tr>\n";
-      echo "<tr class='tab_bg_2'><td class='center b red' colspan='4'>";
-      echo __("If Use the OCSNG software dictionary parameter is checked, no software will be imported before you setup them into OCS", 'ocsinventoryng');
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" .
-           __('Number of items to synchronize via the automatic OCSNG action', 'ocsinventoryng') .
-           "</td>\n<td>";
-      Dropdown::showNumber('cron_sync_number', ['value' => $this->fields['cron_sync_number'],
-                                                'min'   => 1,
-                                                'toadd' => [0 => __('None')]]);
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td class='center b red' colspan='4'>";
-      echo __("The automatic task ocsng is launched only if server is not in expert mode", 'ocsinventoryng');
-      echo "<br>" . __("The automatic task ocsng only synchronize existant computers, it doesn't import new computers", 'ocsinventoryng');
-      echo "<br>" . __("If you want to import new computers, disable this parameter, change to expert mode and use script from system", 'ocsinventoryng');
-      echo "</td></tr>";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" .
-           __('Behavior to the deletion of a computer in OCSNG', 'ocsinventoryng') . "</td>";
-      echo "<td>";
       $actions[0] = Dropdown::EMPTY_VALUE;
       $actions[1] = __('Put in trashbin');
       $dbu        = new DbUtils();
       foreach ($dbu->getAllDataFromTable('glpi_states') as $state) {
          $actions['STATE_' . $state['id']] = sprintf(__('Change to state %s', 'ocsinventoryng'), $state['name']);
       }
-      Dropdown::showFromArray('deleted_behavior', $actions, ['value' => $this->fields['deleted_behavior']]);
-      echo "</td></tr>";
 
-      echo "<tr class='tab_bg_2'><td class='center' colspan='2'>";
-      if (Session::haveRight("plugin_ocsinventoryng", UPDATE)) {
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-         echo "</td></tr>";
-      }
-      echo "</table>\n";
-      Html::closeForm();
-      echo "</div>";
+      $form = [
+         'actions' => Toolbox::getItemTypeFormURL("PluginOcsinventoryngOcsServer"),
+         'buttons' => [
+            Session::haveRight("plugin_ocsinventoryng", UPDATE) ? [
+               'name' => 'update',
+               'value' => __('Save'),
+               'type' => 'submit',
+               'class' => 'btn btn-secondary',
+            ] : []
+         ],
+         'content' => [
+            '' => [
+               'visible' => true,
+               'inputs' => [
+                  [
+                     'type' => 'hidden',
+                     'name' => 'id',
+                     'value' => $ID
+                  ],
+                  __('Web address of the OCSNG console', 'ocsinventoryng') => [
+                     'type' => 'text',
+                     'name' => 'ocs_url',
+                     'value' => $this->fields["ocs_url"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ]
+               ]
+            ],
+            __('Import options', 'ocsinventoryng') => [
+               'visible' => true,
+               'inputs' => [
+                  __('Limit the import to the following tags (separator $, nothing for all)', 'ocsinventoryng') => [
+                     'type' => 'text',
+                     'name' => 'tag_limit',
+                     'value' => $this->fields["tag_limit"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+                  __('Exclude the following tags (separator $, nothing for all)', 'ocsinventoryng') => [
+                     'type' => 'text',
+                     'name' => 'tag_exclude',
+                     'value' => $this->fields["tag_exclude"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+                  __('Behavior when disconnecting', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'deconnection_behavior',
+                     'values' => [
+                        '' => __('Preserve link', 'ocsinventoryng'),
+                        "trash" => __('Put the link in dustbin and add a lock', 'ocsinventoryng'),
+                        "delete" => __('Delete  the link permanently', 'ocsinventoryng')
+                     ],
+                     'value' => $this->fields["deconnection_behavior"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                     'title' => __("Define the action to do on link with other objects when computer is disconnecting from them", 'ocsinventoryng'),
+                  ],
+                  __('Use the OCSNG software dictionary', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'use_soft_dict',
+                     'values' => [0 => __('No'), 1 => __('Yes')],
+                     'value' => $this->fields["use_soft_dict"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+                  __('Number of items to synchronize via the automatic OCSNG action', 'ocsinventoryng') => [
+                     'type' => 'number',
+                     'name' => 'cron_sync_number',
+                     'value' => $this->fields["cron_sync_number"],
+                     'min' => 1,
+                     'title' => "0 = " . __('None'),
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                     'title' => __("The automatic task ocsng is launched only if server is not in expert mode", 'ocsinventoryng') . '. '
+                        . __("The automatic task ocsng only synchronize existant computers, it doesn't import new computers", 'ocsinventoryng') . '. '
+                        . __("If you want to import new computers, disable this parameter, change to expert mode and use script from system", 'ocsinventoryng') . '.',
+                  ],
+                  __('Behavior to the deletion of a computer in OCSNG', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'deleted_behavior',
+                     'values' => $actions,
+                     'value' => $this->fields["deleted_behavior"],
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                  ],
+               ]
+            ]
+         ]
+      ];
+      renderTwigForm($form);
    }
 
    /**

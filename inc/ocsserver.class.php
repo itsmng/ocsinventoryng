@@ -251,7 +251,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
       $dbu                 = new DbUtils();
       $numberActiveServers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers', ["is_active" => 1]);
       if ($numberActiveServers > 0) {
-         $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`
+         $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`, `glpi_plugin_ocsinventoryng_ocsservers`.`name`
             FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
             LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
                ON `glpi_plugin_ocsinventoryng_ocsservers_profiles`.`plugin_ocsinventoryng_ocsservers_id` 
@@ -260,7 +260,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
             AND `glpi_plugin_ocsinventoryng_ocsservers`.`is_active`= 1
             ORDER BY `name` ASC";
          foreach ($DB->request($query) as $data) {
-            $ocsservers[] = $data['id'];
+            $ocsservers[$data['id']] = $data['name'];
          }
 
          $form = [
@@ -384,14 +384,14 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
       $numberActiveServers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers',
                                                         ["is_active" => 1]);
       if ($numberActiveServers > 0) {
-         $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`
+         $query = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`, `glpi_plugin_ocsinventoryng_ocsservers`.`name`
             FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
             LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
                ON `glpi_plugin_ocsinventoryng_ocsservers_profiles`.`plugin_ocsinventoryng_ocsservers_id` = `glpi_plugin_ocsinventoryng_ocsservers`.`id`
             WHERE `profiles_id`= " . $_SESSION["glpiactiveprofile"]['id'] . " AND `glpi_plugin_ocsinventoryng_ocsservers`.`is_active`='1'
             ORDER BY `name` ASC";
          foreach ($DB->request($query) as $data) {
-            $ocsservers[] = $data['id'];
+            $ocsservers[$data['id']] = $data['name'];
          }
 
          $form = [

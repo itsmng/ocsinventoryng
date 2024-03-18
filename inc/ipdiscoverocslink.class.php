@@ -446,10 +446,6 @@ class PluginOcsinventoryngIpdiscoverOcslink extends CommonDBTM {
    static function showSubnetSearchForm($action) {
       global $CFG_GLPI;
 
-      $form = [
-         'action' => Plugin::getWebDir('ocsinventoryng') . "/front/ipdiscover.php?action=$action",
-         'buttons' => 
-      ];
       echo "<form action=\"" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/ipdiscover.php?action=$action\" method='post'>";
       echo "<div class='center'><table class='tab_cadre_fixe' width='40%'>";
 

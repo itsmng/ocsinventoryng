@@ -1086,130 +1086,151 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
          return false;
       }
       $this->getFromDB($ID);
-      echo "<div class='center'>";
-      echo "<form name='historyconfig' id='historyconfig' action='" . Toolbox::getItemTypeFormURL("PluginOcsinventoryngOcsServer") . "' method='post'>";
-      echo "<table class='tab_cadre_fixe'>\n";
-      echo "<tr><th colspan ='4'>";
-      echo __('All');
 
-      echo $JS = <<<JAVASCRIPT
-         <script type='text/javascript'>
-            function form_init_all(value) {
-                if(value != -1) {
-                  var selects = $("form[id='historyconfig'] select");
-
-                  $.each(selects, function(index, select){
-                     if (select.name != "init_all") {
-                       $(select).select2('val', value);
-                     }
-                  });
-               }
-            }
-         </script>
-JAVASCRIPT;
-      $values = [-1 => Dropdown::EMPTY_VALUE,
-                 0  => __('No'),
-                 1  => __('Yes')];
-
-      Dropdown::showFromArray('init_all', $values, [
-         'width'     => '10%',
-         'on_change' => "form_init_all(this.value);"
-      ]);
-
-      echo "</th></tr>";
-      echo "<tr><th colspan='4'>";
-      echo Html::hidden('id', ['value' => $ID]) . __('General history', 'ocsinventoryng') .
-           "</th>\n";
-      echo "</tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Do history', 'ocsinventoryng') . "</td>\n<td>";
-      Dropdown::showYesNo("dohistory", $this->fields["dohistory"]);
-      echo "</td>\n";
-
-      echo "<td class='center'>" . __('System history', 'ocsinventoryng') . "</td>\n<td>";
-      Dropdown::showYesNo("history_hardware", $this->fields["history_hardware"]);
-      echo "&nbsp;";
-      $fields = __('Operating system');
-      $fields .= "<br>";
-      $fields .= __('Serial of the operating system');
-      $fields .= "<br>";
-      $fields .= __('Domain');
-      $fields .= "<br>";
-      $fields .= __('Alternate username');
-      $fields .= "<br>";
-      $fields .= __('Comments');
-      Html::showToolTip(nl2br($fields));
-      echo "&nbsp;</td></tr>\n";
-
-      //history_bios
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Bios history', 'ocsinventoryng') . "</td>\n<td>";
-      Dropdown::showYesNo("history_bios", $this->fields["history_bios"]);
-      echo "&nbsp;";
-      $fields = __('Serial number');
-      $fields .= "<br>";
-      $fields .= __('Model');
-      $fields .= "<br>";
-      $fields .= _n('Manufacturer', 'Manufacturers', 1);
-      $fields .= "<br>";
-      $fields .= __('Type');
-      $fields .= "<br>";
-      if (self::checkVersion($ID)) {
-         $fields .= __('UUID');
-      }
-      Html::showToolTip(nl2br($fields));
-      echo "&nbsp;</td>\n";
-
-      echo "<td class='center'>" . __('Devices history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_devices");
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Volumes history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_drives");
-      echo "</td>\n";
-
-      echo "<td class='center'>" . __('Network history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_network");
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Monitor connection history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_monitor");
-      echo "</td>\n";
-
-      echo "<td class='center'>" . __('Printer connection history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_printer");
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Peripheral connection history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_peripheral");
-      echo "</td>\n";
-
-      echo "<td class='center'>" . __('Software connection history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_software");
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Virtual machines history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_vm");
-
-      echo "<td class='center'>" . __('Administrative infos history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_admininfos");
-
-      echo "<tr class='tab_bg_2'><td class='center'>" . __('Plugins history', 'ocsinventoryng') . "</td><td>";
-      $this->showHistoryDropdown("history_plugins");
-      echo "</td>\n";
-
-      echo "<td class='center'>" . __('OS history', 'ocsinventoryng') . "</td>\n<td>";
-      $this->showHistoryDropdown("history_os");
-      echo "</td>\n";
-
-      echo "</tr>";
-
-      if (Session::haveRight("plugin_ocsinventoryng", UPDATE)) {
-         echo "<tr class='tab_bg_2 center'><td colspan='4'>";
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-         echo "</td></tr>\n";
-      }
-      echo "</table>\n";
-      Html::closeForm();
-      echo "</div>\n";
+      $form = [
+         'action' => Toolbox::getItemTypeFormURL("PluginOcsinventoryngOcsServer"),
+         'attributes' => [
+            'name' => 'historyconfig',
+            'id' => 'historyconfig',
+            'method' => 'post'
+         ],
+         'buttons' => [
+            Session::haveRight("plugin_ocsinventoryng", UPDATE) ? [
+               'name' => 'update',
+               'value' => __('Save'),
+               'type' => 'submit',
+               'class' => 'btn btn-secondary',
+            ] : []
+         ],
+         'content' => [
+            '' => [
+               'visible' => 'true',
+               'inputs' => [
+                  [
+                     'type' => 'hidden',
+                     'name' => 'id',
+                     'value' => $ID
+                  ],
+                  __('All') => [
+                     'type' => 'select',
+                     'name' => 'init_all',
+                     'values' => [-1 => Dropdown::EMPTY_VALUE, 0 => __('No'), 1 => __('Yes')],
+                     'value' => -1,
+                     'col_lg' => 12,
+                     'col_md' => 12,
+                     'hooks' => [
+                        'change' => <<<JS
+                           const value = this.value;
+                           if(value != -1) {
+                              const selects = $("form[id='historyconfig'] select");
+                              $.each(selects, function(index, select){
+                                 if (select.name != "init_all") {
+                                    $(select).val(value);
+                                 }
+                              });
+                              const checkboxes = $("form[id='historyconfig'] input[type='checkbox']");
+                              $.each(checkboxes, function(index, checkbox){
+                                 if (checkbox.name != "init_all") {
+                                    $(checkbox).prop('checked', value == 1)
+                                 }
+                              });
+                           }
+                        JS
+                     ]
+                  ],
+               ]
+            ],
+            __('General history', 'ocsinventoryng') => [
+               'visible' => 'true',
+               'inputs' => [
+                  __('Do history', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'dohistory',
+                     'value' => $this->fields["dohistory"],
+                  ],
+                  __('System history', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'history_hardware',
+                     'value' => $this->fields["history_hardware"],
+                     'title' => nl2br(__('Depends on Bios import', 'ocsinventoryng')),
+                  ],
+                  __('Bios history', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'history_bios',
+                     'value' => $this->fields["history_bios"],
+                     'title' => nl2br(__('Depends on Bios import', 'ocsinventoryng')),
+                  ],
+                  __('Devices history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_devices',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_devices"],
+                  ],
+                  __('Volumes history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_drives',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_drives"],
+                  ],
+                  __('Network history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_network',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_network"],
+                  ],
+                  __('Monitor connection history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_monitor',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_monitor"],
+                  ],
+                  __('Printer connection history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_printer',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_printer"],
+                  ],
+                  __('Peripheral connection history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_peripheral',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_peripheral"],
+                  ],
+                  __('Software connection history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_software',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_software"],
+                  ],
+                  __('Virtual machines history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_vm',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_vm"],
+                  ],
+                  __('Administrative infos history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_admininfos',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_admininfos"],
+                  ],
+                  __('Plugins history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_plugins',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_plugins"],
+                  ],
+                  __('OS history', 'ocsinventoryng') => [
+                     'type' => 'select',
+                     'name' => 'history_os',
+                     'values' => self::getHistoryValues(),
+                     'value' => $this->fields["history_os"],
+                  ],
+               ],
+            ]
+         ]
+      ];
+      renderTwigForm($form);
    }
 
    /**

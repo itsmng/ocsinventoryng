@@ -42,7 +42,7 @@ function plugin_ocsinventoryng_install() {
        && !$DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
        && !$DB->tableExists("ocs_glpi_ocsservers")) {
       //INSTALL
-      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.6-empty.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.7-empty.sql");
 
       $migration->createRule(['sub_type'     => 'RuleImportComputer',
                               'entities_id'  => 0,
@@ -565,6 +565,17 @@ function plugin_ocsinventoryng_install() {
       if (!$DB->tableExists("glpi_plugin_ocsinventoryng_ipdiscoversnmpreconciliation")) {
          $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.6-update.sql");
       }/*1.7.6*/
+
+      /******************* Migration 1.7.7 *******************/
+      // Update 1.7.7
+      if ($DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
+          && $DB->getField("glpi_plugin_ocsinventoryng_ocsservers", "tag_limit")['Type'] != "text") {
+          $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers` 
+              MODIFY `tag_limit` TEXT";
+          $query .= "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers` 
+              MODIFY `tag_exclude` TEXT";
+          $DB->queryOrDie($query, "1.7.7 update table glpi_plugin_ocsinventoryng_ocsservers");
+      }
 
       $migration->executeMigration();
 

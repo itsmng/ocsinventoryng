@@ -1,0 +1,38 @@
+name: Release workflow
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release on GitHub
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build project
+        run: |
+          cd /home/runner/work/ocsinventoryng/
+          rm -r ocsinventoryng/.git* ocsinventoryng/test ocsinventoryng/tools
+          tar -zcvf ocsinventoryng-${{ github.ref_name }}.tgz ocsinventoryng
+
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocsinventoryng-${{ github.ref_name }}.tgz
+          path: /home/runner/work/ocsinventoryng/ocsinventoryng-${{ github.ref_name }}.tgz
+      
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /home/runner/work/ocsinventoryng/ocsinventoryng-${{ github.ref_name }}.tgz
+          body: "New release is available"
+          name: ${{ github.ref_name }}
+          draft: true
+          generate_release_notes: true

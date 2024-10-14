@@ -32,7 +32,7 @@ define("PLUGIN_OCSINVENTORYNG_STATE_RUNNING", 2);
 define("PLUGIN_OCSINVENTORYNG_STATE_FINISHED", 3);
 
 define("PLUGIN_OCSINVENTORYNG_LOCKFILE", GLPI_LOCK_DIR . "/ocsinventoryng.lock");
-define('PLUGIN_OCS_VERSION', '1.8');
+define('PLUGIN_OCS_VERSION', '2.0.0');
 
 define('PLUGIN_OCS_ROOTDOC', Plugin::getWebDir('ocsinventoryng'));
 

@@ -570,9 +570,8 @@ function plugin_ocsinventoryng_install() {
       // Update 1.7.7
       if ($DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
           && $DB->getField("glpi_plugin_ocsinventoryng_ocsservers", "tag_limit")['Type'] != "text") {
-          $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers` 
-              MODIFY `tag_limit` TEXT";
-          $query .= "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers` 
+          $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers`
+              MODIFY `tag_limit` TEXT,
               MODIFY `tag_exclude` TEXT";
           $DB->queryOrDie($query, "1.7.7 update table glpi_plugin_ocsinventoryng_ocsservers");
       }

@@ -1385,17 +1385,17 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
             $this->getTypeName() => [
                'visible' => true,
                'inputs' => [
-                  [
+                  $this->isNewID($ID) ? [] : [
                      'name' => 'id',
                      'type' => 'hidden',
                      'value' => $ID
-                  ],
+                  ] ,
                   __('Connection type', 'ocsinventoryng') => [
                      'type' => 'select',
                      'name' => 'conn_type',
                      'values' => [
                         0 => __('Database', 'ocsinventoryng'),
-                        //1 => __('Webservice (SOAP)', 'ocsinventoryng'),               
+                        //1 => __('Webservice (SOAP)', 'ocsinventoryng'),
                      ],
                      'value' => $this->fields['conn_type'],
                   ],

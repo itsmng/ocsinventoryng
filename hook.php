@@ -42,7 +42,7 @@ function plugin_ocsinventoryng_install() {
        && !$DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
        && !$DB->tableExists("ocs_glpi_ocsservers")) {
       //INSTALL
-      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.7-empty.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.8.0-empty.sql");
 
       $migration->createRule(['sub_type'     => 'RuleImportComputer',
                               'entities_id'  => 0,
@@ -574,6 +574,14 @@ function plugin_ocsinventoryng_install() {
               MODIFY `tag_limit` TEXT,
               MODIFY `tag_exclude` TEXT";
           $DB->queryOrDie($query, "1.7.7 update table glpi_plugin_ocsinventoryng_ocsservers");
+      }
+
+      /******************* Migration 1.8.0 *******************/
+      // Update 1.8.0
+      if (!$DB->fieldExists("glpi_plugin_ocsinventoryng_ocsservers", "cleanup_delay")) {
+          $query = "ALTER TABLE `glpi_plugin_ocsinventoryng_ocsservers`
+              ADD `cleanup_delay` INT(11) NOT NULL DEFAULT '14400' COMMENT 'Delay in minutes before cleanup of old data'";
+          $DB->queryOrDie($query, "1.8.0 update table glpi_plugin_ocsinventoryng_ocsservers");
       }
 
       $migration->executeMigration();

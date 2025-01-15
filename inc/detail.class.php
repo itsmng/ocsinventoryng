@@ -159,6 +159,13 @@ class PluginOcsinventoryngDetail extends CommonDBTM {
       $this->add($input);
    }
 
+   static function cleanProcessingList(DateTime $since) {
+       global $DB;
+       $query = "DELETE FROM `" . self::getTable() . "`
+                 WHERE `process_time` < '" . $since->format('Y-m-d H:i:s') . "'";
+       return $DB->query($query);
+   }
+
 
    /**
     * @param $threads_id

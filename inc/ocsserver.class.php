@@ -1475,8 +1475,29 @@ JAVASCRIPT;
 
       echo "<tr class='tab_bg_1'>";
       echo "<td class='center'>" . __('Use automatic locks', 'ocsinventoryng') . "</td>";
-      echo "<td colspan='3'>";
+      echo "<td>";
       Dropdown::showYesNo("use_locks", $this->fields["use_locks"]);
+      echo "</td>";
+      echo "<td>";
+      $toAdd = [];
+      for ($i=1; $i<=7; $i++) {
+         $toAdd[] = $i * DAY_TIMESTAMP;
+      }
+      for ($i=1; $i<=12; $i++) {
+         $toAdd[] = $i * MONTH_TIMESTAMP;
+      }
+      echo "</tr>";
+      echo "<tr>";
+      echo "<td class='center'>" . __('Cleanup delay', 'ocsinventoryng') . "</td>";
+      echo "<td>";
+      Dropdown::showTimeStamp("cleanup_delay", [
+         'value'  => $this->fields["cleanup_delay"],
+         'width'  => '100%',
+         'min'    => HOUR_TIMESTAMP,
+         'max'    => 24 * HOUR_TIMESTAMP,
+         'toadd'  => $toAdd,
+         'step'   => 2 * HOUR_TIMESTAMP,
+      ]);
       echo "</td>";
       echo "</tr>";
 

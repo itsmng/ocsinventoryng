@@ -485,6 +485,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
       }
 
    }
+   PluginOcsinventoryngDetail::cleanProcessingList(new DateTime('-' . $cfg_ocs['cleanup_delay'] . ' seconds'));
 
    $query    = "SELECT MAX(`last_ocs_update`)
                 FROM `glpi_plugin_ocsinventoryng_ocslinks`

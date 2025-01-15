@@ -32,6 +32,8 @@ include('../../../inc/includes.php');
 Session::checkRight("plugin_ocsinventoryng_import", READ);
 
 Html::header(__('Computers imported by automatic actions', 'ocsinventoryng'), '', "tools", "pluginocsinventoryngmenu", "detail");
+$ditts = new PluginOcsinventoryngDetail();
+$ditts->cleanProcessingList(new DateTime('-2 months'));
 
 Search::show('PluginOcsinventoryngDetail');
 

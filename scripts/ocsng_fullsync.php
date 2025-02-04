@@ -440,6 +440,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
    $nbNotUnique = 0;
    $nbLinkRefused = 0;
 
+   PluginOcsinventoryngDetail::cleanProcessingList(new DateTime('-' . $cfg_ocs['cleanup_delay'] . ' seconds'));
    foreach ($ocsComputers as $ID => $ocsComputer) {
       if ($i == $config->fields["thread_log_frequency"]) {
          $fields["status"] = PLUGIN_OCSINVENTORYNG_STATE_RUNNING;
@@ -485,7 +486,6 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
       }
 
    }
-   PluginOcsinventoryngDetail::cleanProcessingList(new DateTime('-' . $cfg_ocs['cleanup_delay'] . ' seconds'));
 
    $query    = "SELECT MAX(`last_ocs_update`)
                 FROM `glpi_plugin_ocsinventoryng_ocslinks`

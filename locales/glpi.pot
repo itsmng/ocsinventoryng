@@ -2088,3 +2088,7 @@ msgstr ""
 #: inc/winuser.class.php:200
 msgid "SID"
 msgstr ""
+
+#: inc/ocsserver.class.php:1491
+msgid "Cleanup delay"
+msgstr ""

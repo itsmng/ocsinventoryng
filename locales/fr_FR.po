@@ -2263,3 +2263,7 @@ msgstr "SID"
 
 #~ msgid "Switch the equipment to identified on OCS with type"
 #~ msgstr "Passer l'équipement à identifié dans OCS avec le type"
+
+#: inc/ocsserver.class.php:1491
+msgid "Cleanup delay"
+msgstr "Délai de nettoyage"

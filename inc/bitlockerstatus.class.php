@@ -57,6 +57,9 @@ class PluginOcsinventoryngBitlockerstatus extends CommonDBChild {
     */
    static function updateBitlocker($computers_id, $ocsBitlockerStatus, $disk, $cfg_ocs, $force = 0) {
 
+      if (!isset($disk['id'])) {
+          return;
+      }
       $uninstall_history = 0;
       $item_disk = new Item_Disk();
       if ($cfg_ocs['dohistory'] == 1 && ($cfg_ocs['history_plugins'] == 1 || $cfg_ocs['history_plugins'] == 3)) {

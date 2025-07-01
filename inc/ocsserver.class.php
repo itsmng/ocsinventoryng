@@ -610,6 +610,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
                         "4" => __('Unit import serial number only', 'ocsinventoryng')];
 
       $opt                 = PluginOcsinventoryngOcsAdminInfosLink::getColumnListFromAccountInfoTable($ID, 'accountinfo');
+      $opt_date            = PluginOcsinventoryngOcsAdminInfosLink::getColumnListFromAccountInfoTable($ID, 'hardware');
       $oserial             = $opt;
       $oserial['ASSETTAG'] = "ASSETTAG";
       
@@ -1043,7 +1044,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
                   __('Startup date') => [
                      'type' => 'select',
                      'name' => 'import_use_date',
-                     'values' => $opt,
+                     'values' => $opt_date,
                      'value' => $values['useDateValue'],
                   ],
                ]

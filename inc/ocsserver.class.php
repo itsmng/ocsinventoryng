@@ -3389,7 +3389,7 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
          if ($only_url) {
             return $url;
          }
-         return "<a class='vsubmit' target='_blank' href='$url'>" . $todisplay . "</a>";
+         return "<button class='btn btn-secondary btn-sm' target='_blank' href='$url'>" . $todisplay . "</button>";
       }
       return $url;
    }

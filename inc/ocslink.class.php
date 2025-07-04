@@ -192,15 +192,10 @@ class PluginOcsinventoryngOcslink extends CommonDBTM {
 
                      if (Session::haveRight("plugin_ocsinventoryng_sync", UPDATE)) {
                         echo "<td class='text-center' colspan='2'>";
-                        echo "<button class=\"btn btn-secondary btn-sm\" onClick=\"submitGetLink('". $target ."', ". json_encode([
-                           "launch_ocs_resynch" => "launch_ocs_resynch",
-                           "id"                 => $items_id,
-                           "resynch_id"         => $data["id"],
-                           "_glpi_csrf_token"   => $csrf,
-                           "_glpi_simple_form"  => 1
-                        ]) .")\">";
-                        echo _sx('button', 'Launch synchronization', 'ocsinventoryng');
-                        echo "</button>";
+                        Html::showSimpleForm($target, 'launch_ocs_resynch',
+                                             _sx('button', 'Launch synchronization', 'ocsinventoryng'),
+                                             ['id'         => $items_id,
+                                             'resynch_id' => $data["id"]]);
                         echo "</td>";
 
                      } else {
@@ -209,15 +204,10 @@ class PluginOcsinventoryngOcslink extends CommonDBTM {
 
                      if (Session::haveRight("plugin_ocsinventoryng_sync", UPDATE)) {
                         echo "<td class='text-center' colspan='2'>";
-                        echo "<button class=\"btn btn-secondary btn-sm\" onClick=\"submitGetLink('". $target ."', ". json_encode([
-                           "force_ocs_resynch" => "force_ocs_resynch",
-                           "id"                 => $items_id,
-                           "resynch_id"         => $data["id"],
-                           "_glpi_csrf_token"   => $csrf,
-                           "_glpi_simple_form"  => 1
-                        ]) .")\">";
-                        echo _sx('button', 'Force full import', 'ocsinventoryng');
-                        echo "</button>";
+                        Html::showSimpleForm($target, 'force_ocs_resynch',
+                                             _sx('button', 'Force full import', 'ocsinventoryng'),
+                                             ['id'         => $items_id,
+                                                      'resynch_id' => $data["id"]]);
                         echo "</td>";
 
                      } else {
@@ -247,17 +237,12 @@ class PluginOcsinventoryngOcslink extends CommonDBTM {
                      echo "</td><td>" . Html::convDateTime($data["last_update"]) . " (" . $linked . ")</td>";
                      if (Session::haveRight("plugin_ocsinventoryng_sync", UPDATE)) {
                         echo "<td class='text-center' colspan='2'>";
-                        echo "<button class=\"btn btn-secondary btn-sm\" onClick=\"submitGetLink('". $target ."', ". json_encode([
-                           "force_ocssnmp_resynch" => "force_ocssnmp_resynch",
-                           "items_id"                            => $items_id,
-                           "itemtype"                            => $item->getType(),
-                           "id"                                  => $data["id"],
-                           "plugin_ocsinventoryng_ocsservers_id" => $data["plugin_ocsinventoryng_ocsservers_id"],
-                           "_glpi_csrf_token"   => $csrf,
-                           "_glpi_simple_form"  => 1
-                        ]) .")\">";
-                        echo _sx('button', 'Force SNMP synchronization', 'ocsinventoryng');
-                        echo "</button>";
+                        Html::showSimpleForm($target, 'force_ocssnmp_resynch',
+                                             _sx('button', 'Force SNMP synchronization', 'ocsinventoryng'),
+                                             ['items_id'                            => $items_id,
+                                                      'itemtype'                            => $item->getType(),
+                                                      'id'                                  => $data["id"],
+                                                      'plugin_ocsinventoryng_ocsservers_id' => $data["plugin_ocsinventoryng_ocsservers_id"]]);
                         echo "</td>";
 
                      }

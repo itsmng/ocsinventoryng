@@ -32,7 +32,7 @@ define("PLUGIN_OCSINVENTORYNG_STATE_RUNNING", 2);
 define("PLUGIN_OCSINVENTORYNG_STATE_FINISHED", 3);
 
 define("PLUGIN_OCSINVENTORYNG_LOCKFILE", GLPI_LOCK_DIR . "/ocsinventoryng.lock");
-define('PLUGIN_OCS_VERSION', '2.0.1');
+define('PLUGIN_OCS_VERSION', '2.1.0');
 
 define('PLUGIN_OCS_ROOTDOC', Plugin::getWebDir('ocsinventoryng'));
 
@@ -112,6 +112,11 @@ function plugin_init_ocsinventoryng() {
       if (class_exists('PluginOcsinventoryngTeamviewer')) {
          Link::registerTag(PluginOcsinventoryngTeamviewer::$tags);
       }
+   }
+
+   if ($DB->tableExists('glpi_plugin_ocsinventoryng_winsecdetails')) {
+      Plugin::registerClass('PluginOcsinventoryngWinsecdetail',
+                            ['addtabon' => 'Computer']);
    }
 
    if ($DB->tableExists('glpi_plugin_ocsinventoryng_osinstalls')) {

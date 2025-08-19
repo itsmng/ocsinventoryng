@@ -978,6 +978,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                         'registry'        => false,
                         'antivirus'       => false,
                         'uptime'          => false,
+                        'winsecdetails'   => false,
                         'officepack'      => false,
                         'winupdatestate'  => false,
                         'osinstall'       => false,
@@ -1126,6 +1127,10 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                   }
                }
                /********************* PLUGINS *********************/
+               if ($cfg_ocs["import_winsecdetails"]) {
+                  $updates['winsecdetails'] = true;
+                  $ocsPlugins[]             = PluginOcsinventoryngOcsClient::PLUGINS_WINSECDETAILS;
+               }
                if ($cfg_ocs["import_antivirus"]) {
                   $updates['antivirus'] = true;
                   $ocsPlugins[]         = PluginOcsinventoryngOcsClient::PLUGINS_SECURITY;
@@ -1404,6 +1409,11 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                   //import teamviewer entries
                   PluginOcsinventoryngTeamviewer::updateTeamviewer($line['computers_id'], $ocsComputer["TEAMVIEWER"],
                                                                    $cfg_ocs, 1);
+               }
+               if ($updates['winsecdetails'] && isset($ocsComputer["WINSECDETAILS"])) {
+                  //import winsecdetails entries
+                  PluginOcsinventoryngWinsecdetail::updateWinsecdetail($line['computers_id'], $ocsComputer["WINSECDETAILS"],
+                                                                         $cfg_ocs, 1);
                }
                if ($updates['uptime'] && isset($ocsComputer["UPTIME"])) {
                   //import uptime

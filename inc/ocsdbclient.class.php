@@ -428,6 +428,7 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
             case "uptime" :
             case "winupdatestate":
             case "teamviewer":
+            case "winsecdetails":
             case "customapp":
             case "navigatorproxysetting":
             case "winusers":
@@ -1323,6 +1324,7 @@ class PluginOcsinventoryngOcsDbClient extends PluginOcsinventoryngOcsClient {
                                 "securitycenter",
                                 "sim",
                                 "uptime",
+                                "winsecdetails",
                                 "officepack",
                                 "winupdatestate",
                                 "slots",

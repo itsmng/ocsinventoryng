@@ -42,7 +42,7 @@ function plugin_ocsinventoryng_install() {
        && !$DB->tableExists("glpi_plugin_ocsinventoryng_ocsservers")
        && !$DB->tableExists("ocs_glpi_ocsservers")) {
       //INSTALL
-      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.7-empty.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.8-empty.sql");
 
       $migration->createRule(['sub_type'     => 'RuleImportComputer',
                               'entities_id'  => 0,
@@ -576,6 +576,12 @@ function plugin_ocsinventoryng_install() {
           $DB->queryOrDie($query, "1.7.7 update table glpi_plugin_ocsinventoryng_ocsservers");
       }
 
+      /******************* Migration 1.7.8 *******************/
+      // Update 1.7.8
+      if (!$DB->tableExists("glpi_plugin_ocsinventoryng_winsecdetails")) {
+         $DB->runFile(GLPI_ROOT . "/plugins/ocsinventoryng/install/mysql/1.7.8-update.sql");
+      }/*1.7.8*/
+
       $migration->executeMigration();
 
    }
@@ -676,6 +682,7 @@ function plugin_ocsinventoryng_uninstall() {
               "glpi_plugin_ocsinventoryng_customapps",
               "glpi_plugin_ocsinventoryng_bitlockerstatuses",
               "glpi_plugin_ocsinventoryng_teamviewers",
+              "glpi_plugin_ocsinventoryng_winsecdetails",
               "glpi_plugin_ocsinventoryng_notificationstates",
               "glpi_plugin_ocsinventoryng_ocsalerts",
               "glpi_plugin_ocsinventoryng_snmplinkreworks",

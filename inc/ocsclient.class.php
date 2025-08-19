@@ -73,6 +73,7 @@ abstract class PluginOcsinventoryngOcsClient {
    const PLUGINS_ALL                  = 0x00012;
    const PLUGINS_CUSTOMAPP            = 0x00013;
    const PLUGINS_BITLOCKER            = 0x00014;
+   const PLUGINS_WINSECDETAILS        = 0x00015;
 
    private $id;
 
@@ -463,6 +464,10 @@ abstract class PluginOcsinventoryngOcsClient {
          'uptime'                => [
             'plugins' => self::PLUGINS_UPTIME,
             'multi'   => 0,
+         ],
+         'winsecdetails'         => [
+            'plugins' => self::PLUGINS_WINSECDETAILS,
+            'multi'   => 1,
          ],
          'winupdatestate'        => [
             'plugins' => self::PLUGINS_WUPDATE,

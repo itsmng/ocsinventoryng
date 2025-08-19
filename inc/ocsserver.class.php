@@ -958,6 +958,12 @@ class PluginOcsinventoryngOcsServer extends CommonDBTM {
                      'value' => $this->fields["import_teamviewer"],
                      'title' => nl2br(__('Teamviewer Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/teamviewer) must be installed', 'ocsinventoryng')),
                   ],
+                  __('Winsecdetails', 'ocsinventoryng') => [
+                     'type' => 'checkbox',
+                     'name' => 'import_winsecdetails',
+                     'value' => $this->fields["import_winsecdetails"],
+                     'title' => nl2br(__('Winsecdetails Plugin for OCSNG (https://github.com/PluginsOCSInventory-NG/winsecdetails) must be installed', 'ocsinventoryng')),
+                  ],
                   __('Proxy Settings', 'ocsinventoryng') => [
                      'type' => 'checkbox',
                      'name' => 'import_proxysetting',

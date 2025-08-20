@@ -65,10 +65,6 @@ class PluginOcsinventoryngWinsecdetail extends CommonDBChild
      */
     static function updateWinsecdetail($computers_id, $ocsComputer, $cfg_ocs, $force)
     {
-        Toolbox::logInFile(
-            "plugin_ocsinventoryng.log",
-            "Update Winsecdetail for computer id: $computers_id\nOcsComputer: " . json_encode($ocsComputer, JSON_PRETTY_PRINT) . "\n"
-        );
         $uninstall_history = 0;
         if ($cfg_ocs['dohistory'] == 1 && ($cfg_ocs['history_plugins'] == 1 || $cfg_ocs['history_plugins'] == 3)) {
             $uninstall_history = 1;
@@ -114,23 +110,9 @@ class PluginOcsinventoryngWinsecdetail extends CommonDBChild
             'TAMPERPROTECTIONSOURCE'
         ];
 
-        $firstKey = null;
-        if (is_array($ocsComputer)) {
-            foreach ($ocsComputer as $k => $v) {
-                $firstKey = $k;
-                break;
-            }
-        }
-
         foreach ($fields as $field) {
-            $value = null;
-            if ($firstKey !== null && isset($ocsComputer[$firstKey]) && is_array($ocsComputer[$firstKey])) {
-                $value = $ocsComputer[$firstKey][$field] ?? null;
-            } elseif (isset($ocsComputer[0]) && is_array($ocsComputer[0])) {
-                $value = $ocsComputer[0][$field] ?? null;
-            }
-            if (isset($value)) {
-                $input[strtolower($field)] = $value;
+            if (isset($ocsComputer[$field])) {
+                $input[strtolower($field)] = $ocsComputer[$field];
             }
         }
 

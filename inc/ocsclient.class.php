@@ -467,7 +467,7 @@ abstract class PluginOcsinventoryngOcsClient {
          ],
          'winsecdetails'         => [
             'plugins' => self::PLUGINS_WINSECDETAILS,
-            'multi'   => 1,
+            'multi'   => 0,
          ],
          'winupdatestate'        => [
             'plugins' => self::PLUGINS_WUPDATE,

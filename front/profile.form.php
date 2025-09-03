@@ -31,36 +31,71 @@ include('../../../inc/includes.php');
 
 Session::checkRight("profile", READ);
 
-$profservers = new PluginOcsinventoryngOcsserver_Profile();
-$prof        = new PluginOcsinventoryngProfile();
+$profile = new PluginOcsinventoryngProfile();
 
-if (isset($_POST["addocsserver"]) && ($_POST['plugin_ocsinventoryng_ocsservers_id'] > 0)) {
-   $input['profiles_id']                         = $_POST['profile'];
-   $input['plugin_ocsinventoryng_ocsservers_id'] = $_POST['plugin_ocsinventoryng_ocsservers_id'];
-
-   $newID = $profservers->add($input);
-   Html::back();
-
-} else if (isset($_POST["addocsserver"]) && $_POST["plugin_ocsinventoryng_ocsservers_id"] == -1) {
-   $prof::addAllServers($_POST['profile']);
-   Html::back();
-}
-
-// stock selected servers in session
-$_SESSION["plugin_ocsinventoryng_ocsservers_id"] = PluginOcsinventoryngOcsServer::getFirstServer();
-
-$cfg_ocs = PluginOcsinventoryngOcsServer::getConfig($_SESSION["plugin_ocsinventoryng_ocsservers_id"]);
-if ($cfg_ocs['ocs_version'] >= PluginOcsinventoryngOcsServer::OCS2_8_VERSION_LIMIT) {
-   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = true;
-} else {
-   $_SESSION["plugin_ocsinventoryng_ocsservers_version_2_8"] = false;
-}
-
-if (isset ($_POST['delete'])) {
-   $input = [];
-   foreach ($_POST['item'] as $id => $val) {
-      $input['id'] = $id;
-      $profservers->delete($input);
+if (isset($_POST['addocsserver'])) {
+   Session::checkRight("profile", UPDATE);
+   
+   $profile_id = intval($_POST['profile']);
+   $server_id = intval($_POST['plugin_ocsinventoryng_ocsservers_id']);
+   
+   if ($profile_id > 0 && $server_id > 0) {
+      $DB->insert(
+         'glpi_plugin_ocsinventoryng_ocsservers_profiles',
+         [
+            'profiles_id' => $profile_id,
+            'plugin_ocsinventoryng_ocsservers_id' => $server_id
+         ]
+      );
+      
+      Session::addMessageAfterRedirect(__('Server added successfully', 'ocsinventoryng'));
    }
+   
    Html::back();
+   
+} elseif (isset($_POST['delete'])) {
+   Session::checkRight("profile", UPDATE);
+   
+   $profile_id = intval($_POST['profile']);
+   
+   if (isset($_POST['item']) && is_array($_POST['item'])) {
+      foreach ($_POST['item'] as $id => $value) {
+         if ($value == 1) {
+            $DB->delete(
+               'glpi_plugin_ocsinventoryng_ocsservers_profiles',
+               ['id' => intval($id)]
+            );
+         }
+      }
+      
+      Session::addMessageAfterRedirect(__('Selected servers deleted successfully', 'ocsinventoryng'));
+   }
+   
+   Html::back();
+   
+} elseif (isset($_POST['update_rights'])) {
+   Session::checkRight("profile", UPDATE);
+   
+   $result = $profile->updateRights($_POST);
+   
+   if ($result) {
+      Session::addMessageAfterRedirect(__('Rights updated successfully', 'ocsinventoryng'));
+   } else {
+      Session::addMessageAfterRedirect(__('Error updating rights', 'ocsinventoryng'), false, ERROR);
+   }
+   
+   Html::back();
+   
+} else {
+   $profiles_id = 0;
+   if (isset($_GET['id'])) {
+      $profiles_id = intval($_GET['id']);
+   }
+   
+   Html::header(__('OCS Inventory NG', 'ocsinventoryng'), $_SERVER['PHP_SELF'], "admin", "profile", "ocsinventoryng");
+   
+   $profile->showForm($profiles_id);
+   
+   Html::footer();
 }
+?>

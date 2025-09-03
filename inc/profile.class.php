@@ -148,105 +148,283 @@ class PluginOcsinventoryngProfile extends CommonDBTM {
 
       $profile = new Profile();
       $profile->getFromDB($profiles_id);
-
-      echo "<div class='firstbloc'>";
-
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform) {
-         echo "<form action='" . $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/profile.form.php' method='post'>";
-      }
-      //Delegating
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr><th colspan='4' class='center b'>" . sprintf(__('%1$s - %2$s'), 'OcsinventoryNG',
-                                                             $profile->fields["name"]) . "</th>";
-      echo "</tr>";
-
       $used = [];
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . sprintf(__('%1$s : %2$s'),
-                            _n('Allowed OCSNG server', 'Allowed OCSNG servers', 2, 'ocsinventoryng'), "&nbsp;");
-      //$profile = $this->fields['id'];
+      $configid = [];
       $crit = ['profiles_id' => $profiles_id];
       foreach ($DB->request("glpi_plugin_ocsinventoryng_ocsservers_profiles", $crit) as $data) {
-         $used[$data['plugin_ocsinventoryng_ocsservers_id']]     = $data['plugin_ocsinventoryng_ocsservers_id'];
+         $used[$data['plugin_ocsinventoryng_ocsservers_id']] = $data['plugin_ocsinventoryng_ocsservers_id'];
          $configid[$data['plugin_ocsinventoryng_ocsservers_id']] = $data['id'];
       }
+      $available_servers = [];
       if (Session::haveRight("profile", UPDATE)) {
-         Dropdown::show('PluginOcsinventoryngOcsServer', ['width'     => '50%',
-                                                          'used'      => $used,
-                                                          'value'     => '',
-                                                          'condition' => ["is_active" => 1],
-                                                          'toadd'     => ['-1' => __('All')]]);
-         echo Html::hidden('profile', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Add'), ['name' => 'addocsserver']);
-      }
-
-      echo "</td><td>";
-
-      echo "<table width='100%'><tr class='tab_bg_1'><td>";
-      $dbu = new DbUtils();
-      $nbservers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers_profiles',
-                                        ["profiles_id" => $profiles_id]);
-
-      $query  = "SELECT `glpi_plugin_ocsinventoryng_ocsservers`.`id`,
-                       `glpi_plugin_ocsinventoryng_ocsservers`.`name`
-                FROM `glpi_plugin_ocsinventoryng_ocsservers_profiles`
-                LEFT JOIN `glpi_plugin_ocsinventoryng_ocsservers`
-                   ON `glpi_plugin_ocsinventoryng_ocsservers_profiles`.`plugin_ocsinventoryng_ocsservers_id` = `glpi_plugin_ocsinventoryng_ocsservers`.`id`
-                WHERE `profiles_id`= " . $_SESSION["glpiactiveprofile"]['id'] . "
-                ORDER BY `name` ASC";
-      $result = $DB->query($query);
-      if ($data = $DB->fetchAssoc($result)) {
-
-         $ocsserver = new PluginOcsinventoryngOcsServer();
-         foreach ($used as $id) {
-            if ($ocsserver->getFromDB($id)) {
-               echo "<br>";
-               if (Session::haveRight("profile", UPDATE)) {
-                  echo Html::input('item[' . $configid[$id] . ']', ['type'  => 'checkbox',
-                                                                    'value' => 1]);
-               }
-               echo $ocsserver->getLink();
+         $query = "SELECT `id`, `name` 
+                   FROM `glpi_plugin_ocsinventoryng_ocsservers` 
+                   WHERE `is_active` = 1 
+                   ORDER BY `name`";
+         $result = $DB->query($query);
+         
+         while ($data = $DB->fetchAssoc($result)) {
+            if (!in_array($data['id'], $used)) {
+               $available_servers[$data['id']] = htmlspecialchars($data['name']);
             }
          }
       }
-      if (!$nbservers) {
-         echo __('None');
+   
+      $assigned_servers = [];
+      $dbu = new DbUtils();
+      $nbservers = $dbu->countElementsInTable('glpi_plugin_ocsinventoryng_ocsservers_profiles',
+                                        ["profiles_id" => $profiles_id]);
+   
+      if ($nbservers > 0) {
+         $ocsserver = new PluginOcsinventoryngOcsServer();
+         foreach ($used as $id) {
+            if ($ocsserver->getFromDB($id)) {
+               $assigned_servers[] = [
+                  'id' => $configid[$id],
+                  'name' => $ocsserver->getLink(),
+                  'server_id' => $id
+               ];
+            }
+         }
       }
-      echo "</td></tr>";
-      if ($nbservers && Session::haveRight("profile", UPDATE)) {
-         echo "<tr class='tab_bg_1 center'><td>";
-         echo Html::submit(_sx('button', 'Delete'), ['name' => 'delete']);
-         echo "</td></tr>";
+   
+      if (Session::haveRight("profile", UPDATE)) {
+         $add_form = [
+            'action' => $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/profile.form.php",
+            'method' => 'post',
+            'buttons' => [
+               !empty($available_servers) ? [
+                  'name' => 'addocsserver',
+                  'value' => _sx('button', 'Add'),
+                  'type' => 'submit',
+                  'class' => 'btn btn-secondary',
+               ] : []
+            ],
+            'content' => [
+               sprintf(__('%1$s - %2$s'), 'OcsinventoryNG', $profile->fields["name"]) => [
+                  'visible' => true,
+                  'inputs' => []
+               ]
+            ]
+         ];
+   
+         if (!empty($available_servers)) {
+            $add_form['content'][sprintf(__('%1$s - %2$s'), 'OcsinventoryNG', $profile->fields["name"])]['inputs'][_n('Allowed OCSNG server', 'Allowed OCSNG servers', 2, 'ocsinventoryng')] = [
+               'type' => 'select',
+               'name' => 'plugin_ocsinventoryng_ocsservers_id',
+               'values' => ['' => Dropdown::EMPTY_VALUE] + $available_servers,
+               'col_lg' => 6,
+               'col_md' => 8,
+            ];
+   
+            $add_form['content'][sprintf(__('%1$s - %2$s'), 'OcsinventoryNG', $profile->fields["name"])]['inputs'][''] = [
+               'type' => 'hidden',
+               'name' => 'profile',
+               'value' => $profiles_id
+            ];
+         } else {
+            $add_form['content'][sprintf(__('%1$s - %2$s'), 'OcsinventoryNG', $profile->fields["name"])]['inputs'][_n('Allowed OCSNG server', 'Allowed OCSNG servers', 2, 'ocsinventoryng')] = [
+               'type' => 'content',
+               'content' => '<div class="alert alert-info">' . __('No available servers', 'ocsinventoryng') . '</div>',
+               'col_lg' => 12,
+            ];
+         }
+   
+         renderTwigForm($add_form);
       }
-      echo "</table>";
-      echo "</td></tr>";
-      echo "</table>";
-      Html::closeForm();
-
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform
-      ) {
-
-         echo "<form method='post' action='" . $profile->getFormURL() . "'>";
+   
+      if ($nbservers > 0) {
+         $list_form = [
+            'action' => $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/profile.form.php",
+            'method' => 'post',
+            'buttons' => [
+               Session::haveRight("profile", UPDATE) ? [
+                  'name' => 'delete',
+                  'value' => _sx('button', 'Delete selected'),
+                  'type' => 'submit',
+                  'class' => 'btn btn-danger',
+               ] : []
+            ],
+            'content' => [
+               __('Assigned servers', 'ocsinventoryng') => [
+                  'visible' => true,
+                  'inputs' => $this->buildAssignedServersInputs($assigned_servers, $profiles_id)
+               ]
+            ]
+         ];
+   
+         renderTwigForm($list_form);
+      } else {
+         echo '<div class="card mt-3">';
+         echo '<div class="card-header"><h4>' . __('Assigned servers', 'ocsinventoryng') . '</h4></div>';
+         echo '<div class="card-body">';
+         echo '<p>' . __('No assigned servers', 'ocsinventoryng') . '</p>';
+         echo '</div>';
+         echo '</div>';
       }
-
-      $rights = $this->getAllRights();
-
-      $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                    'default_class' => 'tab_bg_2',
-                                                    'title'         => __('General')]);
-
-      if ($canedit
-          && $closeform) {
-         echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-         echo "</div>\n";
-         Html::closeForm();
+   
+      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) && $openform) {
+         $rights = $this->getAllRights();
+   
+         $rights_form = [
+            'action' => $CFG_GLPI['root_doc'] . "/plugins/ocsinventoryng/front/profile.form.php",
+            'method' => 'post',
+            'buttons' => [
+               $canedit && $closeform ? [
+                  'name' => 'update_rights',
+                  'value' => _sx('button', 'Save'),
+                  'type' => 'submit',
+                  'class' => 'btn btn-secondary',
+               ] : []
+            ],
+            'content' => [
+               __('General') => [
+                  'visible' => true,
+                  'inputs' => $this->convertRightsToTwigInputs($rights, $canedit, $profiles_id)
+               ]
+            ]
+         ];
+   
+         renderTwigForm($rights_form);
       }
+   }
+   
+   private function buildAssignedServersInputs($assigned_servers, $profiles_id) {
+      $inputs = [];
+      
+      $inputs[''] = [
+         'type' => 'hidden',
+         'name' => 'profile',
+         'value' => $profiles_id
+      ];
+   
+      foreach ($assigned_servers as $server) {
+         $inputs[$server['name']] = [
+            'type' => 'checkbox',
+            'name' => 'item[' . $server['id'] . ']',
+            'value' => 1,
+            'col_lg' => 12,
+         ];
+      }
+   
+      return $inputs;
+   }
+   
 
-      echo "</div>";
+   private function convertRightsToTwigInputs($rights, $canedit, $profiles_id) {
+      global $DB;
+      
+      $inputs = [];
+      
+      $profile_rights = [];
+      $query = "SELECT * FROM `glpi_profilerights` WHERE `profiles_id` = " . intval($profiles_id);
+      $result = $DB->query($query);
+      while ($data = $DB->fetchAssoc($result)) {
+         $profile_rights[$data['name']] = $data['rights'];
+      }
+      
+      $inputs['profile_id_hidden'] = [
+         'type' => 'hidden',
+         'name' => 'profiles_id',
+         'value' => $profiles_id
+      ];
+   
+      foreach ($rights as $right) {
+         $field_name = $right['field'];
+         $label = $right['label'];
+         $current_value = $profile_rights[$field_name] ?? 0;
+         
+         if (isset($right['rights'])) {
+            $options = [];
+            foreach ($right['rights'] as $value => $text) {
+               $options[$value] = $text;
+            }
+            
+            $inputs[$label] = [
+               'type' => 'select',
+               'name' => 'rights[' . $field_name . ']',
+               'values' => $options,
+               'value' => $current_value,
+               'col_lg' => 6,
+               'col_md' => 8
+            ];
+         } else {
+            $inputs[$label] = [
+               'type' => 'select',
+               'name' => 'rights[' . $field_name . ']',
+               'values' => [
+                  '0' => __('No access'),
+                  READ => __('Read'),
+                  READ | CREATE => __('Read/Create'),
+                  READ | UPDATE => __('Read/Update'), 
+                  READ | CREATE | UPDATE => __('Read/Create/Update'),
+                  READ | CREATE | UPDATE | PURGE => __('Full access')
+               ],
+               'value' => $current_value,
+               'col_lg' => 6,
+               'col_md' => 8
+            ];
+         }
+      }
+   
+      return $inputs;
+   }
+   
+
+   public function updateRights($input) {
+      global $DB;
+      
+      if (!isset($input['profiles_id']) || !isset($input['rights'])) {
+         return false;
+      }
+      
+      $profiles_id = intval($input['profiles_id']);
+      
+      if (!Session::haveRight("profile", UPDATE)) {
+         return false;
+      }
+      
+      $success = true;
+      
+      foreach ($input['rights'] as $right_name => $right_value) {
+         $existing = $DB->request([
+            'FROM' => 'glpi_profilerights',
+            'WHERE' => [
+               'profiles_id' => $profiles_id,
+               'name' => $right_name
+            ]
+         ]);
+         
+         if (count($existing)) {
+            $update_result = $DB->update(
+               'glpi_profilerights',
+               ['rights' => intval($right_value)],
+               [
+                  'profiles_id' => $profiles_id,
+                  'name' => $right_name
+               ]
+            );
+            
+            if (!$update_result) {
+               $success = false;
+            }
+         } else {
+            $insert_result = $DB->insert(
+               'glpi_profilerights',
+               [
+                  'profiles_id' => $profiles_id,
+                  'name' => $right_name,
+                  'rights' => intval($right_value)
+               ]
+            );
+            
+            if (!$insert_result) {
+               $success = false;
+            }
+         }
+      }
+      
+      return $success;
    }
 
    /**

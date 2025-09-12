@@ -44,9 +44,10 @@ if (isset ($_SESSION["ocs_update"])) {
    unset ($_SESSION["ocs_update"]);
 }
 // when open the menu, no $_POST
-if (isset($_POST["plugin_ocsinventoryng_ocsservers_id"])) {
-   $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = $_POST["plugin_ocsinventoryng_ocsservers_id"];
-} else {
+if (isset($_POST["PluginOcsinventoryngOcsServer"])) {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = $_POST["PluginOcsinventoryngOcsServer"];
+} else if (isset($_POST["plugin_ocsinventoryng_ocsservers_id"])) {
+   $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = $_POST["plugin_ocsinventoryng_ocsservers_id"];} else {
    $_SESSION["plugin_ocsinventoryng_ocsservers_id"] = PluginOcsinventoryngOcsServer::getFirstServer();
 }
 

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of ocsinventoryng.
 
  ocsinventoryng is free software; you can redistribute it and/or modify
@@ -37,21 +37,40 @@ restore_error_handler();
 
 $_GET = array();
 if (isset($_SERVER['argv'])) {
-   for ($i = 1; $i < $_SERVER['argc']; $i++) {
-      $it = explode("=", $_SERVER['argv'][$i], 2);
-      $it[0] = preg_replace('/^--/', '', $it[0]);
-      $_GET[$it[0]] = (isset($it[1]) ? $it[1] : true);
-   }
+    for ($i = 1; $i < $_SERVER['argc']; $i++) {
+        $it = explode("=", $_SERVER['argv'][$i], 2);
+        $it[0] = preg_replace('/^--/', '', $it[0]);
+        $_GET[$it[0]] = (isset($it[1]) ? $it[1] : true);
+    }
 }
 
-if (isset($_GET['help']) || !count($_GET)) {
-   echo "Usage : php checkocslinks.php [ options ]\n";
-   echo "Options values :\n";
-   echo "\t--glpi   : check missing computer in GLPI\n";
-   echo "\t--ocs    : check missing computer in OCS\n";
-   echo "\t--dup    : check for duplicate links (n links for 1 computer in GLPI)\n";
-   echo "\t--clean  : delete invalid link\n";
-   exit (0);
+if (isset($_GET['server-id']) && !isset($_GET['ocs_server_id'])) {
+    $_GET['ocs_server_id'] = $_GET['server-id'];
+}
+
+$ocsservers_filter = -1;
+if (isset($_GET['ocs_server_id']) && $_GET['ocs_server_id'] !== '') {
+    if (!preg_match('/^\d+$/', (string) $_GET['ocs_server_id'])) {
+        echo "Invalid value for --server-id (integer expected)\n";
+        exit(1);
+    }
+    $ocsservers_filter = (int) $_GET['ocs_server_id'];
+}
+
+$hasAction = isset($_GET['glpi'])
+    || isset($_GET['ocs'])
+    || isset($_GET['dup'])
+    || isset($_GET['clean']);
+
+if (isset($_GET['help']) || !$hasAction) {
+    echo "Usage : php checkocslinks.php [ options ]\n";
+    echo "Options values :\n";
+    echo "\t--glpi   : check missing computer in GLPI\n";
+    echo "\t--ocs    : check missing computer in OCS\n";
+    echo "\t--dup    : check for duplicate links (n links for 1 computer in GLPI)\n";
+    echo "\t--clean  : delete invalid link\n";
+    echo "\t--server-id=<id> : limit checks to a specific active OCS server\n";
+    exit(0);
 }
 
 $tps = microtime(true);
@@ -60,23 +79,29 @@ $nbdel = 0;
 $nbtodo = 0;
 
 $crit = array('is_active' => 1);
+if ($ocsservers_filter > -1) {
+    $crit['id'] = $ocsservers_filter;
+}
+
+$found_server = false;
 foreach ($DB->request('glpi_plugin_ocsinventoryng_ocsservers', $crit) as $serv) {
-   $ocsservers_id = $serv ['id'];
-   echo "\nServeur: " . $serv['name'] . "\n";
+    $found_server = true;
+    $ocsservers_id = $serv['id'];
+    echo "\nServeur: " . $serv['name'] . "\n";
 
-   if (!PluginOcsinventoryngOcsServer::checkOCSconnection($ocsservers_id)) {
-      echo "** no connexion\n";
-      continue;
-   }
+    if (!PluginOcsinventoryngOcsServer::checkOCSconnection($ocsservers_id)) {
+        echo "** no connexion\n";
+        continue;
+    }
 
-   if (isset($_GET['clean'])) {
-      echo "+ Handle ID changes\n";
-      PluginOcsinventoryngOcsProcess::manageDeleted($ocsservers_id);
-   }
+    if (isset($_GET['clean'])) {
+        echo "+ Handle ID changes\n";
+        PluginOcsinventoryngOcsProcess::manageDeleted($ocsservers_id);
+    }
 
-   if (isset($_GET['glpi'])) {
-      echo "+ Search links with no computer in GLPI\n";
-      $query = "SELECT `glpi_plugin_ocsinventoryng_ocslinks`.`id`,
+    if (isset($_GET['glpi'])) {
+        echo "+ Search links with no computer in GLPI\n";
+        $query = "SELECT `glpi_plugin_ocsinventoryng_ocslinks`.`id`,
                        `glpi_plugin_ocsinventoryng_ocslinks`.`ocs_deviceid`
                 FROM `glpi_plugin_ocsinventoryng_ocslinks`
                 LEFT JOIN `glpi_computers`
@@ -84,122 +109,144 @@ foreach ($DB->request('glpi_plugin_ocsinventoryng_ocsservers', $crit) as $serv) 
                 WHERE `glpi_computers`.`id` IS NULL
                       AND `plugin_ocsinventoryng_ocsservers_id`=$ocsservers_id";
 
-      $result = $DB->query($query);
-      if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetchArray($result)) {
-            $nbchk++;
-            printf("%12d : %s\n", $data['id'], $data['ocs_deviceid']);
-            if (isset($_GET['clean'])) {
-               $query2 = "DELETE
+        $result = $DB->query($query);
+        if ($DB->numrows($result) > 0) {
+            while ($data = $DB->fetchArray($result)) {
+                $nbchk++;
+                printf("%12d : %s\n", $data['id'], $data['ocs_deviceid']);
+                if (isset($_GET['clean'])) {
+                    $query2 = "DELETE
                           FROM `glpi_plugin_ocsinventoryng_ocslinks`
                           WHERE `id` = " . $data['id'];
-               if ($DB->query($query2)) {
-                  $nbdel++;
-               }
-            } else {
-               $nbtodo++;
+                    if ($DB->query($query2)) {
+                        $nbdel++;
+                    }
+                } else {
+                    $nbtodo++;
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   if (isset($_GET['ocs'])) {
+    if (isset($_GET['ocs'])) {
 
-      $DBocs = PluginOcsinventoryngOcsServer::getDBocs($ocsservers_id);
-      $res[] = $DBocs->getOCSComputers();
+        $DBocs = PluginOcsinventoryngOcsServer::getDBocs($ocsservers_id);
+        $res[] = $DBocs->getOCSComputers();
 
-      $hardware = array();
-      $nb = 0;
-      $i = 0;
-      if (count($res) > 0) {
-         foreach ($res as $k => $data) {
-            if (count($data) > 0) {
-               $i++;
-               $nb = count($data);
-               $data = Toolbox::clean_cross_side_scripting_deep(Toolbox::addslashes_deep($data));
-               $hardware[$data["ID"]] = $data["DEVICEID"];
-               echo "$i/$nb\r";
+        $hardware = array();
+        $nb = 0;
+        $i = 0;
+        if (count($res) > 0) {
+            foreach ($res as $k => $data) {
+                if (count($data) > 0) {
+                    $i++;
+                    $nb = count($data);
+                    $data = Toolbox::clean_cross_side_scripting_deep(Toolbox::addslashes_deep($data));
+                    $hardware[$data["ID"]] = $data["DEVICEID"];
+                    echo "$i/$nb\r";
+                }
             }
-         }
-         echo "  $nb computers in OCS\n";
-      }
+            echo "  $nb computers in OCS\n";
+        }
 
-      echo "+ Search links with no computer in OCS\n";
-      $query = "SELECT `id`, `ocsid`, `ocs_deviceid`
+        echo "+ Search links with no computer in OCS\n";
+        $query = "SELECT `id`, `ocsid`, `ocs_deviceid`
                 FROM `glpi_plugin_ocsinventoryng_ocslinks`
                 WHERE `plugin_ocsinventoryng_ocsservers_id` = $ocsservers_id";
 
-      $result = $DB->query($query);
-      $nb = $DB->numrows($result);
-      if ($nb > 0) {
-         for ($i = 1; $data = $DB->fetchArray($result); $i++) {
-            $nbchk++;
-            $data = Toolbox::clean_cross_side_scripting_deep(Toolbox::addslashes_deep($data));
-            if (isset ($hardware[$data["ocsid"]])) {
-               echo "$i/$nb\r";
-            } else {
-               printf("%12d : %s\n", $data['id'], $data['ocs_deviceid']);
-               if (isset($_GET['clean'])) {
-                  $query_del = "DELETE
+        $result = $DB->query($query);
+        $nb = $DB->numrows($result);
+        if ($nb > 0) {
+            for ($i = 1; $data = $DB->fetchArray($result); $i++) {
+                $nbchk++;
+                $data = Toolbox::clean_cross_side_scripting_deep(Toolbox::addslashes_deep($data));
+                if (isset($hardware[$data["ocsid"]])) {
+                    echo "$i/$nb\r";
+                } else {
+                    printf("%12d : %s\n", $data['id'], $data['ocs_deviceid']);
+                    if (isset($_GET['clean'])) {
+                        $query_del = "DELETE
                                 FROM `glpi_plugin_ocsinventoryng_ocslinks`
                                 WHERE `id` = " . $data["id"];
-                  if ($DB->query($query_del)) {
-                     $nbdel++;
-                  }
-               } else {
-                  $nbtodo++;
-               }
+                        if ($DB->query($query_del)) {
+                            $nbdel++;
+                        }
+                    } else {
+                        $nbtodo++;
+                    }
+                }
             }
-         }
-         echo "  $nb links checked\n";
-      }
-   }
+            echo "  $nb links checked\n";
+        }
+    }
+}
+
+if (!$found_server) {
+    if ($ocsservers_filter > -1) {
+        echo "No active OCS server found with id $ocsservers_filter\n";
+    } else {
+        echo "No active OCS server found\n";
+    }
+    exit(1);
 }
 
 // Link must be unique (for all servers)
 if (isset($_GET['dup'])) {
-   echo "+ Search duplicate links\n";
+    echo "+ Search duplicate links\n";
 
-   $query = "SELECT `computers_id`, COUNT(*) as cpt
+    $whereDup = '';
+    if ($ocsservers_filter > -1) {
+        $whereDup = " WHERE `plugin_ocsinventoryng_ocsservers_id` = $ocsservers_filter";
+    }
+
+    $query = "SELECT `computers_id`, COUNT(*) as cpt
              FROM `glpi_plugin_ocsinventoryng_ocslinks`
+             $whereDup
              GROUP BY `computers_id`
              HAVING `cpt`>1";
 
-   foreach ($DB->request($query) as $data) {
-      printf("%4d links for computer #%d\n", $data['cpt'], $data['computers_id']);
-      $query2 = "SELECT `id`, `plugin_ocsinventoryng_ocsservers_id`,
+    foreach ($DB->request($query) as $data) {
+        printf("%4d links for computer #%d\n", $data['cpt'], $data['computers_id']);
+        $query2 = "SELECT `id`, `plugin_ocsinventoryng_ocsservers_id`,
                         `ocsid`, `ocs_deviceid`, `computers_id`, `last_update`
                  FROM `glpi_plugin_ocsinventoryng_ocslinks`
-                 WHERE `computers_id` = " . $data['computers_id'] ."
-                 ORDER BY `last_update`";
-      $i = 1;
-      foreach ($DB->request($query2) as $data2) {
-         $del = ($i < $data['cpt']); // Keep the more recent
-         printf("%12d : %s (%d-%d, last=%s) : %s\n", $data2['id'], $data2['ocs_deviceid'],
-            $data2['plugin_ocsinventoryng_ocsservers_id'], $data2['ocsid'],
-            $data2['last_update'], ($del ? 'delete' : 'keep'));
-         if ($del) {
-            if (isset($_GET['clean'])) {
-               $query_del = "DELETE
+                 WHERE `computers_id` = " . $data['computers_id'] .
+            ($ocsservers_filter > -1 ? " AND `plugin_ocsinventoryng_ocsservers_id` = $ocsservers_filter" : '') .
+            " ORDER BY `last_update`";
+        $i = 1;
+        foreach ($DB->request($query2) as $data2) {
+            $del = ($i < $data['cpt']); // Keep the more recent
+            printf(
+                "%12d : %s (%d-%d, last=%s) : %s\n",
+                $data2['id'],
+                $data2['ocs_deviceid'],
+                $data2['plugin_ocsinventoryng_ocsservers_id'],
+                $data2['ocsid'],
+                $data2['last_update'],
+                ($del ? 'delete' : 'keep')
+            );
+            if ($del) {
+                if (isset($_GET['clean'])) {
+                    $query_del = "DELETE
                              FROM `glpi_plugin_ocsinventoryng_ocslinks`
                              WHERE `id` = " . $data2["id"];
-               if ($DB->query($query_del)) {
-                  $nbdel++;
-               }
-            } else {
-               $nbtodo++;
+                    if ($DB->query($query_del)) {
+                        $nbdel++;
+                    }
+                } else {
+                    $nbtodo++;
+                }
             }
-         }
-         $i++;
-      }
-   }
+            $i++;
+        }
+    }
 }
 
 $tps = microtime(true) - $tps;
 printf("\nChecked links : %d\n", $nbchk);
 if (isset($_GET['clean'])) {
-   printf("Deleted links : %d\n", $nbdel);
+    printf("Deleted links : %d\n", $nbdel);
 } else {
-   printf("Corrupt links : %d\n", $nbtodo);
+    printf("Corrupt links : %d\n", $nbtodo);
 }
 printf("Done in %s\n", Html::timestampToString(round($tps, 0), true));

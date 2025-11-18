@@ -68,6 +68,11 @@ class PluginOcsinventoryngOcsSoapClient extends PluginOcsinventoryngOcsClient {
       return !is_soap_fault($this->soapClient->ocs_config_V2('LOGLEVEL'));
    }
 
+   public function getTotalDeletedComputers() {
+      $xml = $this->callSoap('get_total_deleted_computers_V1', []);
+      return (int)simplexml_load_string($xml);
+   }
+
    /**
     * @param string $field
     * @param mixed  $value

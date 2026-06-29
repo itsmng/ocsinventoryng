@@ -249,13 +249,18 @@ class PluginOcsinventoryngOcslink extends CommonDBTM {
                      echo "</tr>";
 
                      $linked_ids [] = $data['ocs_id'];
-                     $ocsClient     = PluginOcsinventoryngOcsServer::getDBocs($data['plugin_ocsinventoryng_ocsservers_id']);
-                     $ocsResult     = $ocsClient->getSnmp([
-                                                             'MAX_RECORDS' => 1,
-                                                             'FILTER'      => [
-                                                                'IDS' => $linked_ids,
-                                                             ]
-                                                          ]);
+                     $ocsResult     = [];
+                     try {
+                        $ocsClient = PluginOcsinventoryngOcsServer::getDBocs($data['plugin_ocsinventoryng_ocsservers_id']);
+                        $ocsResult = $ocsClient->getSnmp([
+                           'MAX_RECORDS' => 1,
+                           'FILTER'      => [
+                              'IDS' => $linked_ids,
+                           ]
+                        ]);
+                     } catch (Throwable $e) {
+                        // Avoid crashing the page if OCS server is not reachable
+                     }
                      if (isset($ocsResult['SNMP'])) {
                         if (count($ocsResult['SNMP']) > 0) {
                            foreach ($ocsResult['SNMP'] as $snmp) {

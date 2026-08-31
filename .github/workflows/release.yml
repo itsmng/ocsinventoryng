@@ -9,12 +9,12 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Release on GitHub
+  build-archive:
+    name: Build archive
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build project
         run: |
@@ -23,20 +23,112 @@ jobs:
           tar -zcvf ocsinventoryng-${{ github.ref_name }}.tgz ocsinventoryng
 
       - name: Upload release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ocsinventoryng-${{ github.ref_name }}.tgz
           path: /home/runner/work/ocsinventoryng/ocsinventoryng-${{ github.ref_name }}.tgz
-      
-      - name: Create release
-        uses: softprops/action-gh-release@v2
+
+  build-debian-package:
+    name: Build debian package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential dpkg-dev debhelper
+
+      - name: Build DEB Package
+        run: |
+          sed -i "s/CHANGEVERSION/${GITHUB_REF_NAME#v}/g" debian/rules
+          dpkg-buildpackage -us -uc -b
+          mv ../itsm-ng-plugin-ocsinventoryng_${GITHUB_REF_NAME#v}_all.deb "$GITHUB_WORKSPACE/itsm-ng-plugin-ocsinventoryng_${GITHUB_REF_NAME}_all.deb"
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v7
         with:
-          files: /home/runner/work/ocsinventoryng/ocsinventoryng-${{ github.ref_name }}.tgz
+          name: itsm-ng-plugin-ocsinventoryng_${{ github.ref_name }}_all.deb
+          path: ${{ github.workspace }}/itsm-ng-plugin-ocsinventoryng_${{ github.ref_name }}_all.deb
+      
+  upload-deb-to-server:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: ./dist
+          merge-multiple: true
+
+      - name: Upload DEBs to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT_DEB }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+          # Définir les distributions en fonction de la version
+          DISTROS_DEBIAN="trixie sid"
+          DISTROS_UBUNTU="noble resolute"
+
+          for file in ./dist/*.deb; do
+            base=$(basename "$file")
+            echo "📦 Upload de $base vers le serveur"
+            scp -P "$SSH_PORT" "$file" root@"$SSH_HOST":/tmp/
+
+            # Ajout dans toutes les distributions Debian
+            for dist in $DISTROS_DEBIAN; do
+              echo "➕ Ajout de $base dans Debian $dist"
+              ssh -p "$SSH_PORT" root@"$SSH_HOST" \
+                "cd /var/www/debian && reprepro -Vb . includedeb $dist /tmp/$base"
+            done
+
+            # Ajout dans toutes les distributions Ubuntu
+            for dist in $DISTROS_UBUNTU; do
+              echo "➕ Ajout de $base dans Ubuntu $dist"
+              ssh -p "$SSH_PORT" root@"$SSH_HOST" \
+                "cd /var/www/ubuntu && reprepro -Vb . includedeb $dist /tmp/$base"
+            done
+
+            # Nettoyage
+            ssh -p "$SSH_PORT" root@"$SSH_HOST" "rm -f /tmp/$base"
+          done
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+      - build-archive
+      - build-debian-package
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: ./dist
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ./dist/*
           body: "New release is available"
-          name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }} for ITSM-NG 2.X
           draft: false
           generate_release_notes: true
 
+  create_ticket:
+    runs-on: ubuntu-latest
+    needs:
+      - release
+    steps:
       - name: Create ITSM Ticket
         uses: itsmng/itsm-ng_create_ticket_action@master
         with:

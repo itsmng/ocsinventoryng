@@ -1,0 +1,12 @@
+Source: ocsinventoryng
+Section: web
+Priority: standard
+Maintainer: ITSMng SysAdmin <sysadmin@itsm-ng.com>
+Build-Depends:	debhelper (>= 9)
+Rules-Requires-Root: no
+Homepage: https://github.com/itsmng/formcreator
+
+Package: itsm-ng-plugin-ocsinventoryng
+Architecture: all
+Depends: itsm-ng (>= 1:2.0),
+Description: This plugin is connector between OCS Inventory software and ITSM-NG

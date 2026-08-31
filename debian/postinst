@@ -1,0 +1,18 @@
+#!/bin/sh
+if [ -f /etc/itsm-ng/config_db.php ]; then
+	DB_HOST=$(grep "dbhost" /etc/itsm-ng/config_db.php | sed -E "s/.*'([^']+)'.*/\1/")
+	DB_USER=$(grep "dbuser" /etc/itsm-ng/config_db.php | sed -E "s/.*'([^']+)'.*/\1/")
+	DB_PASS=$(grep "dbpassword" /etc/itsm-ng/config_db.php \
+			| sed -E "s/.*'([^']+)'.*/\1/" \
+			| php -r 'echo urldecode(trim(stream_get_contents(STDIN)));')
+	DB_NAME=$(grep "dbdefault" /etc/itsm-ng/config_db.php | sed -E "s/.*'([^']+)'.*/\1/")
+
+	if mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" \
+		-se "SELECT 1 FROM glpi_users WHERE name='itsm' LIMIT 1;" | grep -q 1; then
+		php /usr/share/itsm-ng/bin/console itsmng:plugin:install ocsinventoryng -u itsm
+		php /usr/share/itsm-ng/bin/console itsmng:plugin:activate ocsinventoryng
+	fi
+fi
+
+chown -R www-data:www-data /var/lib/itsm-ng
+exit 0

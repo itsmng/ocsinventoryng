@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+# Variables
+NAME = ocsinventoryng
+VERSION = CHANGEVERSION
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	mkdir -p usr/share/itsm-ng/plugins/$(NAME)
+	find . -mindepth 1 -maxdepth 1 \
+		! -name usr \
+		! -name debian \
+		! -name .git \
+		! -name .github \
+		-exec cp -a {} usr/share/itsm-ng/plugins/$(NAME)/ \;
+
+override_dh_gencontrol:
+	dh_gencontrol -- -v$(VERSION)

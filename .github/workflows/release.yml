@@ -19,7 +19,7 @@ jobs:
       - name: Build project
         run: |
           cd /home/runner/work/ocsinventoryng/
-          rm -r ocsinventoryng/.git* ocsinventoryng/test ocsinventoryng/tools
+          rm -r ocsinventoryng/.git* ocsinventoryng/debian ocsinventoryng/test ocsinventoryng/tools
           tar -zcvf ocsinventoryng-${{ github.ref_name }}.tgz ocsinventoryng
 
       - name: Upload release

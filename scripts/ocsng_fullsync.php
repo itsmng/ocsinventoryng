@@ -418,7 +418,7 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
 
    // Limit the number of imported records according to config
    if ($config->fields["import_limit"] > 0 and count($ocsComputers) > $config->fields["import_limit"]) {
-      $ocsComputers = array_splice($ocsComputers, $config->fields["import_limit"]);
+      $ocsComputers = array_slice($ocsComputers, 0, $config->fields["import_limit"], true);
    }
    $nb = count($ocsComputers);
    echo "\tThread #$threadid: $nb computer(s) found\n";

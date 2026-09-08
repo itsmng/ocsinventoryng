@@ -499,6 +499,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
     * @throws \GlpitestSQLError
     */
    static function importComputer($import_params) {
+      global $DB;
 
       $ocsid                               = $import_params["ocsid"];
       $plugin_ocsinventoryng_ocsservers_id = $import_params["plugin_ocsinventoryng_ocsservers_id"];
@@ -573,6 +574,7 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
 
             //If at least one rule matched
             //else do import as usual
+            $link_refused = null;
             if (isset($rulelink_results['action'])) {
                $rules_matched['RuleImportComputer'] = $rulelink_results['_ruleid'];
 
@@ -596,9 +598,28 @@ class PluginOcsinventoryngOcsProcess extends CommonDBTM {
                                       'computers_id' => $computers_id];
                            }
                         }
-                        break;
+                        $link_refused = ['status'       => self::COMPUTER_LINK_REFUSED,
+                                         'entities_id'  => $data['entities_id'],
+                                         'rule_matched' => $rules_matched,
+                                         'computers_id' => reset($rulelink_results['found_computers'])];
                      }
                }
+            }
+
+            $query = "SELECT `id`
+                      FROM `glpi_plugin_ocsinventoryng_ocslinks`
+                      WHERE `ocsid` = '$ocsid'
+                            AND `plugin_ocsinventoryng_ocsservers_id` = $plugin_ocsinventoryng_ocsservers_id";
+            $result = $DB->query($query);
+            if ($result && $DB->numrows($result)) {
+               $sync_params = ['ID'                                  => $DB->result($result, 0, 'id'),
+                               'plugin_ocsinventoryng_ocsservers_id' => $plugin_ocsinventoryng_ocsservers_id,
+                               'cfg_ocs'                             => $cfg_ocs,
+                               'force'                               => 0];
+               return self::synchronizeComputer($sync_params);
+            }
+            if ($link_refused !== null) {
+               return $link_refused;
             }
 
             $ocsClient->setChecksum(PluginOcsinventoryngOcsClient::CHECKSUM_ALL, $ocsid);

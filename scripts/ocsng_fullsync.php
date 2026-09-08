@@ -350,44 +350,41 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
       $computerOptions['FILTER']['EXCLUDE_TAGS'] = $tag_exclude;
    }
 
-   // Get newly inventoried computers
-   $firstQueryOptions = $computerOptions;
-//   if ($server->fields["max_glpidate"] != '0000-00-00 00:00:00') {
-//      $firstQueryOptions['FILTER']['INVENTORIED_BEFORE'] = $server->fields["max_glpidate"];
-//   }
+   $already_linked_ids = [];
+   $query_linked = "SELECT `glpi_plugin_ocsinventoryng_ocslinks`.`ocsid` AS ocsid
+                    FROM `glpi_plugin_ocsinventoryng_ocslinks`
+                    WHERE `glpi_plugin_ocsinventoryng_ocslinks`.`plugin_ocsinventoryng_ocsservers_id` = $ocsServerId";
+   $result_linked = $DB->query($query_linked);
+   if ($result_linked && $DB->numrows($result_linked) > 0) {
+      while ($data = $DB->fetchAssoc($result_linked)) {
+         $already_linked_ids[] = $data['ocsid'];
+      }
+   }
 
-   $firstQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
+   // Get unlinked computers for link/import
+   $importQueryOptions = $computerOptions;
+   if (!empty($already_linked_ids)) {
+      $importQueryOptions['FILTER']['EXCLUDE_IDS'] = $already_linked_ids;
+   }
 
-   $ocsResult = $ocsClient->getComputers($firstQueryOptions);
-
-   // Get computers for which checksum has changed
-   //   $secondQueryOptions = $computerOptions;
-
-   // Filter only useful computers
-   // Some conditions can't be sent to OCS, so we have to do this in a loop
-   // Maybe add this to SOAP ?
+   $ocsResult = $ocsClient->getComputers($importQueryOptions);
    if (isset($ocsResult['COMPUTERS'])) {
-      $excludeIds = array();
       foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
          if ($ID <= intval($server->fields["max_ocsid"]) and (!$multiThread or ($ID % $thread_nbr) == ($threadid - 1))) {
             $ocsComputers[$ID] = $computer;
          }
-         $excludeIds [] = $ID;
       }
-
-      $secondQueryOptions['FILTER']['EXCLUDE_IDS'] = $excludeIds;
    }
 
-   $secondQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
-   //   $ocsResult = $ocsClient->getComputers($secondQueryOptions);
+   // Get linked computers needing sync
+   if (!empty($already_linked_ids)) {
+      $syncQueryOptions = $computerOptions;
+      $syncQueryOptions['FILTER']['CHECKSUM'] = intval($cfg_ocs["checksum"]);
+      $syncQueryOptions['FILTER']['IDS'] = $already_linked_ids;
 
-   // Filter only useful computers
-   // Some conditions can't be sent to OCS, so we have to do this in a loop
-   // Maybe add this to SOAP ?
-   if (isset($ocsResult['COMPUTERS'])) {
+      $ocsResult = $ocsClient->getComputers($syncQueryOptions);
       if (isset($ocsResult['COMPUTERS'])) {
          foreach ($ocsResult['COMPUTERS'] as $ID => $computer) {
-
             $query_glpi  = "SELECT `glpi_plugin_ocsinventoryng_ocslinks`.`last_update` AS last_update,
                                     `glpi_plugin_ocsinventoryng_ocslinks`.`last_ocs_update` AS last_ocs_update,
                                   `glpi_plugin_ocsinventoryng_ocslinks`.`computers_id` AS computers_id,
@@ -417,10 +414,11 @@ function plugin_ocsinventoryng_importFromOcsServer($threads_id, $cfg_ocs, $serve
             }
          }
       }
-      // Limit the number of imported records according to config
-      if ($config->fields["import_limit"] > 0 and count($ocsComputers) > $config->fields["import_limit"]) {
-         $ocsComputers = array_splice($ocsComputers, $config->fields["import_limit"]);
-      }
+   }
+
+   // Limit the number of imported records according to config
+   if ($config->fields["import_limit"] > 0 and count($ocsComputers) > $config->fields["import_limit"]) {
+      $ocsComputers = array_slice($ocsComputers, 0, $config->fields["import_limit"], true);
    }
    $nb = count($ocsComputers);
    echo "\tThread #$threadid: $nb computer(s) found\n";

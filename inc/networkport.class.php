@@ -142,8 +142,11 @@ class PluginOcsinventoryngNetworkPort extends NetworkPortInstantiation {
             $inst_input['networkports_id'] = $network_port->getID();
             $inst_input['speed']           = NetworkPortEthernet::transformPortSpeed($speed, false);
             $instantiation                 = $network_port->getInstantiation();
-
-            $instantiation->add($inst_input, [], $install_network_history);
+            if ($instantiation->getID() > 0) {
+               $instantiation->update($inst_input, $install_network_history);
+            } else {
+               $instantiation->add($inst_input, [], $install_network_history);
+            }
             unset($instantiation);
          }
          if ($network_port->fields['instantiation_type'] == $instantiation_type) {
